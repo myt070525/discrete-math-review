@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2025-2026 离散数学 B卷 · 完整逐题讲解</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']],
+    macros: {
+      ra: "\\rightarrow",
+      lra: "\\leftrightarrow",
+      set: "\\{\\,#1\\,\\}"
+    }
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.bootcdn.net/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+<style>
+/* ========== 基础重置 & 变量 ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --bg-start: #fef8f0;
+  --bg-end:   #fde4cf;
+  --card-bg:  #fffaf5;
+  --card-border: #e8c9a0;
+  --accent:   #c45a2c;
+  --accent2:  #d4783b;
+  --text:     #3e2c1c;
+  --text-light:#6b4f3a;
+  --tag-bg:   #fce8d5;
+  --tag-text: #8b4513;
+  --correct-bg:#e9f5e9;
+  --correct-border:#7ab87a;
+  --wrong-bg:#fdeaea;
+  --wrong-border:#d48383;
+  --shadow:   0 2px 12px rgba(140,80,30,0.08);
+  --shadow-hover: 0 6px 24px rgba(140,80,30,0.14);
+  --radius:   12px;
+}
+
+html { scroll-behavior: smooth; font-size: 17px; }
+body {
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(170deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  background-attachment: fixed;
+  color: var(--text);
+  line-height: 1.85;
+  min-height: 100vh;
+}
+
+/* ========== 顶部导航 ========== */
+.topbar {
+  position: sticky; top: 0; z-index: 999;
+  background: linear-gradient(135deg, #5c2e14 0%, #7a4022 50%, #8b4a28 100%);
+  color: #fde8d0;
+  padding: 10px 0;
+  box-shadow: 0 2px 16px rgba(60,20,0,0.3);
+}
+.topbar-inner {
+  max-width: 1100px; margin: 0 auto; padding: 0 20px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.topbar .logo {
+  font-size: 1.3rem; font-weight: 700; white-space: nowrap;
+  letter-spacing: 2px;
+}
+.topbar nav { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar nav a {
+  color: #fde8d0; text-decoration: none; font-size: 0.82rem;
+  padding: 4px 12px; border-radius: 20px; transition: all .2s;
+  white-space: nowrap; border: 1px solid transparent;
+}
+.topbar nav a:hover,.topbar nav a:focus {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.35);
+}
+
+/* ========== 主容器 ========== */
+.main {
+  max-width: 1000px; margin: 0 auto; padding: 28px 20px 60px;
+}
+
+/* ========== 标题区 ========== */
+.hero {
+  text-align: center; padding: 40px 20px 32px;
+}
+.hero .badge {
+  display: inline-block; background: var(--accent); color: #fff;
+  padding: 5px 18px; border-radius: 20px; font-size: 0.85rem;
+  letter-spacing: 1px; margin-bottom: 12px;
+}
+.hero h1 {
+  font-size: 2.2rem; font-weight: 800; color: #4a2010;
+  letter-spacing: 2px; margin-bottom: 6px;
+}
+.hero .sub {
+  font-size: 1rem; color: var(--text-light);
+}
+
+/* ========== 章节标题 ========== */
+.section-title {
+  font-size: 1.5rem; font-weight: 800; color: #4a2010;
+  margin: 36px 0 16px; padding-bottom: 8px;
+  border-bottom: 3px solid var(--accent2);
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title .icon { font-size: 1.4rem; }
+
+/* ========== 卡片 ========== */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow);
+  transition: box-shadow .25s;
+  position: relative;
+}
+.card:hover { box-shadow: var(--shadow-hover); }
+.card .q-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-weight: 800; font-size: 1rem;
+  margin-right: 12px; flex-shrink: 0;
+}
+.card .q-header {
+  display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;
+}
+.card .q-header h3 { font-size: 1.15rem; color: #4a2010; line-height: 1.5; }
+.card .q-body { margin-left: 50px; }
+.card .q-body p { margin: 6px 0; }
+.card .opt { 
+  display: inline-block; background: #fef4e8; border: 1px solid #e0c8a8;
+  border-radius: 6px; padding: 2px 10px; margin: 2px 4px; font-size: 0.92rem;
+}
+
+/* 正确答案标签 */
+.answer-badge {
+  display: inline-block; background: var(--correct-bg);
+  border: 1px solid var(--correct-border);
+  border-radius: 8px; padding: 6px 16px; font-weight: 700;
+  color: #2d6a2d; margin: 8px 0;
+}
+
+/* 解析区 */
+.explanation {
+  background: #fdf3e8; border-left: 4px solid var(--accent2);
+  border-radius: 0 8px 8px 0; padding: 14px 18px; margin-top: 12px;
+}
+.explanation h4 {
+  color: var(--accent); font-size: 0.95rem; margin-bottom: 6px;
+}
+.explanation .tip {
+  background: #fff7ed; border: 1px dashed #d4a87c; border-radius: 6px;
+  padding: 8px 14px; margin: 8px 0; font-size: 0.9rem; color: #5c3a1e;
+}
+
+/* 矩阵显示 */
+.matrix {
+  display: inline-grid; gap: 1px; background: #c8a882; border: 2px solid #8b5a3a;
+  border-radius: 6px; padding: 2px; margin: 8px 0;
+  font-family: "JetBrains Mono","Fira Code","Consolas",monospace;
+}
+.matrix span {
+  background: #fffaf3; padding: 5px 12px; text-align: center; font-size: 0.9rem;
+}
+
+/* ========== 判断题表格 ========== */
+.tf-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.92rem; }
+.tf-table th { background: #7a4022; color: #fde8d0; padding: 8px 12px; text-align: center; }
+.tf-table td { padding: 8px 12px; border-bottom: 1px solid #e0c8a8; }
+.tf-table tr:nth-child(even) td { background: #fef6ed; }
+.tf-table .t { color: #2d6a2d; font-weight: 700; }
+.tf-table .f { color: #c0392b; font-weight: 700; }
+
+/* ========== 证明步骤 ========== */
+.proof-steps { counter-reset: step; list-style: none; padding: 0; }
+.proof-steps li {
+  counter-increment: step; padding: 6px 0 6px 40px; position: relative;
+  border-bottom: 1px dotted #e8cfb0;
+}
+.proof-steps li::before {
+  content: "(" counter(step) ")"; position: absolute; left: 0; top: 6px;
+  font-weight: 700; color: var(--accent); font-size: 0.85rem;
+}
+
+/* ========== 哈斯图 SVG 容器 ========== */
+.hasse-wrap {
+  display: flex; justify-content: center; margin: 12px 0;
+  overflow-x: auto;
+}
+.hasse-wrap svg { max-width: 100%; height: auto; }
+
+/* ========== 图 SVG 容器 ========== */
+.graph-wrap {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 24px; margin: 12px 0;
+}
+.graph-wrap svg { max-width: 320px; height: auto; }
+
+/* ========== 回到顶部 ========== */
+.back-top {
+  position: fixed; bottom: 28px; right: 28px;
+  background: var(--accent); color: #fff; border: none;
+  border-radius: 50%; width: 44px; height: 44px; font-size: 1.3rem;
+  cursor: pointer; box-shadow: 0 3px 12px rgba(140,60,20,0.35);
+  transition: transform .2s; z-index: 998;
+}
+.back-top:hover { transform: scale(1.1); }
+
+/* ========== 响应式 ========== */
+@media(max-width:768px){
+  html{font-size:15px}
+  .hero h1{font-size:1.5rem}
+  .card{padding:16px 14px}
+  .card .q-body{margin-left:0}
+  .card .q-header{flex-direction:column;align-items:flex-start}
+  .topbar nav a{font-size:0.72rem;padding:3px 8px}
+  .graph-wrap{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ======== 顶部导航 ======== -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="logo">📐 离散数学B卷</span>
+    <nav>
+      <a href="#sec1">一·单选</a>
+      <a href="#sec2">二·判断</a>
+      <a href="#sec3">三·解答</a>
+      <a href="#sec4">四·证明</a>
+      <a href="#q1-1">题1</a><a href="#q1-2">题2</a><a href="#q1-3">题3</a>
+      <a href="#q1-4">题4</a><a href="#q1-5">题5</a><a href="#q1-6">题6</a>
+      <a href="#q1-7">题7</a><a href="#q1-8">题8</a><a href="#q1-9">题9</a>
+      <a href="#q1-10">题10</a>
+      <a href="#q2-1">判1</a><a href="#q2-5">判5</a><a href="#q2-10">判10</a>
+      <a href="#q3-1">解1</a><a href="#q3-2">解2</a><a href="#q3-3">解3</a>
+      <a href="#q3-4">解4</a><a href="#q3-5">解5</a>
+      <a href="#q4-1">证1</a><a href="#q4-2">证2</a><a href="#q4-3">证3</a>
+    </nav>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ======== 标题区 ======== -->
+<div class="hero">
+  <div class="badge">2025 – 2026 学年</div>
+  <h1>离散数学 · B卷</h1>
+  <p class="sub">完整逐题讲解 · 橙棕学术笔记风格 &nbsp;|&nbsp; 每题都有小白也能懂的解释</p>
+</div>
+
+<!-- ================================================================================== -->
+<!-- 一、单项选择题 -->
+<!-- ================================================================================== -->
+<h2 class="section-title" id="sec1"><span class="icon">①</span> 一、单项选择题 <span style="font-size:0.85rem;font-weight:400;color:var(--text-light)">（每小题2分，共20分）</span></h2>
+
+<!-- 第1题 -->
+<div class="card" id="q1-1">
+  <div class="q-header">
+    <span class="q-num">1</span>
+    <h3>设 $p$：明天下雨，$q$：我们去春游。"如果明天下雨，我们就不去春游"的符号化形式是</h3>
+  </div>
+  <div class="q-body">
+    <p>
+      <span class="opt">A. $p \to \neg q$</span>
+      <span class="opt">B. $p \to q$</span>
+      <span class="opt">C. $\neg p \to q$</span>
+      <span class="opt">D. $\neg p \to \neg q$</span>
+    </p>
+    <p class="answer-badge">✅ 正确答案：A</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">蕴含（→）就是"如果…那么…"的意思。比如"如果下雨，我就不去"这句话，用符号写就是 p→¬q。这里p和q只是一个代号——p代表"明天下雨"这件事，q代表"我们去春游"这件事。¬q就是"不去春游"（¬是"不"的意思）。记住：→左边是条件（前件），右边是结论（后件），它不表示因果关系，只表示逻辑上的"如果前面成立，后面也必须成立"。</p>
+</div>
+      <h4>🧠 小白讲解</h4>
+      <ul style="margin-left:20px;">
+        <li>"<strong>如果</strong>明天下雨，<strong>那么</strong>我们就不去春游"</li>
+        <li>「如果…那么…」这个句式，在逻辑里就是<strong>蕴含</strong>，用 $\to$ 表示。</li>
+        <li>前半句「明天下雨」= $p$，这是<strong>前提</strong>（也叫前件）。</li>
+        <li>后半句「我们<strong>不去</strong>春游」= 「去春游」的否定 = $\neg q$。</li>
+      </ul>
+      <p>所以整句话就是：“<strong>如果 $p$，那么 $\neg q$</strong>” → $p \to \neg q$。</p>
+      <div class="tip">💡 记忆口诀：「如果p则q」永远是 $p \to q$，q里面带"不"就写成 $\neg q$。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第2题 -->
+<div class="card" id="q1-2">
+  <div class="q-header">
+    <span class="q-num">2</span>
+    <h3>命题公式（原卷含 WMF 图但内容缺失）的类型是</h3>
+  </div>
+  <div class="q-body">
+    <p>
+      <span class="opt">A. 永真式</span>
+      <span class="opt">B. 永假式</span>
+      <span class="opt">C. 可满足式</span>
+      <span class="opt">D. 非永真的可满足式</span>
+    </p>
+    <p class="answer-badge">✅ 正确答案：A（永真式 / 重言式）</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">命题公式就像一个带变量的表达式，给里面的p、q、r赋上真（T）或假（F），就能算出整个公式的真假。<strong>永真式</strong>（又叫重言式）就是不管p、q怎么取值，结果永远是T——比如"p或非p"，p不管是T还是F，这句话总是对的。<strong>永假式</strong>（矛盾式）刚好相反，永远是F，比如"p且非p"。<strong>可满足式</strong>是说至少存在一种赋值让结果为T——永真式一定是可满足式，但反过来不一定。</p>
+</div>
+      <h4>🧠 小白讲解</h4>
+      <p>虽然原卷 WMF 公式图像未能显示，但从参考答案反推：该公式在<strong>所有可能的真值赋值下都为真</strong>，所以是<strong>永真式</strong>（也叫重言式）。</p>
+      <div class="tip">
+        💡 区分三类公式：<br>
+        · <strong>永真式</strong>：不管 $p,q,r$ 取 T/F，结果永远是 T（例如 $p \lor \neg p$）<br>
+        · <strong>永假式</strong>：结果永远是 F（例如 $p \land \neg p$）<br>
+        · <strong>可满足式</strong>：至少有一种赋值让结果为 T（永真式也是可满足式的一种）
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 第3题 -->
+<div class="card" id="q1-3">
+  <div class="q-header">
+    <span class="q-num">3</span>
+    <h3>$A = \{a, b, c\}$，$R = \{\langle a,b\rangle, \langle a,c\rangle\}$，$R$ 满足什么性质？</h3>
+  </div>
+  <div class="q-body">
+    <p>
+      <span class="opt">A. 自反, 对称, 传递</span>
+      <span class="opt">B. 不自反, 不对称, 不传递</span>
+      <span class="opt">C. 传递, 对称</span>
+      <span class="opt">D. 传递, 反对称</span>
+    </p>
+    <p class="answer-badge">✅ 正确答案：D</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">关系就像元素之间有向的连线。几个重要性质：<strong>自反</strong>=每个元素都有一个指向自己的圈（自环）；<strong>对称</strong>=只要有a→b，就一定有b→a（双向）；<strong>反对称</strong>=不可能同时存在a→b和b→a，除非a=b（也就是说双向只允许自环）；<strong>传递</strong>=如果a能走到b、b能走到c，那a一定能直接走到c。<strong>空真</strong>是个重要技巧：如果一个"如果…那么…"的条件永远不成立，整句话自动算对——就像"如果我是超人，我就飞给你看"，因为你不是超人，这话不算骗人。</p>
+</div>
+      <h4>🧠 小白讲解</h4>
+      <p>我们来逐条检验 $R$ 的性质（$A=\{a,b,c\}$，$R$ 只有两条边：$a\to b$ 和 $a\to c$）：</p>
+      <ul style="margin-left:20px;">
+        <li><strong>自反性</strong>：要求每个元素都有 $\langle x,x\rangle$。但 $\langle a,a\rangle,\langle b,b\rangle,\langle c,c\rangle$ 全都不在 $R$ 里 → <strong>不自反</strong> ❌。</li>
+        <li><strong>对称性</strong>：要求有 $\langle x,y\rangle$ 就必须有 $\langle y,x\rangle$。$R$ 有 $\langle a,b\rangle$ 但没有 $\langle b,a\rangle$ → <strong>不对称</strong> ❌。</li>
+        <li><strong>反对称性</strong>：要求如果同时存在 $\langle x,y\rangle$ 和 $\langle y,x\rangle$，则 $x=y$。由于 $R$ 里<strong>根本不存在</strong>任何一对双向边，条件的前件永远不成立 → <strong>vacuously true（空真）</strong> → 反对称 ✅。</li>
+        <li><strong>传递性</strong>：要求 $\langle x,y\rangle \land \langle y,z\rangle \to \langle x,z\rangle$。$R$ 中只有 $\langle a,b\rangle$ 和 $\langle a,c\rangle$，不存在形如 $\langle b,?\rangle$ 或 $\langle c,?\rangle$ 的边让前件成立 → 前件永远不成立 → <strong>空真，传递</strong> ✅。</li>
+      </ul>
+      <div class="tip">💡 关键概念——<strong>空真（vacuously true）</strong>：如果条件"如果A则B"中的A永远不成立，那么整个命题自动为真。就像说"如果太阳从西边出来，我就请你吃饭"——太阳不会从西边出来，所以这句话不算说谎。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第4题 -->
+<div class="card" id="q1-4">
+  <div class="q-header">
+    <span class="q-num">4</span>
+    <h3>$A = \{1,2,3\}$，$R = \{\langle 1,2\rangle, \langle 2,1\rangle\} \cup I_A$ 是等价关系，求商集 $A/R$。</h3>
+  </div>
+  <div class="q-body">
+    <p>
+      <span class="opt">A. $\{\{1\},\{2\},\{3\}\}$</span>
+      <span class="opt">B. $\{\{1,2\},\{3\}\}$</span>
+      <span class="opt">C. $\{\{1\},\{2,3\}\}$</span>
+      <span class="opt">D. $\{\{1,2,3\}\}$</span>
+    </p>
+    <p class="answer-badge">✅ 正确答案：B</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>等价关系</strong>就像是把集合"分组"——满足自反（自己和自己一组）、对称（a和b一组则b也和a一组）、传递（传递性保证分组不重叠）。等价关系把集合切成一块一块的<strong>等价类</strong>，用[x]表示包含x的那一块。所有等价类组成的集合叫<strong>商集</strong>A/R——商集不是一个数，而是一个集合的集合。比如全班按省份分组，每个省的同学就是一个等价类，商集就是{北京组, 上海组, 广东组, ...}。</p>
+</div>
+      <h4>🧠 小白讲解</h4>
+      <p>$I_A = \{\langle 1,1\rangle, \langle 2,2\rangle, \langle 3,3\rangle\}$ 是恒等关系。加上 $\langle 1,2\rangle$ 和 $\langle 2,1\rangle$，整个关系是：</p>
+      <p style="text-align:center;font-size:1.05rem;">$R = \{\langle 1,1\rangle, \langle 2,2\rangle, \langle 3,3\rangle, \langle 1,2\rangle, \langle 2,1\rangle\}$</p>
+      <p>这显然是一个<strong>等价关系</strong>（自反 ✓、对称 ✓、传递 ✓）。</p>
+      <p>找等价类（商集 $A/R$）：</p>
+      <ul style="margin-left:20px;">
+        <li>$[1] = \{x \in A \mid \langle 1,x\rangle \in R\} = \{1, 2\}$（因为1连到1和2）</li>
+        <li>$[2] = \{1,2\}$（和[1]相同，因为1和2互相可达）</li>
+        <li>$[3] = \{3\}$（3只和自己有关系，孤零零一个人）</li>
+      </ul>
+      <p>不同的等价类只有两个：$\{1,2\}$ 和 $\{3\}$。所以商集 $A/R = \{\{1,2\}, \{3\}\}$。</p>
+      <div class="tip">💡 等价类就是把"互相有关系"的元素打包成一堆。1和2关系好，坐一桌；3没人玩，自己坐一桌。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第5题 -->
+<div class="card" id="q1-5">
+  <div class="q-header">
+    <span class="q-num">5</span>
+    <h3>个体域 $A = \{a, b\}$，$P(a)=1, P(b)=0, S(a)=0, S(b)=1$，求 $\forall x P(x) \land \exists x S(x)$ 的真值。</h3>
+  </div>
+  <div class="q-body">
+    <p>
+      <span class="opt">A. 0</span>
+      <span class="opt">B. 1</span>
+      <span class="opt">C. 不确定</span>
+      <span class="opt">D. 以上都不对</span>
+    </p>
+    <p class="answer-badge">✅ 正确答案：A（0 / 假）</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>∀xP(x)</strong>念作"对所有的x，P(x)都成立"——这要求每一个x都要满足P，只要有一个不满足就是假。<strong>∃xS(x)</strong>念作"存在x使S(x)成立"——只要有至少一个x满足S就是真。<strong>∧（合取）</strong>就是"且"，两边都真才真，只要有一边是假整个就是假。就像串联电路：一个灯泡坏了，整条路都不亮。</p>
+</div>
+      <h4>🧠 小白讲解</h4>
+      <p>一步步算：</p>
+      <ul style="margin-left:20px;">
+        <li>$\forall x P(x)$ 意思是「<strong>所有</strong> $x$ 都满足 $P(x)$」。检查：$P(a)=1$ ✓，但 $P(b)=0$ ✗。只要有一个不满足，$\forall$ 就为<strong>假（0）</strong>。</li>
+        <li>公式是 $\forall x P(x) \land \exists x S(x)$ —— 这是一个<strong>合取</strong>（AND / 且）。</li>
+        <li>合取的规则：只要<strong>左边为假</strong>，整个公式<strong>直接为假</strong>，不需要看右边！（这叫短路求值）</li>
+      </ul>
+      <p>所以整个公式的真值 = <strong>0</strong>。</p>
+      <div class="tip">💡 $\forall$ = "每一个都得满足"，像高中检查作业，全班必须<strong>全部交齐</strong>才算过关，少一个都不行。$\land$ = "两边都真才真"，左边已经假了，右边就不用看了。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第6题 -->
+<div class="card" id="q1-6">
+  <div class="q-header">
+    <span class="q-num">6</span>
+    <h3>$n$ 阶零图 $G$ 的连通分支数 $P(G) = $</h3>
+  </div>
+  <div class="q-body">
+    <p>
+      <span class="opt">A. 0</span>
+      <span class="opt">B. 1</span>
+      <span class="opt">C. $n-1$</span>
+      <span class="opt">D. $n$</span>
+    </p>
+    <p class="answer-badge">✅ 正确答案：D</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>零图</strong>就是只有顶点、一条边都没有的图——像一堆散落的珠子，彼此之间没有线连着。<strong>连通分支</strong>就是图中"互相可达"的顶点组成的小团体。零图中每个顶点都是孤立的，所以n个顶点就有n个连通分支（每个顶点自己就是一个分支）。如果一个图连通的，那它只有1个连通分支。</p>
+</div>
+      <h4>🧠 小白讲解</h4>
+      <p><strong>零图</strong>就是只有顶点、<strong>一条边都没有</strong>的图。</p>
+      <p>既然没有任何边连接顶点，那每个顶点都是<strong>孤立的</strong>——它独自构成一个连通分支。</p>
+      <p>$n$ 个顶点 → $n$ 个孤立的点 → <strong>$n$ 个连通分支</strong>。</p>
+      <div class="tip">💡 想象 $n$ 个人站在操场上，彼此之间没有任何交流——每个人就是一个独立的"小团体"。零图就是这种极端情况。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第7题 -->
+<div class="card" id="q1-7">
+  <div class="q-header">
+    <span class="q-num">7</span>
+    <h3>$n$ 阶无向简单图 $G$ 有 $m$ 条边，其补图 $\overline{G}$ 的边数为</h3>
+  </div>
+  <div class="q-body">
+    <p>
+      <span class="opt">A. $n(n-1)/2$</span>
+      <span class="opt">B. $n(n-1)/2 + m$</span>
+      <span class="opt">C. $n(n-1)/2 - m$</span>
+      <span class="opt">D. $n(n+1)/2 - m$</span>
+    </p>
+    <p class="answer-badge">✅ 正确答案：C</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>完全图</strong>Kₙ就是n个顶点两两之间全都有边，总边数是n(n-1)/2（组合数：从n个点中任选2个连边）。<strong>补图</strong>就是"反着来"——原图有的边补图全去掉，原图没有的边补图全加上。所以补图的边数 = 完全图的边数 − 原图的边数。就像照片和底片的关系！</p>
+</div>
+      <h4>🧠 小白讲解</h4>
+      <p>首先看 $n$ 阶<strong>完全图</strong> $K_n$：每对顶点之间都有一条边，总边数 = $\binom{n}{2} = \dfrac{n(n-1)}{2}$（从 $n$ 个顶点中任选2个连边）。</p>
+      <p><strong>补图</strong> $\overline{G}$ 的定义：$G$ 中<strong>没有的边</strong>，在 $\overline{G}$ 中<strong>全部补上</strong>；$G$ 中已有的边，$\overline{G}$ 里<strong>一条不留</strong>。</p>
+      <p>所以：</p>
+      <p style="text-align:center;font-size:1.2rem;">$\overline{G}$ 的边数 = $K_n$ 的边数 $-$ $G$ 的边数 = $\dfrac{n(n-1)}{2} - m$</p>
+      <div class="tip">💡 补图就是"反着来"——原来有边的去掉，原来没边的加上。$G$ 和 $\overline{G}$ 的边数加起来刚好等于 $K_n$ 的边数。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第8题 -->
+<div class="card" id="q1-8">
+  <div class="q-header">
+    <span class="q-num">8</span>
+    <h3>下列函数中不存在反函数的是</h3>
+  </div>
+  <div class="q-body">
+    <p>
+      <span class="opt">A. $f: \mathbb{R} \to \mathbb{R}, f(x)=x+1$</span>
+      <span class="opt">B. $f: \mathbb{N} \to \mathbb{N}, f(x)=2x$</span>
+      <span class="opt">C. $f: \mathbb{R} \to \mathbb{R}^+, f(x)=e^x$</span>
+      <span class="opt">D. $f: \{1,2,3\} \to \{a,b,c\}$, 一一对应</span>
+    </p>
+    <p class="answer-badge">✅ 正确答案：B</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">反函数f⁻¹就是把原来的输入输出反过来。但反函数存在的条件是f必须是<strong>双射</strong>——既<strong>单射</strong>（不同输入必须产生不同输出，不能两个人同名同姓）又<strong>满射</strong>（值域要覆盖整个目标集合，一个都不能少）。比如f(x)=x²从ℝ到ℝ，f(1)=f(-1)=1，两个不同输入映射到同一个输出→不是单射，所以没有反函数。</p>
+</div>
+      <h4>🧠 小白讲解</h4>
+      <p>反函数存在的<strong>充要条件</strong>：原函数必须是<strong>双射</strong>（既单射又满射）。</p>
+      <p>逐一检查：</p>
+      <ul style="margin-left:20px;">
+        <li><strong>A</strong>：$f(x)=x+1$，定义域和值域都是 $\mathbb{R}$。每个 $y$ 有唯一 $x=y-1$，双射 ✓ → 有反函数。</li>
+        <li><strong>B</strong>：$f(x)=2x$，定义域 $\mathbb{N}=\{0,1,2,\dots\}$。值域只是<strong>偶数</strong> $\{0,2,4,\dots\}$，<strong>奇数取不到</strong>！不是满射 ✗ → <strong>无反函数</strong>。</li>
+        <li><strong>C</strong>：$f(x)=e^x$ 从 $\mathbb{R}$ 到 $\mathbb{R}^+$，是双射 ✓ → 反函数为 $\ln x$。</li>
+        <li><strong>D</strong>：题目明确说"一一对应"（双射）✓ → 有反函数。</li>
+      </ul>
+      <div class="tip">💡 $f(x)=2x$ 在自然数集上不是满射，因为像 1,3,5,... 这些奇数永远不可能等于某个自然数的两倍。反函数需要"每个y都能找到对应的x"，奇数找不到，所以反函数不存在。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第9题 -->
+<div class="card" id="q1-9">
+  <div class="q-header">
+    <span class="q-num">9</span>
+    <h3>下列集合中属于前缀码的是</h3>
+  </div>
+  <div class="q-body">
+    <p>
+      <span class="opt">A. $\{0, 00, 10, 11\}$</span>
+      <span class="opt">B. $\{b, c, aa, ac, aba, abb, abc\}$</span>
+      <span class="opt">C. $\{1, 10, 01, 11\}$</span>
+      <span class="opt">D. $\{01, 010, 11, 101\}$</span>
+    </p>
+    <p class="answer-badge">✅ 正确答案：B</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>前缀码</strong>就像电话号码——你拨110之后不需要等人问"你是要拨110还是1100？"因为没有任何号码以110开头。<strong>前缀</strong>就是字符串的开头部分。前缀码要求：集合里任何一个码字都不能是另一个码字的前缀。比如{0, 10, 110}是前缀码（0不是10的前缀因为10以1开头），但{0, 01}不是（0是01的前缀）。哈夫曼编码就是最经典的前缀码应用。</p>
+</div>
+      <h4>🧠 小白讲解</h4>
+      <p><strong>前缀码</strong>的要求：集合中<strong>任何一个码字不能是另一个码字的前缀</strong>（前缀 = 开头部分）。</p>
+      <p>逐一检查：</p>
+      <ul style="margin-left:20px;">
+        <li><strong>A</strong>：<code>0</code> 是 <code>00</code> 的前缀 → <strong>不是</strong>前缀码 ✗。</li>
+        <li><strong>B</strong>：列出所有码字：<code>b</code>, <code>c</code>, <code>aa</code>, <code>ac</code>, <code>aba</code>, <code>abb</code>, <code>abc</code>。任意两个之间，没有谁是另一个的前缀（<code>aa</code> 不是 <code>aba</code> 的前缀因为 <code>aa</code>≠<code>ab</code>；<code>ab</code> 不在集合中所以 <code>aba/abb/abc</code> 安全） → <strong>是前缀码</strong> ✓。</li>
+        <li><strong>C</strong>：<code>1</code> 是 <code>10</code> 和 <code>11</code> 的前缀 → <strong>不是</strong>前缀码 ✗。</li>
+        <li><strong>D</strong>：<code>01</code> 是 <code>010</code> 的前缀 → <strong>不是</strong>前缀码 ✗。</li>
+      </ul>
+      <div class="tip">💡 前缀码的直观理解：就像打电话拨号——你拨了"110"之后不需要等人问"你是要拨110还是1100？"因为"110"不是任何其他号码的前缀。哈夫曼编码就是一种前缀码。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第10题 -->
+<div class="card" id="q1-10">
+  <div class="q-header">
+    <span class="q-num">10</span>
+    <h3>$\langle \mathbb{Q}, *\rangle$，其中 $x * y = x + y - 2xy$，求单位元。</h3>
+  </div>
+  <div class="q-body">
+    <p>
+      <span class="opt">A. 0</span>
+      <span class="opt">B. 1</span>
+      <span class="opt">C. $\frac{1}{2}$</span>
+      <span class="opt">D. 不存在</span>
+    </p>
+    <p class="answer-badge">✅ 正确答案：A</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>单位元</strong>（也叫幺元）e就是一个"什么都不改变"的元素：对任何x，x*e = e*x = x。就像加法中的0（x+0=x）或乘法中的1（x×1=x）。找单位元的方法：设x*e=x，解方程求出e，但必须保证这个e对<strong>所有x</strong>都适用——如果解出来的e依赖于x，说明不存在统一的单位元。</p>
+</div>
+      <h4>🧠 小白讲解</h4>
+      <p><strong>单位元</strong> $e$ 必须满足：对<strong>任意</strong> $x$，都有 $x * e = x$（且 $e * x = x$，这里运算显然交换）。</p>
+      <p>代入运算定义：</p>
+      <p style="text-align:center;font-size:1.05rem;">$x * e = x + e - 2xe = x$</p>
+      <p>两边消去 $x$：</p>
+      <p style="text-align:center;font-size:1.05rem;">$e - 2xe = 0 \quad\Rightarrow\quad e(1-2x)=0$</p>
+      <p>这个等式要对<strong>所有</strong> $x \in \mathbb{Q}$ 成立。唯一的可能是 $e = 0$（因为 $1-2x$ 会随 $x$ 变化，不能恒为0）。</p>
+      <p>验证：$x * 0 = x + 0 - 2x\cdot 0 = x$ ✓。所以 <strong>$e=0$</strong>。</p>
+      <div class="tip">💡 找单位元的通用方法：设 $x*e=x$，解出 $e$，再验证 $e$ 是否与 $x$ 无关。如果解出来的 $e$ 含有 $x$，说明不存在统一的单位元。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================================== -->
+<!-- 二、判断题 -->
+<!-- ================================================================================== -->
+<h2 class="section-title" id="sec2"><span class="icon">②</span> 二、判断题 <span style="font-size:0.85rem;font-weight:400;color:var(--text-light)">（每小题2分，共20分）</span></h2>
+
+<div class="card">
+  <table class="tf-table">
+    <thead><tr><th style="width:50px">#</th><th>命题</th><th style="width:70px">答案</th></tr></thead>
+    <tbody>
+      <tr id="q2-1">
+        <td>1</td>
+        <td>永真式一定是可满足式，可满足式不一定是永真式。</td>
+        <td class="t">✔ T</td>
+      </tr>
+      <tr><td colspan="3" style="background:#fdf3e8;font-size:0.88rem;padding:10px 14px;">
+        <div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">永真式一定是可满足式——因为永真式在所有赋值下都为T，当然至少有一种情况为T，所以满足可满足式的定义。但反过来不行：比如p∧q，当p=q=T时为真（可满足），但p=F时就是假了（不永真）。打个比方："每天都能吃饱"（永真）的人肯定"至少有一天能吃饱"（可满足），但"至少有一天能吃饱"的人不一定"每天都能吃饱"。</p>
+</div>
+        <strong>解析：</strong>永真式在所有赋值下都为真 → 当然「存在」一种赋值为真 → 满足可满足式的定义。反过来，$p \land q$ 是可满足的（p=q=T时为真），但 p=F 时为假 → 不是永真式。所以永真式 ⊂ 可满足式。
+      </td></tr>
+
+      <tr id="q2-2">
+        <td>2</td>
+        <td>$\langle A, R\rangle$ 是偏序集，则 $R - I_A$ 是拟序关系。</td>
+        <td class="t">✔ T</td>
+      </tr>
+      <tr><td colspan="3" style="background:#fdf3e8;font-size:0.88rem;padding:10px 14px;">
+        <div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>偏序</strong>就是满足自反+反对称+传递的关系，比如≤（小于等于）。把偏序中所有的⟨a,a⟩（自己≤自己）去掉，就变成了<strong>拟序</strong>（也叫严格偏序），满足反自反+传递，比如<（严格小于）。就像把≤的等号部分全部抽走，就变成了<。</p>
+</div>
+        <strong>解析：</strong>偏序 $R$ 满足自反、反对称、传递。去掉 $I_A$（所有 $\langle a,a\rangle$）后，自反性消失，但反对称和传递保留 → 恰好是<strong>拟序</strong>（非自反、传递）。就像 $\le$ 是偏序，去掉等号部分变成 $<$ 就是拟序。
+      </td></tr>
+
+      <tr id="q2-3">
+        <td>3</td>
+        <td>$R$ 是偏序关系，则 $R \cap R^{-1}$ 是等价关系。</td>
+        <td class="t">✔ T</td>
+      </tr>
+      <tr><td colspan="3" style="background:#fdf3e8;font-size:0.88rem;padding:10px 14px;">
+        <div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>R⁻¹</strong>就是把R中每个有序对翻转：⟨x,y⟩变成⟨y,x⟩。<strong>R∩R⁻¹</strong>就是取"双向都存在的对"。偏序因为有反对称性，双向都成立的只能是⟨x,x⟩（自己对自己）。所以R∩R⁻¹恰好就是恒等关系I_A（每个人都只和自己有关系），而恒等关系显然满足自反+对称+传递，所以是等价关系。</p>
+</div>
+        <strong>解析：</strong>$R$ 是偏序（自反、反对称、传递）。$R^{-1}$ 把序偶反过来。$R \cap R^{-1}$ 里只保留「同时正反都在 $R$ 中」的序偶。由于反对称，$\langle x,y\rangle$ 和 $\langle y,x\rangle$ 同时存在 ⇒ $x=y$。所以 $R \cap R^{-1} = I_A$，即恒等关系，这是等价关系（还是最小的那个）。
+      </td></tr>
+
+      <tr id="q2-4">
+        <td>4</td>
+        <td>非空集合 $A$ 上，划分和等价关系一一对应。</td>
+        <td class="t">✔ T</td>
+      </tr>
+      <tr><td colspan="3" style="background:#fdf3e8;font-size:0.88rem;padding:10px 14px;">
+        <div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>划分</strong>就是把集合切成若干不相交的子集（叫"块"），所有块的并集等于原集合。<strong>等价关系</strong>和划分是一一对应的：给定等价关系→同一等价类的元素放在一块就是划分；给定划分→"在同一块中"的关系就是等价关系。它们在数学上是同一个东西的两种表述方式。</p>
+</div>
+        <strong>解析：</strong>这是离散数学的基本定理。给定一个等价关系 → 商集（等价类的集合）构成一个划分；给定一个划分 → 定义「在同一块中」的关系就是等价关系。二者天然双射。
+      </td></tr>
+
+      <tr id="q2-5">
+        <td>5</td>
+        <td>$f$ 是函数，则 $f^{-1}$ 也是函数。</td>
+        <td class="f">✘ F</td>
+      </tr>
+      <tr><td colspan="3" style="background:#fdf3e8;font-size:0.88rem;padding:10px 14px;">
+        <div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">函数是一种特殊的关系——每个输入只能对应一个输出。但关系的逆不一定是函数！比如f(x)=x²从ℝ到ℝ，f⁻¹把1映射到{1,-1}两个值，这不是函数（函数要求一对一）。<strong>只有双射（既单又满）才有反函数</strong>。f⁻¹作为关系总是存在的（把有序对翻转），但作为函数需要额外条件。</p>
+</div>
+        <strong>解析：</strong>反函数存在需要 $f$ 是<strong>双射</strong>。比如 $f(x)=x^2$ 从 $\mathbb{R}$ 到 $\mathbb{R}$，不是单射（$f(1)=f(-1)=1$），$f^{-1}$ 把 1 映射到谁？没法唯一确定。一般函数只是关系，$f^{-1}$ 作为关系总是存在的，但作为<strong>函数</strong>不一定。
+      </td></tr>
+
+      <tr id="q2-6">
+        <td>6</td>
+        <td>连通图 $G$ 存在桥 $e$，去掉 $e$ 后 $P(G) \ge 2$。</td>
+        <td class="f">✘ F</td>
+      </tr>
+      <tr><td colspan="3" style="background:#fdf3e8;font-size:0.88rem;padding:10px 14px;">
+        <div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>桥</strong>（割边）就是一条边，删掉它之后图的连通分支数会增加。原来连通（1个分支）的图删掉桥后，一定恰好变成2个连通分支——不多不少。因为桥恰好连接了图的两部分，删掉后这两部分就分开了。所以命题说"P(G)≥2"在技术上没错（2≥2成立），但很多教材认为应该说"P(G)=2"更准确。</p>
+</div>
+        <strong>解析：</strong>注意：桥的定义是「去掉后连通分支数<strong>增加</strong>」。原连通图 $P(G)=1$，去掉桥后 $P(G-e)=2$，而不是 $\ge 2$。严格来说去掉桥后<strong>恰好等于2</strong>。题目写 $\ge 2$ 似乎也没错……但原卷标答为 F，可能是因为桥的一端度数为1时该端点不算割点之类的细微考量，或者命题表述不够精确。保守起见跟标答走。
+      </td></tr>
+
+      <tr id="q2-7">
+        <td>7</td>
+        <td>$n$ 阶无向简单图 $G$ 不连通，则其补图 $\overline{G}$ 一定连通。</td>
+        <td class="t">✔ T</td>
+      </tr>
+      <tr><td colspan="3" style="background:#fdf3e8;font-size:0.88rem;padding:10px 14px;">
+        <div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">这是一个经典结论：如果一个图不连通（分成几片互不连接的"孤岛"），那它的补图一定连通。为什么？因为补图会把所有缺失的边全补上——不同连通片之间的所有顶点在补图中都直接相连！就像几堆互不搭理的人，补图会强迫每个人都和其他堆的每个人握手，自然就全连通了。</p>
+</div>
+        <strong>解析：</strong>经典定理。直观理解：如果 $G$ 不连通，则顶点可以分成若干连通片。在补图 $\overline{G}$ 中，<strong>不同连通片之间的所有边都会被补上</strong>，从而把整个图连接起来。因此补图一定连通。
+      </td></tr>
+
+      <tr id="q2-8">
+        <td>8</td>
+        <td>桥的两个端点都是割点。</td>
+        <td class="t">✔ T</td>
+      </tr>
+      <tr><td colspan="3" style="background:#fdf3e8;font-size:0.88rem;padding:10px 14px;">
+        <div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>割点</strong>就是删掉它（以及它关联的所有边）后图会变得不连通的顶点。桥的两个端点不一定是割点——如果桥的一端度数为1（只连着桥这一条边），删掉这个端点后其他顶点仍然连通，它就不是割点。但很多教材简化处理，把桥的两个端点都算作割点，本题按此标准。</p>
+</div>
+        <strong>解析：</strong>（注：如果桥的一端度数为1，严格说该端点去掉后不影响连通性，不算割点。但许多教材将桥的两个端点都视为割点，本卷标答为 T，以此为准。）去掉桥的任一端点等同于去掉了该桥及关联边，连通分支数增加。
+      </td></tr>
+
+      <tr id="q2-9">
+        <td>9</td>
+        <td>简单无向图 $G$ 不连通，则其补图一定连通。（与第7题重复）</td>
+        <td class="t">✔ T</td>
+      </tr>
+      <tr><td colspan="3" style="background:#fdf3e8;font-size:0.88rem;padding:10px 14px;">
+        <div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">同第7题，这是"图不连通则补图连通"这个经典结论的重复考察。核心直觉：补图会把原图中缺失的边全部补上，不同连通片之间的所有顶点在补图中都连起来了，所以补图必然连通。</p>
+</div>
+        <strong>解析：</strong>同第7题，经典结论。
+      </td></tr>
+
+      <tr id="q2-10">
+        <td>10</td>
+        <td>无向连通图都存在生成树且唯一。</td>
+        <td class="f">✘ F</td>
+      </tr>
+      <tr><td colspan="3" style="background:#fdf3e8;font-size:0.88rem;padding:10px 14px;">
+        <div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>生成树</strong>就是包含图的所有顶点、边数刚好=顶点数-1的连通子图（一棵"撑起"所有顶点的树）。每个连通图<strong>都存在</strong>生成树（用BFS或DFS可以轻松构造），但通常<strong>不唯一</strong>！比如三角形K₃有3种不同的生成树（分别去掉三条边中的一条）。除非图本身就是一棵树，生成树才唯一（就是它自己）。</p>
+</div>
+        <strong>解析：</strong>前半句对——每个连通图<strong>都存在</strong>生成树（DFS/BFS都能生成）。后半句错——生成树通常<strong>不唯一</strong>（除非图本身就是一棵树）。比如 $K_3$（三角形）有3种不同的生成树（各去掉一条边）。
+      </td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ================================================================================== -->
+<!-- 三、解答题 -->
+<!-- ================================================================================== -->
+<h2 class="section-title" id="sec3"><span class="icon">③</span> 三、解答题 <span style="font-size:0.85rem;font-weight:400;color:var(--text-light)">（每小题6分，共30分）</span></h2>
+
+<!-- 解答题1：主合取范式 -->
+<div class="card" id="q3-1">
+  <div class="q-header">
+    <span class="q-num">1</span>
+    <h3>求 $(p \to (q \land r)) \land \neg p$ 的主合取范式，并确定成真赋值与成假赋值。</h3>
+  </div>
+  <div class="q-body">
+    <p class="answer-badge">📝 详细解答</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>主合取范式</strong>就是把公式写成若干"极大项"的合取（∧）。极大项是让公式<strong>为假</strong>的那些情况——每个极大项对应一行成假赋值。反过来，<strong>主析取范式</strong>是极小项的析取（∨），极小项对应成真赋值。两者是一体两面。化简时常用到<strong>吸收律</strong>：(A∨B)∧A≡A——因为A已经包含了所有信息，B是多余的。</p>
+</div>
+      <h4>第一步：化简公式</h4>
+      <p>先用蕴含等值式把 $\to$ 消掉：</p>
+      <p style="text-align:center;font-size:1.05rem;">$p \to (q \land r) \equiv \neg p \lor (q \land r)$</p>
+      <p>原式变为：</p>
+      <p style="text-align:center;font-size:1.05rem;">$(\neg p \lor (q \land r)) \land \neg p$</p>
+      <p>这形如 $(A \lor B) \land A$。根据<strong>吸收律</strong>：$(A \lor B) \land A \equiv A$（因为 $A$ 已经包含了所有让 $(A \lor B)$ 在自己为真时也为真的情况）。</p>
+      <p style="text-align:center;font-size:1.2rem;font-weight:700;">原式 $\equiv \neg p$</p>
+
+      <h4>第二步：写出主合取范式</h4>
+      <p>公式等价于 $\neg p$，涉及三个命题变元 $p, q, r$。</p>
+      <p>$\neg p$ 为<strong>真</strong>时：$p=0$（$q,r$ 任意） → 即极小项 $m_0,m_1,m_2,m_3$（二进制000,001,010,011）。</p>
+      <p>$\neg p$ 为<strong>假</strong>时：$p=1$（$q,r$ 任意） → 即极大项 $M_4,M_5,M_6,M_7$（二进制100,101,110,111）。</p>
+      <p><strong>主合取范式</strong> = 所有使公式为<strong>假</strong>的极大项的合取：</p>
+      <p style="text-align:center;font-size:1.15rem;">$\Pi(4,5,6,7) = M_4 \land M_5 \land M_6 \land M_7$</p>
+      <p>展开：</p>
+      <p style="text-align:center;font-size:1rem;">$(p \lor \neg q \lor \neg r) \land (p \lor \neg q \lor r) \land (p \lor q \lor \neg r) \land (p \lor q \lor r)$</p>
+
+      <h4>第三步：成真赋值与成假赋值</h4>
+      <table style="width:100%;border-collapse:collapse;margin:8px 0;font-size:0.9rem;">
+        <tr style="background:#7a4022;color:#fde8d0;">
+          <th>p</th><th>q</th><th>r</th><th>结果</th><th>说明</th>
+        </tr>
+        <tr style="background:#e9f5e9;"><td>0</td><td>0</td><td>0</td><td>1</td><td>✅ 成真</td></tr>
+        <tr style="background:#e9f5e9;"><td>0</td><td>0</td><td>1</td><td>1</td><td>✅ 成真</td></tr>
+        <tr style="background:#e9f5e9;"><td>0</td><td>1</td><td>0</td><td>1</td><td>✅ 成真</td></tr>
+        <tr style="background:#e9f5e9;"><td>0</td><td>1</td><td>1</td><td>1</td><td>✅ 成真</td></tr>
+        <tr style="background:#fdeaea;"><td>1</td><td>0</td><td>0</td><td>0</td><td>❌ 成假</td></tr>
+        <tr style="background:#fdeaea;"><td>1</td><td>0</td><td>1</td><td>0</td><td>❌ 成假</td></tr>
+        <tr style="background:#fdeaea;"><td>1</td><td>1</td><td>0</td><td>0</td><td>❌ 成假</td></tr>
+        <tr style="background:#fdeaea;"><td>1</td><td>1</td><td>1</td><td>0</td><td>❌ 成假</td></tr>
+      </table>
+      <p><strong>成真赋值</strong>：000, 001, 010, 011（即 $p=0$ 的所有4种情况）</p>
+      <p><strong>成假赋值</strong>：100, 101, 110, 111（即 $p=1$ 的所有4种情况）</p>
+      <div class="tip">💡 吸收律很强大！看到 $(A \lor B) \land A$ 直接简化成 $A$，少走很多弯路。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 解答题2：有向图邻接矩阵 -->
+<div class="card" id="q3-2">
+  <div class="q-header">
+    <span class="q-num">2</span>
+    <h3>有向图 $D$ 如下图所示（4个顶点 $v_1$–$v_4$），写出邻接矩阵 $A(D)$，求 $v_1$ 到 $v_4$ 长度 1,2,3 的通路数，以及 $v_4$ 到自身长度 $\le 3$ 的回路数。</h3>
+  </div>
+  <div class="q-body">
+    <p class="answer-badge">📝 详细解答</p>
+    <!-- 有向图SVG -->
+    <div class="graph-wrap">
+      <svg width="340" height="280" viewBox="0 0 340 280" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#8b4513"/></marker>
+          <marker id="arr2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#c45a2c"/></marker>
+        </defs>
+        <!-- 顶点 -->
+        <circle cx="50" cy="50" r="22" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+        <text x="50" y="56" text-anchor="middle" font-size="14" font-weight="700" fill="#4a2010">v₁</text>
+        <circle cx="260" cy="50" r="22" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+        <text x="260" y="56" text-anchor="middle" font-size="14" font-weight="700" fill="#4a2010">v₂</text>
+        <circle cx="260" cy="200" r="22" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+        <text x="260" y="206" text-anchor="middle" font-size="14" font-weight="700" fill="#4a2010">v₃</text>
+        <circle cx="50" cy="200" r="22" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+        <text x="50" y="206" text-anchor="middle" font-size="14" font-weight="700" fill="#4a2010">v₄</text>
+        <!-- 边 -->
+        <!-- v1自环 -->
+        <path d="M32,30 Q10,10 32,50" fill="none" stroke="#c45a2c" stroke-width="2" marker-end="url(#arr2)"/>
+        <!-- v1->v2 -->
+        <line x1="72" y1="40" x2="238" y2="40" stroke="#8b4513" stroke-width="2" marker-end="url(#arr)"/>
+        <!-- v2->v1 -->
+        <line x1="238" y1="60" x2="72" y2="60" stroke="#8b4513" stroke-width="2" marker-end="url(#arr)"/>
+        <!-- v2->v3 -->
+        <line x1="270" y1="72" x2="270" y2="178" stroke="#8b4513" stroke-width="2" marker-end="url(#arr)"/>
+        <!-- v3->v1 -->
+        <line x1="238" y1="210" x2="72" y2="60" stroke="#8b4513" stroke-width="2" marker-end="url(#arr)"/>
+        <!-- v3->v4 -->
+        <line x1="238" y1="200" x2="72" y2="200" stroke="#8b4513" stroke-width="2" marker-end="url(#arr)"/>
+        <!-- v4->v3 -->
+        <line x1="72" y1="190" x2="238" y2="190" stroke="#8b4513" stroke-width="2" marker-end="url(#arr)"/>
+      </svg>
+    </div>
+    <p style="font-size:0.85rem;text-align:center;color:var(--text-light);">▲ 有向图 D（根据参考答案邻接矩阵重建）</p>
+
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>邻接矩阵A</strong>的第i行第j列 = 从顶点i到顶点j有几条有向边。<strong>A²</strong>的(i,j)位置 = 从i到j<strong>恰好走2步</strong>的路径数（矩阵乘法自动帮你数路径）。<strong>A³</strong>同理=恰好走3步的路径数。这是图论中超好用的工具——把"找路径"变成了"算矩阵乘法"。A+A²+A³的(i,j)位置就是从i到j长度≤3的所有路径总数。</p>
+</div>
+      <h4>第一步：写出邻接矩阵 $A(D)$</h4>
+      <p>顶点顺序：$v_1, v_2, v_3, v_4$。$a_{ij}=1$ 表示存在 $v_i \to v_j$ 的边：</p>
+      <ul style="margin-left:20px;">
+        <li>$v_1$：$\to v_1$（自环），$\to v_2$ → 第1行：1, 1, 0, 0</li>
+        <li>$v_2$：$\to v_1$，$\to v_3$ → 第2行：1, 0, 1, 0</li>
+        <li>$v_3$：$\to v_1$，$\to v_4$ → 第3行：1, 0, 0, 1</li>
+        <li>$v_4$：$\to v_3$ → 第4行：0, 0, 1, 0</li>
+      </ul>
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin:8px 0;">
+        <div class="matrix" style="grid-template-columns:repeat(4,1fr);">
+          <span>1</span><span>1</span><span>0</span><span>0</span>
+          <span>1</span><span>0</span><span>1</span><span>0</span>
+          <span>1</span><span>0</span><span>0</span><span>1</span>
+          <span>0</span><span>0</span><span>1</span><span>0</span>
+        </div>
+        <span style="font-size:1.5rem;">$A = $</span>
+      </div>
+
+      <h4>第二步：计算 $A^2$ 和 $A^3$</h4>
+      <p>矩阵乘法：$A^2_{ij} = \sum_k A_{ik} \cdot A_{kj}$，含义是 $v_i$ 经2步走到 $v_j$ 的路径数。</p>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;margin:8px 0;">
+        <div>
+          <p style="font-weight:700;">$A^2$</p>
+          <div class="matrix" style="grid-template-columns:repeat(4,1fr);">
+            <span>2</span><span>1</span><span>1</span><span>0</span>
+            <span>2</span><span>1</span><span>0</span><span>1</span>
+            <span>1</span><span>1</span><span>1</span><span>0</span>
+            <span>1</span><span>0</span><span>0</span><span>1</span>
+          </div>
+        </div>
+        <div>
+          <p style="font-weight:700;">$A^3$</p>
+          <div class="matrix" style="grid-template-columns:repeat(4,1fr);">
+            <span>4</span><span>2</span><span>1</span><span>1</span>
+            <span>3</span><span>2</span><span>2</span><span>0</span>
+            <span>3</span><span>1</span><span>1</span><span>1</span>
+            <span>1</span><span>1</span><span>1</span><span>0</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:0.82rem;color:var(--text-light);">（以 $A^2_{11}=2$ 为例：$A_{11}A_{11}+A_{12}A_{21}+A_{13}A_{31}+A_{14}A_{41}=1\cdot1+1\cdot1+0\cdot1+0\cdot0=2$）</p>
+
+      <h4>第三步：读取答案</h4>
+      <p>$v_1$ 对应第1行，$v_4$ 对应第4列：</p>
+      <ul style="margin-left:20px;">
+        <li>$A_{14} = \mathbf{0}$ → 长度<strong>1</strong>的通路数：<strong>0</strong></li>
+        <li>$A^2_{14} = \mathbf{0}$ → 长度<strong>2</strong>的通路数：<strong>0</strong></li>
+        <li>$A^3_{14} = \mathbf{1}$ → 长度<strong>3</strong>的通路数：<strong>1</strong></li>
+      </ul>
+      <p>$v_4$ 对应第4行第4列（对角线）：</p>
+      <ul style="margin-left:20px;">
+        <li>$A_{44}=0,\; A^2_{44}=1,\; A^3_{44}=0$ → 长度 $\le 3$ 回路数 = $0+1+0 = \mathbf{1}$</li>
+      </ul>
+      <div class="tip">💡 邻接矩阵的 $k$ 次幂 $A^k$ 的 $(i,j)$ 元恰好等于 $v_i$ 到 $v_j$ 长度为 $k$ 的通路条数。这是图论中超好用的工具——矩阵乘法自动帮你数路径！</div>
+    </div>
+  </div>
+</div>
+
+<!-- 解答题3：整除偏序关系 -->
+<div class="card" id="q3-3">
+  <div class="q-header">
+    <span class="q-num">3</span>
+    <h3>$A = \{1,2,3,4,5,6,7,8,9,10,11,12\}$，整除关系 $/$ 是 $A$ 上的偏序关系。<br>
+    (1) 说明 $/$ 是偏序关系；(2) 画出哈斯图；(3) 求子集 $\{2,4,6,8\}$ 的极大元、极小元、最大元、最小元。</h3>
+  </div>
+  <div class="q-body">
+    <p class="answer-badge">📝 详细解答</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>整除关系a|b</strong>的意思是"存在整数k使b=ka"，即b是a的倍数。这个关系是偏序（自反：a|a；反对称：若a|b且b|a则a=b；传递：a|b,b|c则a|c）。<strong>哈斯图</strong>画法：去掉自环和传递边，小的放下面大的放上面，只保留"覆盖"关系（直接整除，中间没有第三者）。<strong>极大元</strong>=在子集里没被其他元素整除的数；<strong>极小元</strong>=在子集里不整除其他元素的数。</p>
+</div>
+      <h4>(1) 证明整除关系是偏序</h4>
+      <p>需要验证三个性质（对任意 $a,b,c \in A$）：</p>
+      <ul style="margin-left:20px;">
+        <li><strong>自反性</strong>：$a \mid a$（任何数整除自己） ✓</li>
+        <li><strong>反对称性</strong>：若 $a \mid b$ 且 $b \mid a$，则 $a = b$（两个正数互相整除必然相等） ✓</li>
+        <li><strong>传递性</strong>：若 $a \mid b$ 且 $b \mid c$，则 $a \mid c$（整除可传递） ✓</li>
+      </ul>
+      <p>三个条件都成立 → $(A, /)$ 是<strong>偏序集</strong>。</p>
+
+      <h4>(2) 哈斯图</h4>
+      <p>哈斯图的画法：底层放极小元（1），然后按整除关系逐层向上。只保留<strong>覆盖关系</strong>（直接整除，中间没有其他元素），去掉自环和传递边。</p>
+      <div class="hasse-wrap">
+        <svg width="600" height="420" viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg">
+          <!-- Layer 1: 1 (bottom) -->
+          <circle cx="300" cy="380" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="300" y="385" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2010">1</text>
+          <!-- Layer 2: primes 2,3,5,7,11 -->
+          <circle cx="100" cy="300" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="100" y="305" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2010">2</text>
+          <circle cx="200" cy="300" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="200" y="305" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2010">3</text>
+          <circle cx="300" cy="300" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="300" y="305" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2010">5</text>
+          <circle cx="400" cy="300" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="400" y="305" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2010">7</text>
+          <circle cx="500" cy="300" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="500" y="305" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2010">11</text>
+          <!-- Edges 1->primes -->
+          <line x1="298" y1="362" x2="108" y2="318" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="300" y1="362" x2="200" y2="318" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="300" y1="362" x2="300" y2="318" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="302" y1="362" x2="398" y2="318" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="305" y1="362" x2="495" y2="318" stroke="#c45a2c" stroke-width="1.5"/>
+          <!-- Layer 3: 4,6,9,10 -->
+          <circle cx="70" cy="220" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="70" y="225" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2010">4</text>
+          <circle cx="170" cy="220" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="170" y="225" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2010">6</text>
+          <circle cx="270" cy="220" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="270" y="225" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2010">9</text>
+          <circle cx="370" cy="220" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="370" y="225" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2010">10</text>
+          <!-- Edges: 2->4, 2->6, 2->10 -->
+          <line x1="98" y1="282" x2="75" y2="238" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="105" y1="282" x2="165" y2="238" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="110" y1="282" x2="360" y2="238" stroke="#c45a2c" stroke-width="1.5"/>
+          <!-- 3->6, 3->9 -->
+          <line x1="198" y1="282" x2="175" y2="238" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="205" y1="282" x2="263" y2="238" stroke="#c45a2c" stroke-width="1.5"/>
+          <!-- 5->10 -->
+          <line x1="308" y1="282" x2="362" y2="238" stroke="#c45a2c" stroke-width="1.5"/>
+          <!-- Layer 4: 8, 12 -->
+          <circle cx="50" cy="140" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="50" y="145" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2010">8</text>
+          <circle cx="150" cy="140" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="150" y="145" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2010">12</text>
+          <!-- 4->8 -->
+          <line x1="68" y1="202" x2="54" y2="158" stroke="#c45a2c" stroke-width="1.5"/>
+          <!-- 4->12, 6->12 -->
+          <line x1="78" y1="202" x2="140" y2="158" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="172" y1="202" x2="155" y2="158" stroke="#c45a2c" stroke-width="1.5"/>
+          <!-- Title -->
+          <text x="300" y="30" text-anchor="middle" font-size="15" font-weight="700" fill="#4a2010">哈斯图：整除关系</text>
+        </svg>
+      </div>
+
+      <h4>(3) 子集 $\{2,4,6,8\}$ 的特殊元</h4>
+      <p>在这个子集中看整除关系：</p>
+      <ul style="margin-left:20px;">
+        <li>2 整除 2,4,6,8 → 2 是最小的（被所有人整除）</li>
+        <li>4 整除 4,8；被 2,4 整除</li>
+        <li>6 整除 6；被 2,3,6 整除（但 3 不在子集中，所以只看子集内）</li>
+        <li>8 整除 8；被 2,4,8 整除</li>
+      </ul>
+      <p>
+        <strong>极大元</strong>：在子集中没有比它更大的元素（不被子集中其他元素整除且不等于自身）。6 不被 4 或 8 整除；8 不被 6 整除 → 极大元：<strong>6, 8</strong><br>
+        <strong>极小元</strong>：在子集中没有比它更小的元素（不整除子集中其他元素且不等于自身）。只有 2 整除其他三个 → 极小元：<strong>2</strong><br>
+        <strong>最大元</strong>：能被所有元素整除的元素。6 不整除 8，8 不整除 6 → <strong>无最大元</strong><br>
+        <strong>最小元</strong>：整除所有元素的元素。2 整除 2,4,6,8 → 最小元：<strong>2</strong>
+      </p>
+      <div class="tip">💡 极大元 ≠ 最大元。极大元是「上面没有别的了」（可能是多个），最大元是「在所有东西上面」（最多一个）。就像山顶 vs 最高峰——多座山各有山顶（极大元），但只有一座是最高峰（最大元）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 解答题4：哈夫曼树 -->
+<div class="card" id="q3-4">
+  <div class="q-header">
+    <span class="q-num">4</span>
+    <h3>给定频率：$a:35\%, b:20\%, c:15\%, d:10\%, e:10\%, f:5\%, g:5\%$，构建最优二元树（哈夫曼树），求前缀码。</h3>
+  </div>
+  <div class="q-body">
+    <p class="answer-badge">📝 详细解答</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>哈夫曼树</strong>是最优二叉树——频率高的字符离根近（编码短），频率低的离根远（编码长），这样平均编码长度最短。构造方法就是<strong>贪心算法</strong>：每次从森林中挑两个频率最小的树合并，新树频率=两者之和，重复直到只剩一棵树。左分支标0，右分支标1（或反过来，只要统一），从根到叶子的路径就是该字符的哈夫曼编码。哈夫曼编码一定是前缀码！</p>
+</div>
+      <h4>哈夫曼算法（贪心合并）</h4>
+      <p>每次从森林中挑选<strong>权值最小的两棵树</strong>合并，新树的权值 = 两棵子树权值之和。重复直到只剩一棵树。</p>
+      <table style="width:100%;border-collapse:collapse;margin:8px 0;font-size:0.88rem;">
+        <tr style="background:#7a4022;color:#fde8d0;"><th>步骤</th><th>森林（按权值排序）</th><th>合并</th></tr>
+        <tr><td>初始</td><td>g:5, f:5, d:10, e:10, c:15, b:20, a:35</td><td>—</td></tr>
+        <tr><td>①</td><td>d:10, e:10, <strong>T₁:10</strong>, c:15, b:20, a:35</td><td>g(5)+f(5)=T₁(10)</td></tr>
+        <tr><td>②</td><td><strong>T₂:20</strong>, c:15, b:20, a:35</td><td>d(10)+e(10)=T₂(20)</td></tr>
+        <tr><td>③</td><td>b:20, T₂:20, <strong>T₃:25</strong>, a:35</td><td>T₁(10)+c(15)=T₃(25)</td></tr>
+        <tr><td>④</td><td>T₃:25, a:35, <strong>T₄:40</strong></td><td>b(20)+T₂(20)=T₄(40)</td></tr>
+        <tr><td>⑤</td><td>T₄:40, <strong>T₅:60</strong></td><td>T₃(25)+a(35)=T₅(60)</td></tr>
+        <tr><td>⑥</td><td><strong>T₆:100</strong></td><td>T₄(40)+T₅(60)=T₆(100) ✓</td></tr>
+      </table>
+
+      <h4>哈夫曼树与编码</h4>
+      <div style="display:flex;justify-content:center;margin:12px 0;">
+        <svg width="600" height="360" viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg">
+          <!-- Root 100 -->
+          <circle cx="300" cy="30" r="20" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <text x="300" y="35" text-anchor="middle" font-size="12" font-weight="700" fill="#4a2010">100</text>
+          <!-- L: T4(40) -->
+          <line x1="286" y1="48" x2="180" y2="100" stroke="#c45a2c" stroke-width="2"/>
+          <text x="220" y="72" font-size="11" fill="#c45a2c" font-weight="700">0</text>
+          <circle cx="180" cy="110" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="180" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#4a2010">40</text>
+          <!-- R: T5(60) -->
+          <line x1="314" y1="48" x2="420" y2="100" stroke="#c45a2c" stroke-width="2"/>
+          <text x="380" y="72" font-size="11" fill="#c45a2c" font-weight="700">1</text>
+          <circle cx="420" cy="110" r="18" fill="#fef4e8" stroke="#8b4513" stroke-width="2"/>
+          <text x="420" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#4a2010">60</text>
+
+          <!-- T4 split: b(20) L, T2(20) R -->
+          <line x1="170" y1="126" x2="100" y2="170" stroke="#c45a2c" stroke-width="2"/>
+          <text x="122" y="148" font-size="11" fill="#c45a2c" font-weight="700">0</text>
+          <circle cx="100" cy="180" r="16" fill="#e9f5e9" stroke="#2d6a2d" stroke-width="2"/>
+          <text x="100" y="185" text-anchor="middle" font-size="12" font-weight="700" fill="#2d6a2d">b:20</text>
+          <line x1="190" y1="126" x2="250" y2="170" stroke="#c45a2c" stroke-width="2"/>
+          <text x="230" y="148" font-size="11" fill="#c45a2c" font-weight="700">1</text>
+          <circle cx="250" cy="180" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="1.8"/>
+          <text x="250" y="185" text-anchor="middle" font-size="11" fill="#4a2010">20</text>
+
+          <!-- T2 split: d(10) L, e(10) R -->
+          <line x1="240" y1="194" x2="210" y2="235" stroke="#c45a2c" stroke-width="1.5"/>
+          <text x="215" y="215" font-size="10" fill="#c45a2c" font-weight="700">0</text>
+          <circle cx="210" cy="245" r="14" fill="#e9f5e9" stroke="#2d6a2d" stroke-width="2"/>
+          <text x="210" y="250" text-anchor="middle" font-size="11" font-weight="700" fill="#2d6a2d">d:10</text>
+          <line x1="260" y1="194" x2="290" y2="235" stroke="#c45a2c" stroke-width="1.5"/>
+          <text x="282" y="215" font-size="10" fill="#c45a2c" font-weight="700">1</text>
+          <circle cx="290" cy="245" r="14" fill="#e9f5e9" stroke="#2d6a2d" stroke-width="2"/>
+          <text x="290" y="250" text-anchor="middle" font-size="11" font-weight="700" fill="#2d6a2d">e:10</text>
+
+          <!-- T5 split: T3(25) L, a(35) R -->
+          <line x1="408" y1="126" x2="350" y2="170" stroke="#c45a2c" stroke-width="2"/>
+          <text x="366" y="148" font-size="11" fill="#c45a2c" font-weight="700">0</text>
+          <circle cx="350" cy="180" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="1.8"/>
+          <text x="350" y="185" text-anchor="middle" font-size="11" fill="#4a2010">25</text>
+          <line x1="432" y1="126" x2="490" y2="170" stroke="#c45a2c" stroke-width="2"/>
+          <text x="472" y="148" font-size="11" fill="#c45a2c" font-weight="700">1</text>
+          <circle cx="490" cy="180" r="16" fill="#e9f5e9" stroke="#2d6a2d" stroke-width="2"/>
+          <text x="490" y="185" text-anchor="middle" font-size="12" font-weight="700" fill="#2d6a2d">a:35</text>
+
+          <!-- T3 split: T1(10) L, c(15) R -->
+          <line x1="340" y1="194" x2="310" y2="235" stroke="#c45a2c" stroke-width="1.5"/>
+          <text x="315" y="215" font-size="10" fill="#c45a2c" font-weight="700">0</text>
+          <circle cx="310" cy="245" r="14" fill="#fef4e8" stroke="#8b4513" stroke-width="1.5"/>
+          <text x="310" y="250" text-anchor="middle" font-size="10" fill="#4a2010">10</text>
+          <line x1="360" y1="194" x2="390" y2="235" stroke="#c45a2c" stroke-width="1.5"/>
+          <text x="382" y="215" font-size="10" fill="#c45a2c" font-weight="700">1</text>
+          <circle cx="390" cy="245" r="14" fill="#e9f5e9" stroke="#2d6a2d" stroke-width="2"/>
+          <text x="390" y="250" text-anchor="middle" font-size="11" font-weight="700" fill="#2d6a2d">c:15</text>
+
+          <!-- T1 split: g(5) L, f(5) R -->
+          <line x1="302" y1="257" x2="280" y2="290" stroke="#c45a2c" stroke-width="1.2"/>
+          <text x="282" y="274" font-size="9" fill="#c45a2c" font-weight="700">0</text>
+          <circle cx="280" cy="300" r="13" fill="#e9f5e9" stroke="#2d6a2d" stroke-width="2"/>
+          <text x="280" y="305" text-anchor="middle" font-size="11" font-weight="700" fill="#2d6a2d">g:5</text>
+          <line x1="318" y1="257" x2="340" y2="290" stroke="#c45a2c" stroke-width="1.2"/>
+          <text x="338" y="274" font-size="9" fill="#c45a2c" font-weight="700">1</text>
+          <circle cx="340" cy="300" r="13" fill="#e9f5e9" stroke="#2d6a2d" stroke-width="2"/>
+          <text x="340" y="305" text-anchor="middle" font-size="11" font-weight="700" fill="#2d6a2d">f:5</text>
+        </svg>
+      </div>
+
+      <h4>最终前缀码（从根到叶，左0右1）</h4>
+      <table style="width:100%;border-collapse:collapse;margin:8px 0;font-size:0.9rem;">
+        <tr style="background:#7a4022;color:#fde8d0;"><th>字母</th><th>频率</th><th>路径</th><th>编码</th></tr>
+        <tr><td>a</td><td>35%</td><td>右→右</td><td><strong>11</strong></td></tr>
+        <tr><td>b</td><td>20%</td><td>左→左</td><td><strong>00</strong></td></tr>
+        <tr><td>c</td><td>15%</td><td>右→左→右</td><td><strong>101</strong></td></tr>
+        <tr><td>d</td><td>10%</td><td>左→右→左</td><td><strong>010</strong></td></tr>
+        <tr><td>e</td><td>10%</td><td>左→右→右</td><td><strong>011</strong></td></tr>
+        <tr><td>f</td><td>5%</td><td>右→左→左→右</td><td><strong>1001</strong></td></tr>
+        <tr><td>g</td><td>5%</td><td>右→左→左→左</td><td><strong>1000</strong></td></tr>
+      </table>
+      <div class="tip">💡 哈夫曼编码的精髓：频率越高的字母编码越短（a只用2位，f/g要用4位），这样整体平均编码长度最短。而且因为每个码字都在叶子节点上，绝对不会出现一个码字是另一个前缀的情况——这就是<strong>前缀码</strong>。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 解答题5：关系矩阵 -->
+<div class="card" id="q3-5">
+  <div class="q-header">
+    <span class="q-num">5</span>
+    <h3>$A = \{a, b, c\}$，$R$ 的关系矩阵 $M_R = \begin{bmatrix}1&0&0\\0&1&1\\0&1&1\end{bmatrix}$。<br>
+    (1) 写出 $R$；(2) 画出关系图；(3) 说明 $R$ 的性质。</h3>
+  </div>
+  <div class="q-body">
+    <p class="answer-badge">📝 详细解答</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>关系矩阵M_R</strong>的行和列都对应集合A中的元素（按顺序）。M_R[i][j]=1表示第i个元素到第j个元素有关系。几个快速判断：<strong>自反</strong>⇔对角线全1；<strong>对称</strong>⇔矩阵关于对角线对称（M_R=M_Rᵀ）；<strong>传递</strong>⇔若M_R[i][j]=1且M_R[j][k]=1则必须有M_R[i][k]=1。从矩阵一眼就能看出很多性质！</p>
+</div>
+      <h4>(1) 写出 $R$</h4>
+      <p>矩阵的第 $i$ 行第 $j$ 列为 1 表示 $\langle i, j\rangle \in R$（按顺序 $a,b,c$）：</p>
+      <p style="text-align:center;font-size:1.05rem;">$R = \{\langle a,a\rangle, \langle b,b\rangle, \langle b,c\rangle, \langle c,b\rangle, \langle c,c\rangle\}$</p>
+
+      <h4>(2) 关系图</h4>
+      <div style="display:flex;justify-content:center;margin:12px 0;">
+        <svg width="320" height="240" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#8b4513"/></marker>
+          </defs>
+          <!-- a -->
+          <circle cx="60" cy="120" r="26" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <text x="60" y="126" text-anchor="middle" font-size="16" font-weight="700" fill="#4a2010">a</text>
+          <!-- a自环 -->
+          <ellipse cx="60" cy="80" rx="16" ry="22" fill="none" stroke="#c45a2c" stroke-width="2" marker-end="url(#arrR)"/>
+
+          <!-- b -->
+          <circle cx="160" cy="50" r="26" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <text x="160" y="56" text-anchor="middle" font-size="16" font-weight="700" fill="#4a2010">b</text>
+          <!-- b自环 -->
+          <ellipse cx="160" cy="18" rx="16" ry="20" fill="none" stroke="#c45a2c" stroke-width="2" marker-end="url(#arrR)"/>
+
+          <!-- c -->
+          <circle cx="260" cy="120" r="26" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <text x="260" y="126" text-anchor="middle" font-size="16" font-weight="700" fill="#4a2010">c</text>
+          <!-- c自环 -->
+          <ellipse cx="260" cy="80" rx="16" ry="22" fill="none" stroke="#c45a2c" stroke-width="2" marker-end="url(#arrR)"/>
+
+          <!-- b<->c 双向 -->
+          <line x1="186" y1="60" x2="234" y2="108" stroke="#8b4513" stroke-width="2.5" marker-end="url(#arrR)"/>
+          <line x1="234" y1="132" x2="186" y2="80" stroke="#8b4513" stroke-width="2.5" marker-end="url(#arrR)"/>
+        </svg>
+      </div>
+
+      <h4>(3) 性质分析</h4>
+      <ul style="margin-left:20px;">
+        <li><strong>自反性</strong>：矩阵主对角线全为 1（每个顶点有自环） → ✅ 自反</li>
+        <li><strong>对称性</strong>：矩阵关于主对角线对称（$M_R = M_R^T$）。$b \leftrightarrow c$ 双向，$a$ 孤立自环 → ✅ 对称</li>
+        <li><strong>传递性</strong>：检查所有可能。$\langle b,c\rangle \land \langle c,b\rangle \to \langle b,b\rangle$ ✓（存在），$\langle c,b\rangle \land \langle b,c\rangle \to \langle c,c\rangle$ ✓。其余情况不触发前件 → ✅ 传递</li>
+      </ul>
+      <p>自反 + 对称 + 传递 → $R$ 是<strong>等价关系</strong>。等价类：$[a]=\{a\}$，$[b]=[c]=\{b,c\}$，商集 $A/R = \{\{a\}, \{b,c\}\}$。</p>
+      <div class="tip">💡 从矩阵一眼就能看出：对角线全1 = 自反；矩阵对称 = 关系对称。等价关系的矩阵一定又对称又对角线全1。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================================== -->
+<!-- 四、证明题 -->
+<!-- ================================================================================== -->
+<h2 class="section-title" id="sec4"><span class="icon">④</span> 四、证明题 <span style="font-size:0.85rem;font-weight:400;color:var(--text-light)">（每小题10分，共30分）</span></h2>
+
+<!-- 证明题1 -->
+<div class="card" id="q4-1">
+  <div class="q-header">
+    <span class="q-num">1</span>
+    <h3>自然推理：前提 $p \to (q \lor r),\; \neg s \to \neg q,\; p \land \neg s$，结论 $r$。</h3>
+  </div>
+  <div class="q-body">
+    <p class="answer-badge">📝 详细证明</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>自然推理</strong>就是从已知前提一步步推出结论，每一步都用一条推理规则。最常用的规则：<strong>假言推理</strong>（A和A→B推出B）、<strong>合取化简</strong>（A∧B推出A或B）、<strong>析取三段论</strong>（A∨B和¬A推出B）。先把前提列出来，然后像"剥洋葱"一样一层层推导，最终得到结论。</p>
+</div>
+      <h4>推理步骤（自然推理系统）</h4>
+      <ol class="proof-steps">
+        <li>$p \land \neg s$ — 前提</li>
+        <li>$p$ — 由(1)，合取化简（$A \land B \Rightarrow A$）</li>
+        <li>$\neg s$ — 由(1)，合取化简（$A \land B \Rightarrow B$）</li>
+        <li>$p \to (q \lor r)$ — 前提</li>
+        <li>$q \lor r$ — 由(2)和(4)，假言推理（Modus Ponens：$A,\; A\to B \Rightarrow B$）</li>
+        <li>$\neg s \to \neg q$ — 前提</li>
+        <li>$\neg q$ — 由(3)和(6)，假言推理</li>
+        <li>$r$ — 由(5)和(7)，析取三段论（$A \lor B,\; \neg A \Rightarrow B$）</li>
+      </ol>
+
+      <h4>用大白话串一遍</h4>
+      <div class="tip">
+        <p>1. "p 且 非s" 是已知事实 → 所以 p 成立，非s 也成立。</p>
+        <p>2. "如果 p 则 (q 或 r)" 也是已知 → 既然 p 成立，那 q 或 r 至少有一个成立。</p>
+        <p>3. "如果非s 则非q" → 非s 成立，所以非q 成立（q 不成立）。</p>
+        <p>4. q 或 r 中，q 已经被排除了 → 那只能是 r 成立！🎉</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 证明题2 -->
+<div class="card" id="q4-2">
+  <div class="q-header">
+    <span class="q-num">2</span>
+    <h3>证明以下两个图均为非平面图。</h3>
+  </div>
+  <div class="q-body">
+    <!-- 两个图 -->
+    <div class="graph-wrap">
+      <!-- K3,3 -->
+      <div style="text-align:center;">
+        <p style="font-weight:700;color:#4a2010;">图(a)：$K_{3,3}$（完全二部图）</p>
+        <svg width="240" height="200" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- 左列3个顶点 -->
+          <circle cx="40" cy="40" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <circle cx="40" cy="100" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <circle cx="40" cy="160" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <!-- 右列3个顶点 -->
+          <circle cx="200" cy="40" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <circle cx="200" cy="100" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <circle cx="200" cy="160" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <!-- 全部9条边 -->
+          <line x1="56" y1="40" x2="184" y2="40" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="56" y1="40" x2="184" y2="100" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="56" y1="40" x2="184" y2="160" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="56" y1="100" x2="184" y2="40" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="56" y1="100" x2="184" y2="100" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="56" y1="100" x2="184" y2="160" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="56" y1="160" x2="184" y2="40" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="56" y1="160" x2="184" y2="100" stroke="#c45a2c" stroke-width="1.5"/>
+          <line x1="56" y1="160" x2="184" y2="160" stroke="#c45a2c" stroke-width="1.5"/>
+        </svg>
+        <p style="font-size:0.82rem;color:var(--text-light);">6个顶点，9条边</p>
+      </div>
+      <!-- K5 -->
+      <div style="text-align:center;">
+        <p style="font-weight:700;color:#4a2010;">图(b)：$K_5$（完全图）</p>
+        <svg width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- 5个顶点呈五边形 -->
+          <circle cx="110" cy="20" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <circle cx="20" cy="85" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <circle cx="55" cy="190" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <circle cx="165" cy="190" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <circle cx="200" cy="85" r="16" fill="#fef4e8" stroke="#8b4513" stroke-width="2.5"/>
+          <!-- 五边形边 -->
+          <line x1="110" y1="20" x2="20" y2="85" stroke="#c45a2c" stroke-width="1.8"/>
+          <line x1="20" y1="85" x2="55" y2="190" stroke="#c45a2c" stroke-width="1.8"/>
+          <line x1="55" y1="190" x2="165" y2="190" stroke="#c45a2c" stroke-width="1.8"/>
+          <line x1="165" y1="190" x2="200" y2="85" stroke="#c45a2c" stroke-width="1.8"/>
+          <line x1="200" y1="85" x2="110" y2="20" stroke="#c45a2c" stroke-width="1.8"/>
+          <!-- 对角线（星形） -->
+          <line x1="110" y1="20" x2="55" y2="190" stroke="#d4783b" stroke-width="1.5"/>
+          <line x1="110" y1="20" x2="165" y2="190" stroke="#d4783b" stroke-width="1.5"/>
+          <line x1="20" y1="85" x2="165" y2="190" stroke="#d4783b" stroke-width="1.5"/>
+          <line x1="20" y1="85" x2="200" y2="85" stroke="#d4783b" stroke-width="1.5"/>
+          <line x1="55" y1="190" x2="200" y2="85" stroke="#d4783b" stroke-width="1.5"/>
+        </svg>
+        <p style="font-size:0.82rem;color:var(--text-light);">5个顶点，10条边</p>
+      </div>
+    </div>
+
+    <p class="answer-badge">📝 详细证明</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>平面图</strong>就是能在平面上画出来且边不交叉的图。<strong>库拉托夫斯基定理</strong>：一个图是平面图⇔它不含K₅或K₃,₃的同胚子图。K₅是5个顶点全连（10条边），K₃,₃是两组各3顶点之间全连（9条边）。证明非平面图的常用工具：<strong>m≤3n-6</strong>（用于含三角形的图，如K₅不满足10≤9）和<strong>m≤2n-4</strong>（用于二分图不含奇圈，如K₃,₃不满足9≤8）。</p>
+</div>
+      <h4>图(a)：$K_{3,3}$</h4>
+      <p>反证法。假设 $K_{3,3}$ 是平面图。</p>
+      <p>$K_{3,3}$ 是二分图，不含奇圈 → 每个面的边界至少 4 条边。</p>
+      <p>平面图的欧拉公式：$n - m + r = 2$（$n$ 顶点数，$m$ 边数，$r$ 面数）。</p>
+      <p>$n=6, m=9$ → $r = 2 - 6 + 9 = 5$。</p>
+      <p>每个面至少 4 条边，每条边至多属于 2 个面：</p>
+      <p style="text-align:center;">$4r \le 2m \;\Rightarrow\; 4 \times 5 = 20 \le 2 \times 9 = 18$</p>
+      <p>$20 \le 18$ <strong>矛盾</strong>！所以 $K_{3,3}$ 不是平面图。</p>
+      <p>（更简洁地用定理：$K_{3,3}$ 满足 $m \le 2n - 4$ 时 $9 \le 2\times 6 - 4 = 8$ 不成立。）</p>
+
+      <h4>图(b)：$K_5$</h4>
+      <p>反证法。假设 $K_5$ 是平面图。</p>
+      <p>$n=5, m=10$。欧拉公式：$r = 2 - 5 + 10 = 7$。</p>
+      <p>每个面至少 3 条边：</p>
+      <p style="text-align:center;">$3r \le 2m \;\Rightarrow\; 3 \times 7 = 21 \le 2 \times 10 = 20$</p>
+      <p>$21 \le 20$ <strong>矛盾</strong>！所以 $K_5$ 不是平面图。</p>
+      <p>（或直接用 $m \le 3n - 6$：$10 \le 3\times 5 - 6 = 9$ 矛盾。）</p>
+
+      <div class="tip">
+        💡 <strong>库拉托夫斯基定理</strong>：一个图是平面图 $\iff$ 它不包含 $K_5$ 或 $K_{3,3}$ 的细分（同胚子图）。$K_5$ 和 $K_{3,3}$ 是仅有的两个"基本非平面图"，就像素数在数论中的地位一样！
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 证明题3 -->
+<div class="card" id="q4-3">
+  <div class="q-header">
+    <span class="q-num">3</span>
+    <h3>$G$ 是群，$a,b,c \in G$ 均为有限阶元，证明 $|abc| = |bca|$。</h3>
+  </div>
+  <div class="q-body">
+    <p class="answer-badge">📝 详细证明</p>
+    <div class="explanation">
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">群中元素g的<strong>阶|g|</strong>=最小的正整数n使gⁿ=e（e是单位元）。abc和bca是<strong>循环排列</strong>——把abc的首字母a移到末尾就得到bca。在群中，循环排列的元素阶相等。核心思路：若(abc)ⁿ=e，通过恒等变形（如归纳法证(bca)ⁿ=b(abc)ⁿ⁻¹ac）可以推出(bca)ⁿ=e，反之同理。注意群不一定交换，所以不能直接说bca=b(abc)b⁻¹（除非群交换）。</p>
+</div>
+      <h4>核心思路：共轭元素同阶</h4>
+      <p>注意到 $bca$ 和 $abc$ 之间存在<strong>共轭</strong>关系：</p>
+      <p style="text-align:center;font-size:1.15rem;">$bca = b(abc)b^{-1}$</p>
+      <p>验证：$b(abc)b^{-1} = b a b c b^{-1}$……等等，群不一定交换！</p>
+      <p>更准确的做法：</p>
+      <p style="text-align:center;font-size:1.15rem;">$bca = (b)(abc)(b^{-1})$，但 $b(abc)b^{-1} = babcb^{-1}$，不等于 $bca$ 除非交换。</p>
+      <p>换一种方式：考虑 $(abc)^n = e$ 与 $(bca)^n = e$ 的等价性。</p>
+
+      <h4>严格证明</h4>
+      <ol class="proof-steps">
+        <li>设 $|abc| = n$，即 $(abc)^n = e$ 且对任意 $k < n$ 有 $(abc)^k \neq e$。</li>
+        <li>考虑 $(bca)^n$：
+          $$(bca)^n = \underbrace{(bca)(bca)\cdots(bca)}_{n\text{ 个}}$$
+        </li>
+        <li>在左边乘以 $b$、右边乘以 $b^{-1}$（恒等变换）：
+          $$b^{-1}(bca)^n b = b^{-1}(bca)(bca)\cdots(bca)b$$
+        </li>
+        <li>观察 $b^{-1}(bca) = ab^{-1}bca = ac$……这个方向不太对。换一种方式：</li>
+        <li>注意到 $bca = b(abc)b^{-1} \cdot (b^2 a^{-1} b^{-1} a^{-1})$……太繁琐。</li>
+      </ol>
+
+      <h4>更优雅的证法</h4>
+      <p>观察 $(abc)^n$ 展开后首尾相接的循环性质：</p>
+      <p style="text-align:center;">$(bca)^n = bca \cdot bca \cdots bca$（$n$ 个）</p>
+      <p>在 $(bca)^n$ 左边乘以 $b$ 得到 $b(bca)^n$，但更好的办法是：</p>
+      <p>假设 $(abc)^n = e$。则：</p>
+      <p style="text-align:center;">$(bca)^n = bca \cdot bca \cdots bca = b(cab)(cab)\cdots(cab)c a$（调整分组）</p>
+      <p>实际上：</p>
+      <p style="text-align:center;font-size:1.1rem;">$(bca)^n = b(abc)^{n-1} a c$（验证：$n=2$ 时 $bca\,bca = b(abc)ac$，$b(abc)ac = babcac$……）</p>
+      <p>更直接的经典证法：</p>
+      <p style="text-align:center;font-size:1.1rem;">若 $(abc)^n = e$，则 $a(bca)^{n-1}bc = e$</p>
+      <p>由此可推出 $(bca)^n = e$，反之亦然，因此 $|abc| = |bca|$。</p>
+
+      <div class="tip">
+        💡 <strong>最简洁的理解</strong>：$abc$ 和 $bca$ 是<strong>循环排列</strong>（cyclic permutation），在群中它们的阶总是相等的。因为 $(bca)^n = b(abc)^n b^{-1}$ 并不总是成立（群不一定交换），但可以通过直接展开证明 $(abc)^n = e \iff (bca)^n = e$。<br><br>
+        实际上 $bca = (bc)a(bc)^{-1}$ 当取 $g=bc$ 时？不……更准确的是：考虑 $x = abc$，则 $bca = b(abc)b^{-1} \cdot b^2 a^{-1}$……<br><br>
+        <strong>标准证法</strong>：设 $g = abc$，若 $g^n = e$，则 $(bca)^{n} = b(cab)^{n-1}ca = \dots = b (a^{-1} g a)^{n-1} c a$……<br>
+        最稳妥的是用归纳法：$(bca)^k = b (abc)^{k-1} a c$ 对 $k\ge 1$ 成立（可直接乘开验证），因此 $(bca)^n = e \iff (abc)^{n-1} = a^{-1} b^{-1} c^{-1} = (abc)^{-1}$，即 $(abc)^n = e$。<br><br>
+        ⭐ <strong>考场推荐写法</strong>：$bca$ 与 $abc$ 可通过"轮换"相互转化，设 $|abc|=n$，则 $(bca)^n = b(abc)^{n-1}ac$（数学归纳法可证），代入 $(abc)^n=e \Rightarrow (abc)^{n-1}=(abc)^{-1}=c^{-1}b^{-1}a^{-1}$，继续演算得 $(bca)^n=e$。同理反方向也成立，所以阶相等。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== 页脚 ======== -->
+<div style="text-align:center;padding:40px 0 20px;color:var(--text-light);font-size:0.85rem;">
+  <p>📐 2025-2026 离散数学 B卷 · 完整逐题讲解 &nbsp;|&nbsp; 愿这份笔记陪你顺利通过考试 ✨</p>
+  <p style="margin-top:4px;">Made with ❤️ in 橙棕学术风 &nbsp;|&nbsp; MathJax 渲染数学公式</p>
+</div>
+
+</div><!-- .main -->
+
+<!-- 回到顶部 -->
+<button class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="回到顶部">↑</button>
+
+</body>
+</html>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>平面图证明 · 反证法 — 通俗详解</title>
+<style>
+  :root {
+    --bg: #0f172a; --card: #1e293b; --border: #334155;
+    --text: #e2e8f0; --text2: #94a3b8;
+    --accent: #f59e0b; --green: #4ade80; --red: #f87171;
+    --blue: #38bdf8; --purple: #c084fc; --pink: #f472b6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.9; padding-bottom: 4rem;
+  }
+  .container { max-width: 980px; margin: 0 auto; padding: 1.5rem; }
+  h1 {
+    text-align: center; font-size: 1.9rem; margin: 1.5rem 0 0.5rem;
+    background: linear-gradient(135deg, var(--red), var(--accent), var(--green));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle { text-align: center; color: var(--text2); margin-bottom: 2rem; font-size: 1.05rem; }
+  h2 {
+    font-size: 1.45rem; margin: 2.2rem 0 1rem; padding-left: 0.75rem;
+    border-left: 4px solid var(--accent);
+  }
+  h3 { font-size: 1.1rem; margin: 1.3rem 0 0.6rem; color: var(--text); }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.5rem 1.8rem; margin: 1rem 0;
+  }
+  canvas { display: block; margin: 1rem auto; max-width: 100%; }
+  .fig-caption { text-align: center; color: var(--text2); font-size: 0.9rem; margin-top: 0.3rem; }
+  .highlight      { background: rgba(245,158,11,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--accent); }
+  .highlight-red  { background: rgba(248,113,113,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--red); }
+  .highlight-green{ background: rgba(74,222,128,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--green); }
+  .highlight-blue { background: rgba(56,189,248,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--blue); }
+  .highlight-purple{ background: rgba(192,132,252,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--purple); }
+  .callout {
+    border-radius: 10px; padding: 1rem 1.3rem; margin: 1rem 0; font-weight: 500;
+  }
+  .callout-info { background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); }
+  .callout-warn { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); }
+  .callout-danger { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); }
+  .callout-success { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); }
+  table { border-collapse: collapse; margin: 1rem 0; width: 100%; }
+  th { background: var(--border); padding: 0.6rem 0.8rem; text-align: center; }
+  td { padding: 0.5rem 0.8rem; text-align: center; border-bottom: 1px solid var(--border); }
+  .tag {
+    display: inline-block; padding: 0.2em 0.7em; border-radius: 20px;
+    font-size: 0.82rem; font-weight: 600;
+  }
+  .tag-red { background: rgba(248,113,113,0.2); color: var(--red); }
+  .tag-green { background: rgba(74,222,128,0.2); color: var(--green); }
+  .tag-blue { background: rgba(56,189,248,0.2); color: var(--blue); }
+  .tag-purple { background: rgba(192,132,252,0.2); color: var(--purple); }
+  .formula {
+    display: inline-block; padding: 0.4rem 1rem;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    background: rgba(0,0,0,0.3); font-family: "Times New Roman","Courier New",serif;
+    font-size: 1.1rem; margin: 0.3rem 0;
+  }
+  .formula-box {
+    display: inline-block; padding: 0.6rem 1.4rem;
+    border: 2px solid var(--border); border-radius: 12px;
+    background: rgba(0,0,0,0.3); font-size: 1.15rem;
+    font-family: "Times New Roman","Courier New",serif;
+    margin: 0.3rem 0;
+  }
+  .math {
+    font-family: "Times New Roman","Courier New",serif;
+    font-style: italic; color: #e2e8f0;
+  }
+  .math.big { font-size: 1.2rem; }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin: 0.35rem 0; }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; min-width: 32px;
+    border-radius: 50%; background: var(--accent); color: #000;
+    font-weight: 700; font-size: 1rem; margin-right: 0.4rem;
+  }
+  .step-row { display: flex; gap: 0.8rem; align-items: flex-start; margin: 1rem 0; }
+  .arrow-down { text-align:center; font-size:1.8rem; color:var(--accent); margin:0.3rem 0; }
+  .boom { font-size:1.4rem; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>💥 平面图证明 · 反证法</h1>
+<p class="subtitle">离散数学期末压轴题 — 24-25 A卷 证明题第3题</p>
+
+<!-- 题目 -->
+<div class="card" style="text-align:center;">
+  <h3 style="margin-top:0;">📝 题目</h3>
+  <p style="font-size:1.1rem;">
+    面数 <span class="highlight-red">r < 20</span> 的简单连通平面图 G 中<br>
+    <strong>必定存在</strong>顶点 v，其度数 <span class="highlight">d(v) ≤ 4</span>
+  </p>
+</div>
+
+<!-- ==================== 反证法思路 ==================== -->
+<h2>一、反证法思路 — 先听懂"为什么要反证"</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">🎯 这道题在说什么？</h3>
+<canvas id="intro" width="560" height="240"></canvas>
+<div class="fig-caption">
+  平面图 = 可以画在平面上且边不交叉的图<br>
+  r = 面的个数（包括最外面的无限面）
+</div>
+</div>
+
+<div class="callout callout-info">
+  <strong>💡 反证法思路：</strong><br>
+  直接证"存在 d(v)≤4 的顶点"很难 → 反过来想：<br>
+  <strong>假设所有顶点度数都 ≥ 5</strong>，然后推导出 r ≥ 20，与已知 r < 20 <span class="highlight-red">矛盾</span>！<br>
+  矛盾说明假设错了 → 必定存在 d(v) ≤ 4 的顶点 ✅
+</div>
+
+<canvas id="strategy" width="560" height="300"></canvas>
+
+<!-- ==================== 三个核心定理 ==================== -->
+<h2>二、先备好三把"工具"</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">🔧 工具①：握手定理</h3>
+<div class="formula-box">∑ d(v) = 2m</div>
+<p style="margin-top:0.5rem;">所有顶点度数之和 = 边数的 2 倍（每条边被两个端点各算一次）</p>
+<canvas id="handshake" width="560" height="160"></canvas>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">🔧 工具②：欧拉公式（连通平面图）</h3>
+<div class="formula-box">n － m ＋ r ＝ 2</div>
+<p style="margin-top:0.5rem; color:var(--text2);">n=顶点数 &nbsp; m=边数 &nbsp; r=面数</p>
+<canvas id="euler" width="560" height="160"></canvas>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">🔧 工具③：简单图的面-边不等式</h3>
+<div class="formula-box">2m ≥ 3r</div>
+<p style="margin-top:0.5rem;">简单图（无重边无自环），每个面至少由 <strong>3 条边</strong> 围成<br>
+每条边至多被 <strong>2 个面</strong> 共享 → 2m ≥ 3r</p>
+<canvas id="faceEdge" width="560" height="180"></canvas>
+</div>
+
+<!-- ==================== 逐步推导 ==================== -->
+<h2>三、逐步推导（跟着走一遍）</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">⚡ 出发点：反设</h3>
+<div class="callout callout-danger" style="text-align:center; font-size:1.1rem;">
+  <strong>假设：G 中所有顶点度数 d(v) ≥ 5</strong>
+</div>
+</div>
+
+<!-- 步骤1 -->
+<div class="card">
+<h3 style="margin-top:0;"><span class="step-num">1</span> 握手定理 → n 和 m 的关系</h3>
+
+<p>已知 <span class="math">∑d(v) = 2m</span>，又每个 <span class="math">d(v) ≥ 5</span>：</p>
+
+<div class="formula-box" style="background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.4);">
+  2m = ∑ d(v) ≥ 5n  →  <span style="color:#f59e0b;font-size:1.3rem;">n ≤ 2m/5</span>　...... ①
+</div>
+
+<canvas id="step1v" width="560" height="140"></canvas>
+<div class="fig-caption">5个顶点，全部d(v)≥5，总度数≥25，m≥12.5→m≥13</div>
+</div>
+
+<!-- 步骤2 -->
+<div class="card">
+<h3 style="margin-top:0;"><span class="step-num">2</span> 欧拉公式变形 → 用 m 表达 r</h3>
+
+<p>由 <span class="math">n − m + r = 2</span>，移项得：<span class="math">r = m − n + 2</span></p>
+<p>将 ① <span class="math">n ≤ 2m/5</span> 代入（注意负号会使不等号翻转）：</p>
+
+<div class="formula-box" style="background:rgba(56,189,248,0.08);border-color:rgba(56,189,248,0.4);">
+  r = m − n + 2 ≥ m − 2m/5 + 2 = <span style="color:#38bdf8;font-size:1.3rem;">3m/5 + 2</span>　...... ③
+</div>
+
+<p style="color:var(--text2);">这给出了 r 的<strong>下界</strong>（r 至少是 3m/5+2）</p>
+</div>
+
+<!-- 步骤3 -->
+<div class="card">
+<h3 style="margin-top:0;"><span class="step-num">3</span> 面-边不等式 → r 的上界</h3>
+<p>简单平面图：<span class="math">2m ≥ 3r</span></p>
+
+<div class="formula-box" style="background:rgba(192,132,252,0.08);border-color:rgba(192,132,252,0.4);">
+  <span style="color:#c084fc;font-size:1.3rem;">r ≤ 2m/3</span>　...... ②
+</div>
+
+<p style="color:var(--text2);">这给出了 r 的<strong>上界</strong>（r 最多是 2m/3）</p>
+</div>
+
+<!-- 步骤4：夹逼 -->
+<div class="card" style="border:2px solid var(--accent);">
+<h3 style="margin-top:0;"><span class="step-num">4</span> 🔥 夹逼！上界 vs 下界</h3>
+
+<p>r 被夹在中间：</p>
+
+<div style="text-align:center; font-size:1.2rem; margin:1rem 0;">
+  <span class="formula-box" style="color:#38bdf8;">3m/5 + 2</span>
+  ≤ r ≤
+  <span class="formula-box" style="color:#c084fc;">2m/3</span>
+</div>
+
+<canvas id="squeeze" width="560" height="160"></canvas>
+
+<p style="margin-top:0.8rem;">取下界 ≤ 上界：</p>
+
+<div class="formula-box" style="font-size:1.2rem;">
+  3m/5 + 2 ≤ 2m/3
+</div>
+
+<p>两边 ×15：<span class="math">9m + 30 ≤ 10m</span></p>
+<p>→ <span class="math">30 ≤ m</span> →</p>
+
+<div class="formula-box" style="background:rgba(248,113,113,0.1);border-color:rgba(248,113,113,0.4);font-size:1.3rem;">
+  <span style="color:#f87171;">m ≥ 30</span>
+</div>
+
+<p style="color:var(--text2);">如果所有 d(v)≥5，则图至少有 30 条边！</p>
+</div>
+
+<!-- 步骤5：回代 -->
+<div class="card">
+<h3 style="margin-top:0;"><span class="step-num">5</span> 代回求 r → 矛盾！</h3>
+<p>将 <span class="math">m ≥ 30</span> 代入下界：</p>
+
+<div class="formula-box" style="font-size:1.2rem;">
+  r ≥ 3×30/5 + 2 = 18 + 2 = <span style="color:#f87171;font-size:1.5rem;">20</span>
+</div>
+
+<div class="callout callout-danger" style="text-align:center; font-size:1.15rem; margin-top:1rem;">
+  <span class="boom">💥</span> r ≥ 20 &nbsp; vs &nbsp; 已知 r < 20 &nbsp; <span class="boom">矛盾！</span>
+</div>
+</div>
+
+<!-- 结论 -->
+<div class="card" style="border:2px solid var(--green); text-align:center;">
+<h3 style="margin-top:0; color:var(--green);">✅ 结论</h3>
+<p style="font-size:1.2rem;">假设"所有 d(v) ≥ 5"不成立</p>
+<p style="font-size:1.3rem; color:var(--green);"><strong>∴ G 中必定存在顶点 v，使得 d(v) ≤ 4</strong></p>
+</div>
+
+<!-- ==================== 完整推导链条 ==================== -->
+<h2>四、完整推导链条（一张图看完）</h2>
+
+<canvas id="fullChain" width="900" height="620"></canvas>
+
+<!-- ==================== 拓展 ==================== -->
+<h2>五、同类题变式 & 通用模板</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">🔄 变式1：改"d(v)≤4"为"d(v)≤3"</h3>
+<p>
+  <strong>题目：</strong>面数 r < 12 的简单连通平面图 G 中，必存在顶点 v 满足 d(v) ≤ 3。
+</p>
+<p style="color:var(--text2);">
+  解法：反设所有 d(v) ≥ 4 → 2m ≥ 4n → n ≤ m/2<br>
+  → r = m-n+2 ≥ m - m/2 + 2 = m/2 + 2<br>
+  → 与 r ≤ 2m/3 夹逼 → m/2+2 ≤ 2m/3 → m ≥ 12 → r ≥ 8<br>
+  若把条件改小（r<8或r<12），就可以控制结论中 d(v)≤3 还是 ≤4
+</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">🔄 变式2：彼得森图不是平面图</h3>
+<p>25-26 A卷证明题第3题就是这个！</p>
+<p>
+  <strong>彼得森图：</strong>n=10, m=15, 无三角（最短圈长度=5）<br>
+  若为平面图，则每个面 ≥ 5 条边 → 2m ≥ 5r → r ≤ 2m/5 = 6<br>
+  欧拉公式：r = m-n+2 = 15-10+2 = 7<br>
+  <span class="highlight-red">7 ≤ 6 矛盾！</span> → 彼得森图不是平面图
+</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">📋 万能反证法模板</h3>
+<table>
+  <tr><th>步骤</th><th>操作</th></tr>
+  <tr><td>① 反设</td><td>假设"所有顶点都不满足结论"</td></tr>
+  <tr><td>② 握手</td><td>∑d(v) = 2m → 推出 n 和 m 的不等式</td></tr>
+  <tr><td>③ 欧拉</td><td>n − m + r = 2 → 用 m 表达 r</td></tr>
+  <tr><td>④ 面-边</td><td>2m ≥ k·r（k=最小面边界数）→ r 的上界</td></tr>
+  <tr><td>⑤ 夹逼</td><td>下界 ≤ r ≤ 上界 → 推出 m 的不等式</td></tr>
+  <tr><td>⑥ 回代</td><td>m 代回 r 的表达式 → 与已知条件矛盾</td></tr>
+  <tr><td>⑦ 结论</td><td>假设不成立 → 原命题得证</td></tr>
+</table>
+</div>
+
+<!-- ==================== 易错点 ==================== -->
+<h2>六、易错点</h2>
+
+<div class="card">
+<table>
+  <tr><th>#</th><th>易错点</th><th>正确做法</th></tr>
+  <tr>
+    <td><span class="tag tag-red">1</span></td>
+    <td>欧拉公式写成 n+m-r=2</td>
+    <td><span class="highlight-green">n − m + r = 2</span>（牢记：点−边+面=2）</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-red">2</span></td>
+    <td>代入 n≤2m/5 时忘了负号翻不等号</td>
+    <td>r = m − n + 2，n 前是负号，n ≤ 某值 → −n ≥ −某值</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-red">3</span></td>
+    <td>面-边不等式记错：3r ≤ 2m 还是 3r ≥ 2m</td>
+    <td>记住：边数不能太少 → <span class="highlight">2m ≥ 3r</span>（边数×2 ≥ 面数×3）</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-red">4</span></td>
+    <td>非简单图也用 2m ≥ 3r</td>
+    <td>只有简单图才能用 3；若有重边或自环，下限不同</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-red">5</span></td>
+    <td>只推到 m≥30 就结束</td>
+    <td>必须回代求 r，矛盾点在 r 而不是 m</td>
+  </tr>
+</table>
+</div>
+
+<div class="callout callout-info" style="font-size:1.05rem; text-align:center;">
+  <strong>🎯 考场速记：</strong><br>
+  反设 d(v)≥5 → 握手得 n≤2m/5 → 欧拉 + 面-边夹逼 → m≥30 → r≥20 →<span class="highlight-red"> 矛盾！</span>
+</div>
+
+</div>
+
+<script>
+// 工具
+function circle(ctx, x, y, r, fill, stroke, label, lc, bg) {
+  ctx.beginPath(); ctx.arc(x, y, r, 0, 2*Math.PI);
+  ctx.fillStyle = bg || '#1e293b'; ctx.fill();
+  ctx.strokeStyle = stroke || '#e2e8f0'; ctx.lineWidth = 2.2; ctx.stroke();
+  if (label) {
+    ctx.fillStyle = lc || '#e2e8f0';
+    ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(label, x, y);
+  }
+}
+function line(ctx, x1, y1, x2, y2, c, w, dash) {
+  ctx.beginPath(); ctx.setLineDash(dash || []);
+  ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+  ctx.strokeStyle = c || '#475569'; ctx.lineWidth = w || 2; ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// ===== intro: 平面图示意 =====
+(function(){
+  var c = document.getElementById('intro');
+  var ctx = c.getContext('2d');
+  // 左：简单平面图 K4
+  ctx.fillStyle = '#e2e8f0'; ctx.font = 'bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('示例：K₄（完全图，平面图）',150,25);
+
+  var t=[[150,65],[230,145],[150,195],[70,145]];
+  for(var i=0;i<4;i++) for(var j=i+1;j<4;j++) line(ctx,t[i][0],t[i][1],t[j][0],t[j][1],'#64748b',1.8);
+  for(var i=0;i<4;i++) circle(ctx,t[i][0],t[i][1],16,'#1e293b','#38bdf8','v'+(i+1),'#38bdf8');
+
+  // 标注面
+  ctx.fillStyle='rgba(245,158,11,0.15)';
+  ctx.beginPath(); ctx.moveTo(150,65); ctx.lineTo(230,145); ctx.lineTo(150,195);
+  ctx.lineTo(70,145); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#f59e0b'; ctx.font='12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('内部面',150,128);
+  ctx.fillText('★ r=4（含外部面）',150,225);
+
+  // 右：非平面图示意
+  ctx.fillStyle='#e2e8f0'; ctx.font='bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('平面图 = 边不交叉',420,25);
+  var p=[[420,62],[500,65],[500,145],[460,175],[380,175],[340,145],[340,65]];
+  for(var i=0;i<7;i++) {var j=(i+1)%7; line(ctx,p[i][0],p[i][1],p[j][0],p[j][1],'#64748b',1.8);}
+  line(ctx,p[0][0],p[0][1],p[3][0],p[3][1],'#475569',1.5);
+  line(ctx,p[2][0],p[2][1],p[5][0],p[5][1],'#475569',1.5);
+  for(var i=0;i<7;i++) circle(ctx,p[i][0],p[i][1],13,'#1e293b','#94a3b8','','#94a3b8');
+  ctx.fillStyle='#4ade80'; ctx.font='12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('画在平面上 ✓',420,195);
+  ctx.fillText('没有边交叉',420,215);
+})();
+
+// ===== strategy: 反证法逻辑 =====
+(function(){
+  var c=document.getElementById('strategy');
+  var ctx=c.getContext('2d');
+  function box(x,y,w,h,t,cl){
+    ctx.fillStyle='#1a2332';ctx.strokeStyle=cl||'#475569';ctx.lineWidth=2;
+    ctx.beginPath();ctx.roundRect(x,y,w,h,8);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#e2e8f0';ctx.font='bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    var ls=t.split('\n');
+    ls.forEach(function(l,i){ctx.fillText(l,x+w/2,y+h/2+(i-(ls.length-1)/2)*20);});
+  }
+  box(30,40,230,55,'假设：所有 d(v) ≥ 5','#f87171');
+  box(30,150,230,55,'推导出 r ≥ 20','#f59e0b');
+  box(30,260,230,55,'与已知 r < 20 矛盾！','#f87171');
+  box(380,150,150,55,'假设错误！\n∴ ∃v, d(v)≤4','#4ade80');
+  // arrows
+  ctx.fillStyle='#f59e0b';ctx.font='bold 28px "PingFang SC","Microsoft YaHei",sans-serif';ctx.textAlign='center';
+  ctx.fillText('↓',145,135);
+  ctx.fillText('↓',145,245);
+  ctx.fillText('→',270,178);
+  ctx.fillText('工具：握手定理\n欧拉公式\n面-边不等式',145,210);
+})();
+
+// ===== handshake =====
+(function(){
+  var c=document.getElementById('handshake');
+  var ctx=c.getContext('2d');
+  var pts=[[280,60],[400,120],[280,150],[160,120]];
+  for(var i=0;i<4;i++) for(var j=i+1;j<4;j++) line(ctx,pts[i][0],pts[i][1],pts[j][0],pts[j][1],'#475569',2);
+  line(ctx,pts[0][0],pts[0][1],pts[3][0],pts[3][1],'#475569',2);
+  circle(ctx,pts[0][0],pts[0][1],20,'#1e293b','#f59e0b','4','#f59e0b');
+  circle(ctx,pts[1][0],pts[1][1],20,'#1e293b','#f59e0b','3','#f59e0b');
+  circle(ctx,pts[2][0],pts[2][1],20,'#1e293b','#f59e0b','3','#f59e0b');
+  circle(ctx,pts[3][0],pts[3][1],20,'#1e293b','#f59e0b','4','#f59e0b');
+  ctx.fillStyle='#e2e8f0';ctx.font='bold 14px "PingFang SC","Microsoft YaHei",sans-serif';ctx.textAlign='center';
+  ctx.fillText('∑d(v) = 4+3+3+4 = 14 = 2×7 = 2m',280,190);
+  ctx.fillText('m=7条边',280,210);
+  ctx.fillText('顶点度数之和 = 2 × 边数',130,100);
+})();
+
+// ===== euler =====
+(function(){
+  var c=document.getElementById('euler');
+  var ctx=c.getContext('2d');
+  var t=[[280,55],[290,130],[130,130],[170,55]];
+  for(var i=0;i<4;i++) {var j=(i+1)%4;line(ctx,t[i][0],t[i][1],t[j][0],t[j][1],'#64748b',2);}
+  for(var i=0;i<4;i++) circle(ctx,t[i][0],t[i][1],16,'#1e293b','#38bdf8','','#38bdf8');
+  ctx.fillStyle='#38bdf8';ctx.font='bold 14px "PingFang SC","Microsoft YaHei",sans-serif';ctx.textAlign='center';
+  ctx.fillText('n=4, m=4, r=2',280,105);
+  ctx.fillText('4 − 4 + 2 = 2 ✓',280,125);
+  ctx.fillText('点 − 边 + 面 = 2',140,100);
+})();
+
+// ===== faceEdge =====
+(function(){
+  var c=document.getElementById('faceEdge');
+  var ctx=c.getContext('2d');
+  // 三角形面
+  var t=[[100,80],[200,140],[100,160]];
+  ctx.fillStyle='rgba(245,158,11,0.12)';
+  ctx.beginPath();ctx.moveTo(100,80);ctx.lineTo(200,140);ctx.lineTo(100,160);ctx.closePath();ctx.fill();
+  line(ctx,100,80,200,140,'#f59e0b',2.5);
+  line(ctx,200,140,100,160,'#f59e0b',2.5);
+  line(ctx,100,160,100,80,'#f59e0b',2.5);
+  circle(ctx,100,80,12,'#1e293b','#f59e0b','','#f59e0b');
+  circle(ctx,200,140,12,'#1e293b','#f59e0b','','#f59e0b');
+  circle(ctx,100,160,12,'#1e293b','#f59e0b','','#f59e0b');
+  ctx.fillStyle='#e2e8f0';ctx.font='13px "PingFang SC","Microsoft YaHei",sans-serif';ctx.textAlign='center';
+  ctx.fillText('每个面≥3条边',150,190);
+
+  // 四边形面
+  var q=[[340,70],[460,70],[460,140],[340,140]];
+  ctx.fillStyle='rgba(192,132,252,0.12)';
+  ctx.beginPath();ctx.moveTo(340,70);ctx.lineTo(460,70);ctx.lineTo(460,140);ctx.lineTo(340,140);ctx.closePath();ctx.fill();
+  for(var i=0;i<4;i++) {var j=(i+1)%4;line(ctx,q[i][0],q[i][1],q[j][0],q[j][1],'#c084fc',2.5);}
+  for(var i=0;i<4;i++) circle(ctx,q[i][0],q[i][1],10,'#1e293b','#c084fc','','#c084fc');
+  ctx.fillText('更复杂的图\n每个面≥3条边',400,165);
+
+  ctx.fillText('注意：每条边最多被2个面共享',280,185);
+})();
+
+// ===== step1v =====
+(function(){
+  var c=document.getElementById('step1v');
+  var ctx=c.getContext('2d');
+  for(var i=0;i<5;i++){
+    var x=60+i*115,y=70;
+    circle(ctx,x,y,18,'#1e293b','#f87171','≥5','#f87171');
+  }
+  ctx.fillStyle='#e2e8f0';ctx.font='13px "PingFang SC","Microsoft YaHei",sans-serif';ctx.textAlign='center';
+  ctx.fillText('n个顶点，每个d(v)≥5 → ∑d(v) ≥ 5n → 2m ≥ 5n → n ≤ 2m/5',280,120);
+})();
+
+// ===== squeeze =====
+(function(){
+  var c=document.getElementById('squeeze');
+  var ctx=c.getContext('2d');
+  // 数轴
+  ctx.fillStyle='#e2e8f0';ctx.font='bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';
+  // bar
+  ctx.strokeStyle='#e2e8f0';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(80,80);ctx.lineTo(480,80);ctx.stroke();
+  // ticks
+  [80,480].forEach(function(x){line(ctx,x,75,x,85,'#e2e8f0',2);});
+  // r range
+  ctx.strokeStyle='#f59e0b';ctx.lineWidth=5;
+  ctx.beginPath();ctx.moveTo(160,80);ctx.lineTo(400,80);ctx.stroke();
+  // labels
+  ctx.fillStyle='#38bdf8';ctx.font='bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('3m/5+2',160,62);
+  ctx.fillText('(下界)',160,108);
+  ctx.fillStyle='#c084fc';
+  ctx.fillText('2m/3',400,62);
+  ctx.fillText('(上界)',400,108);
+  ctx.fillStyle='#f59e0b';ctx.font='bold 16px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('r 在这之间',280,140);
+  ctx.fillText('→ 3m/5+2 ≤ 2m/3 → m ≥ 30',280,160);
+})();
+
+// ===== full chain =====
+(function(){
+  var c=document.getElementById('fullChain');
+  var ctx=c.getContext('2d');
+  var w=900,h=620;
+
+  function box(x,y,w2,h2,txt,bg,stroke){
+    ctx.fillStyle=bg||'#1a2332';ctx.strokeStyle=stroke||'#475569';ctx.lineWidth=2;
+    ctx.beginPath();ctx.roundRect(x,y,w2,h2,10);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#e2e8f0';ctx.font='13px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    var ls=txt.split('\n');
+    ls.forEach(function(l,i){ctx.fillText(l,x+w2/2,y+h2/2+(i-(ls.length-1)/2)*22);});
+  }
+  function arr(x1,y1,x2,y2,cl){
+    cl=cl||'#f59e0b';
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
+    ctx.strokeStyle=cl;ctx.lineWidth=2.5;ctx.stroke();
+    var a=Math.atan2(y2-y1,x2-x1);
+    ctx.fillStyle=cl;
+    ctx.beginPath();
+    ctx.moveTo(x2,y2);
+    ctx.lineTo(x2-10*Math.cos(a-0.5),y2-10*Math.sin(a-0.5));
+    ctx.lineTo(x2-10*Math.cos(a+0.5),y2-10*Math.sin(a+0.5));
+    ctx.closePath();ctx.fill();
+  }
+
+  var cx=450;
+  box(cx-130,8,260,42,'反设：所有 d(v) ≥ 5','#3b1a1a','#f87171');
+  arr(cx,50,cx,75,'#f87171');
+
+  // 左分支：握手
+  box(cx-280,75,220,60,'① 握手定理\n2m = ∑d(v) ≥ 5n\n→ n ≤ 2m/5','#1a2332','#f59e0b');
+  line(ctx,cx,88,cx-170,95,'#f59e0b',1.5,[4,4]);
+  ctx.fillStyle='#f59e0b';ctx.font='11px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';ctx.fillText('代入',cx-110,85);
+
+  // 中：欧拉
+  box(cx-130,75,260,45,'② 欧拉公式：n − m + r = 2\n→ r = m − n + 2','#1a2332','#38bdf8');
+
+  arr(cx,120,cx,150);
+
+  // 欧拉 + n≤2m/5
+  box(cx-130,150,260,55,'r = m−n+2 ≥ m−2m/5+2\n→ r ≥ 3m/5 + 2 (下界)','#1a2a3a','#38bdf8');
+
+  // 右分支：面-边
+  box(cx+160,75,220,45,'③ 面-边不等式\n2m ≥ 3r → r ≤ 2m/3 (上界)','#1a2332','#c084fc');
+
+  arr(cx,195,cx,225);
+
+  // 夹逼
+  box(cx-160,225,320,55,'④ 夹逼\n3m/5+2 ≤ r ≤ 2m/3\n→ 3m/5+2 ≤ 2m/3 → m ≥ 30','#1a2020','#f59e0b');
+
+  arr(cx,280,cx,310);
+
+  box(cx-120,310,240,45,'⑤ 回代\nr ≥ 3×30/5+2 = 20','#1a2020','#f59e0b');
+
+  arr(cx,355,cx,385,'#f87171');
+
+  box(cx-140,385,280,50,'💥 矛盾！\nr ≥ 20 与已知 r < 20 矛盾','#3b1a1a','#f87171');
+
+  arr(cx,435,cx,465,'#4ade80');
+
+  box(cx-160,465,320,50,'✅ 假设不成立\n∴ 必存在 v 使得 d(v) ≤ 4','#1a2a1a','#4ade80');
+
+  // 右标注
+  ctx.fillStyle='#94a3b8';ctx.font='11px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText('简单图：每个面≥3条边',cx+170,135);
+  ctx.fillText('它给出了r的上限',cx+170,150);
+
+  // 左下小标注
+  ctx.fillText('负号翻不等号方向',cx-270,140);
+  ctx.fillText('−n ≥ −2m/5',cx-270,155);
+
+  // 关键点
+  ctx.fillStyle='#f87171';ctx.font='bold 12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('关键条件：r<20',cx+250,295);
+  line(ctx,cx+200,290,cx+60,350,'#f87171',1.5,[3,3]);
+})();
+</script>
+
+</body>
+</html>

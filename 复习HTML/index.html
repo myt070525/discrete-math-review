@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>离散数学四套试卷 - 复习导航</title>
+<style>
+  :root {
+    --card1: #0d9488;
+    --card2: #c45a2c;
+    --card3: #7c3aed;
+    --card4: #166534;
+    --bg: #f0f4f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #f0f4f8 100%);
+    min-height: 100vh;
+  }
+  .hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    color: white;
+    text-align: center;
+    padding: 60px 20px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(13,148,136,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(124,58,237,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 70%, rgba(196,90,44,0.1) 0%, transparent 50%);
+    animation: float 15s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20px, -10px); }
+  }
+  .hero h1 {
+    font-size: 2.8em;
+    font-weight: 800;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, #5eead4, #a78bfa, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    position: relative;
+    z-index: 1;
+    color: #94a3b8;
+    font-size: 1.1em;
+    margin-top: 12px;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; margin-top: -20px; }
+  .card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+  }
+  .card:hover { transform: translateY(-8px); box-shadow: 0 20px 48px rgba(0,0,0,0.15); }
+  .card-header {
+    padding: 32px 28px 20px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: -10%;
+    width: 120%;
+    height: 40px;
+    background: inherit;
+    border-radius: 50%;
+  }
+  .card:nth-child(1) .card-header { background: linear-gradient(135deg, #0d9488, #14b8a6); }
+  .card:nth-child(2) .card-header { background: linear-gradient(135deg, #c45a2c, #e07b3c); }
+  .card:nth-child(3) .card-header { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+  .card:nth-child(4) .card-header { background: linear-gradient(135deg, #166534, #22c55e); }
+  .card-header .icon {
+    font-size: 2.5em;
+    margin-bottom: 8px;
+    opacity: 0.9;
+  }
+  .card-header h2 { font-size: 1.5em; font-weight: 700; position: relative; z-index: 1; }
+  .card-header .subtitle { font-size: 0.9em; opacity: 0.85; margin-top: 4px; position: relative; z-index: 1; }
+  .card-body { padding: 28px; }
+  .stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .stat {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 12px 16px;
+    text-align: center;
+    flex: 1;
+    min-width: 60px;
+  }
+  .stat .num { font-size: 1.4em; font-weight: 700; color: #1e293b; }
+  .stat .lbl { font-size: 0.75em; color: #94a3b8; margin-top: 2px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .tag {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75em;
+    font-weight: 600;
+  }
+  .card:nth-child(1) .tag { background: #ccfbf1; color: #0f766e; }
+  .card:nth-child(2) .tag { background: #fff7ed; color: #9a3412; }
+  .card:nth-child(3) .tag { background: #f3e8ff; color: #6b21a8; }
+  .card:nth-child(4) .tag { background: #dcfce7; color: #166534; }
+  .btn {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    padding: 14px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 1em;
+    transition: all 0.25s;
+    letter-spacing: 0.5px;
+  }
+  .card:nth-child(1) .btn { background: linear-gradient(135deg, #0d9488, #14b8a6); color: white; }
+  .card:nth-child(2) .btn { background: linear-gradient(135deg, #c45a2c, #e07b3c); color: white; }
+  .card:nth-child(3) .btn { background: linear-gradient(135deg, #7c3aed, #a78bfa); color: white; }
+  .card:nth-child(4) .btn { background: linear-gradient(135deg, #166534, #22c55e); color: white; }
+  .btn:hover { filter: brightness(1.1); transform: scale(1.02); }
+  .info-section { margin-top: 48px; }
+  .info-section h3 {
+    font-size: 1.4em;
+    color: #1e293b;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 3px solid #e2e8f0;
+  }
+  .info-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+  .info-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .info-card .emoji { font-size: 2em; margin-bottom: 8px; }
+  .info-card h4 { font-size: 1em; color: #334155; margin-bottom: 4px; }
+  .info-card p { font-size: 0.85em; color: #94a3b8; }
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #94a3b8;
+    font-size: 0.9em;
+    margin-top: 40px;
+  }
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 2em; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🎓 离散数学 · 试卷复习</h1>
+  <p>贵州大学 · 四套历年真题完整详解 | 点击卡片进入逐题讲解</p>
+</div>
+
+<div class="container">
+  <div class="grid">
+    <!-- Card 1: 2025-2026 A卷 -->
+    <a href="25-26A卷-完整讲解.html" style="text-decoration:none;color:inherit;" class="card">
+      <div class="card-header">
+        <div class="icon">🌊</div>
+        <h2>2025-2026 年 A 卷</h2>
+        <div class="subtitle">最新试卷 · 蓝绿清新风</div>
+      </div>
+      <div class="card-body">
+        <div class="stat-row">
+          <div class="stat"><div class="num">10</div><div class="lbl">选择题</div></div>
+          <div class="stat"><div class="num">10</div><div class="lbl">判断题</div></div>
+          <div class="stat"><div class="num">5</div><div class="lbl">解答题</div></div>
+          <div class="stat"><div class="num">3</div><div class="lbl">证明题</div></div>
+        </div>
+        <div class="tags">
+          <span class="tag">命题逻辑</span><span class="tag">谓词逻辑</span><span class="tag">集合论</span>
+          <span class="tag">图论</span><span class="tag">哈夫曼树</span><span class="tag">平面图</span>
+        </div>
+        <div class="btn">📖 开始复习</div>
+      </div>
+    </a>
+
+    <!-- Card 2: 2025-2026 B卷 -->
+    <a href="25-26B卷-完整讲解.html" style="text-decoration:none;color:inherit;" class="card">
+      <div class="card-header">
+        <div class="icon">🔥</div>
+        <h2>2025-2026 年 B 卷</h2>
+        <div class="subtitle">配套B卷 · 暖橙学术风</div>
+      </div>
+      <div class="card-body">
+        <div class="stat-row">
+          <div class="stat"><div class="num">10</div><div class="lbl">选择题</div></div>
+          <div class="stat"><div class="num">10</div><div class="lbl">判断题</div></div>
+          <div class="stat"><div class="num">5</div><div class="lbl">解答题</div></div>
+          <div class="stat"><div class="num">3</div><div class="lbl">证明题</div></div>
+        </div>
+        <div class="tags">
+          <span class="tag">命题逻辑</span><span class="tag">关系矩阵</span><span class="tag">邻接矩阵</span>
+          <span class="tag">非平面图</span><span class="tag">群论</span><span class="tag">前缀码</span>
+        </div>
+        <div class="btn">📖 开始复习</div>
+      </div>
+    </a>
+
+    <!-- Card 3: 2024-2025 A卷 -->
+    <a href="24-25A卷-完整讲解.html" style="text-decoration:none;color:inherit;" class="card">
+      <div class="card-header">
+        <div class="icon">💜</div>
+        <h2>2024-2025 年 A 卷</h2>
+        <div class="subtitle">往届真题 · 紫罗兰优雅风</div>
+      </div>
+      <div class="card-body">
+        <div class="stat-row">
+          <div class="stat"><div class="num">10</div><div class="lbl">选择题</div></div>
+          <div class="stat"><div class="num">10</div><div class="lbl">判断题</div></div>
+          <div class="stat"><div class="num">5</div><div class="lbl">解答题</div></div>
+          <div class="stat"><div class="num">3</div><div class="lbl">证明题</div></div>
+        </div>
+        <div class="tags">
+          <span class="tag">命题逻辑</span><span class="tag">二元关系</span><span class="tag">阿贝尔群</span>
+          <span class="tag">表达式树</span><span class="tag">等价关系</span><span class="tag">欧拉图</span>
+        </div>
+        <div class="btn">📖 开始复习</div>
+      </div>
+    </a>
+
+    <!-- Card 4: 2018-2019 A卷 -->
+    <a href="18-19A卷-完整讲解.html" style="text-decoration:none;color:inherit;" class="card">
+      <div class="card-header">
+        <div class="icon">🌿</div>
+        <h2>2018-2019 年 A 卷</h2>
+        <div class="subtitle">经典老卷 · 绿金沉稳风</div>
+      </div>
+      <div class="card-body">
+        <div class="stat-row">
+          <div class="stat"><div class="num">10</div><div class="lbl">选择题</div></div>
+          <div class="stat"><div class="num">10</div><div class="lbl">判断题</div></div>
+          <div class="stat"><div class="num">5</div><div class="lbl">解答题</div></div>
+          <div class="stat"><div class="num">3</div><div class="lbl">应用题</div></div>
+        </div>
+        <div class="tags">
+          <span class="tag">命题逻辑</span><span class="tag">一阶逻辑</span><span class="tag">幂集哈斯图</span>
+          <span class="tag">欧拉通路</span><span class="tag">正则树</span><span class="tag">连通关系</span>
+        </div>
+        <div class="btn">📖 开始复习</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="info-section">
+    <h3>📚 复习指南</h3>
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="emoji">🧠</div>
+        <h4>基础概念</h4>
+        <p>每道题都附带知识点讲解，从零基础出发</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">📐</div>
+        <h4>图表解析</h4>
+        <p>哈斯图、哈夫曼树、有向图等均用SVG绘制</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">✏️</div>
+        <h4>逐步推导</h4>
+        <p>解答题和证明题都有详细的逐步推导过程</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">✅</div>
+        <h4>参考答案</h4>
+        <p>所有题目均附带标准答案和判分要点</p>
+      </div>
+      <div class="info-card">
+        <div class="emoji">📱</div>
+        <h4>响应式设计</h4>
+        <p>电脑和手机上都能舒适阅读</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>离散数学复习资料 · 包含2018-2025年四套历年真题</p>
+  <p style="margin-top:4px;">点击任意卡片即可开始复习 🚀</p>
+</footer>
+
+</body>
+</html>

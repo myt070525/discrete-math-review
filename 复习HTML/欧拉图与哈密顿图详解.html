@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>欧拉图 vs 哈密顿图 — 通俗详解</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --card2: #1a2332;
+    --border: #334155;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --accent: #38bdf8;
+    --green: #4ade80;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --purple: #c084fc;
+    --pink: #f472b6;
+    --euler: #38bdf8;
+    --hamilton: #f472b6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    padding-bottom: 4rem;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+  h1 {
+    text-align: center; font-size: 2.2rem; margin: 1.5rem 0 0.5rem;
+    background: linear-gradient(135deg, var(--euler), var(--hamilton));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle { text-align: center; color: var(--text2); margin-bottom: 2rem; font-size: 1.05rem; }
+  h2 {
+    font-size: 1.55rem; margin: 2.2rem 0 1rem; padding-left: 0.75rem;
+    border-left: 4px solid var(--accent);
+  }
+  h3 { font-size: 1.15rem; margin: 1.3rem 0 0.6rem; color: var(--text); }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.5rem 1.8rem; margin: 1rem 0;
+  }
+  .card2 {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.2rem 1.5rem; margin: 0.8rem 0;
+  }
+  canvas { display: block; margin: 1rem auto; max-width: 100%; }
+  .fig-caption { text-align: center; color: var(--text2); font-size: 0.9rem; margin-top: 0.3rem; }
+  .highlight { background: rgba(56,189,248,0.15); padding: 0.15em 0.4em; border-radius: 5px; font-weight: 600; color: var(--accent); }
+  .highlight2 { background: rgba(244,114,182,0.15); padding: 0.15em 0.4em; border-radius: 5px; font-weight: 600; color: var(--pink); }
+  .vs-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  .vs-table th { background: var(--border); padding: 0.7rem 1rem; text-align: left; font-size: 1rem; }
+  .vs-table td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); }
+  .vs-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .tag { display: inline-block; padding: 0.2em 0.65em; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+  .tag-euler { background: rgba(56,189,248,0.2); color: var(--euler); }
+  .tag-hamilton { background: rgba(244,114,182,0.2); color: var(--pink); }
+  .box-euler { border-left: 3px solid var(--euler); padding-left: 1rem; }
+  .box-hamilton { border-left: 3px solid var(--pink); padding-left: 1rem; }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin: 0.35rem 0; }
+  .callout {
+    border-radius: 10px; padding: 1rem 1.3rem; margin: 1rem 0;
+    font-weight: 500;
+  }
+  .callout-info { background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); }
+  .callout-warn { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); }
+  .callout-danger { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>🧭 欧拉图 vs 哈密顿图</h1>
+<p class="subtitle">离散数学期末高频考点 · 通俗图解版</p>
+
+<!-- ==================== 核心比喻 ==================== -->
+<div class="card" style="text-align:center;">
+  <h3 style="margin-top:0; font-size:1.35rem;">一句话区分</h3>
+  <div style="display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap; margin-top:1rem;">
+    <div style="flex:1; min-width:250px; text-align:center;">
+      <div style="font-size:3rem;">🖊️</div>
+      <div style="font-size:1.3rem; font-weight:700;"><span class="tag tag-euler">欧拉图</span></div>
+      <div style="margin-top:0.3rem; color:var(--text2);">"<span class="highlight">一笔画</span>" —— 每条<span class="highlight">边</span>恰好走一次</div>
+    </div>
+    <div style="flex:1; min-width:250px; text-align:center;">
+      <div style="font-size:3rem;">🌍</div>
+      <div style="font-size:1.3rem; font-weight:700;"><span class="tag tag-hamilton">哈密顿图</span></div>
+      <div style="margin-top:0.3rem; color:var(--text2);">"<span class="highlight2">周游世界</span>" —— 每个<span class="highlight2">顶点</span>恰好访问一次</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 欧拉图 ==================== -->
+<h2>一、欧拉图 — "一笔画"</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">📖 定义</h3>
+<div class="box-euler">
+  <p><strong>欧拉通路</strong>：经过图中<span class="highlight">每条边恰好一次</span>的通路</p>
+  <p><strong>欧拉回路</strong>：经过图中<span class="highlight">每条边恰好一次</span>的回路（起点=终点）</p>
+  <p><strong>欧拉图</strong>：存在<span class="highlight">欧拉回路</span>的图</p>
+</div>
+</div>
+
+<!-- Canvas 1: 欧拉图示例 -->
+<div class="card">
+<h3 style="margin-top:0;">🎨 欧拉图示例：能否一笔画完所有边？</h3>
+<canvas id="euler1" width="560" height="340"></canvas>
+<div class="fig-caption">每个顶点的度数都是偶数 → 可以从任意点出发，一笔画完所有边回到起点</div>
+</div>
+
+<!-- Canvas 2: 欧拉图的度数解释 -->
+<div class="card">
+<h3 style="margin-top:0;">🧠 为什么要求「度数全为偶数」？</h3>
+<canvas id="euler2" width="560" height="280"></canvas>
+<div class="fig-caption">
+  每次你"进入"一个顶点，必须有另一条边让你"离开"它<br>
+  → 每条回路中，每个顶点的"进"与"出"次数相等 → <span class="highlight">度数必须是偶数！</span>
+</div>
+</div>
+
+<!-- 判定定理表 -->
+<div class="card">
+<h3 style="margin-top:0;">📋 无向图欧拉判定定理</h3>
+<table class="vs-table">
+  <tr><th>条件</th><th>结论</th><th>例子</th></tr>
+  <tr><td>所有顶点度数均为<span class="highlight">偶数</span> + 连通</td><td><span class="tag tag-euler">欧拉图</span>（有欧拉回路）</td><td>K₅（每个点度=4）</td></tr>
+  <tr><td>恰有<span class="highlight">2个奇度</span>顶点 + 连通</td><td>有欧拉通路，<strong>非欧拉图</strong></td><td>一条链的两个端点</td></tr>
+  <tr><td>其他情况</td><td>既无回路也无通路</td><td>K₄（每点度=3，4个奇度）</td></tr>
+</table>
+</div>
+
+<!-- 非欧拉图例子 -->
+<div class="card">
+<h3 style="margin-top:0;">🚫 这些图不是欧拉图</h3>
+<canvas id="euler3" width="560" height="280"></canvas>
+<div class="fig-caption">
+  左图：有2个奇度顶点（可一笔画但回不到起点，即只有欧拉通路）<br>
+  右图：有4个奇度顶点（无法一笔画完）
+</div>
+</div>
+
+<!-- ⚠️ 连通性 -->
+<div class="callout callout-danger">
+<strong>⚠️ 考试大坑：</strong>度数全偶 ≠ 欧拉图！还必须<span class="highlight">连通</span>！
+
+<div style="margin-top:0.5rem;">
+  反例：两个不相连的三角形 K₃ ∪ K₃ —— 每个顶点度数=2（偶数），但图不连通 ⇒ <strong>不是欧拉图！</strong>
+</div>
+</div>
+
+<canvas id="euler4" width="560" height="160"></canvas>
+<div class="fig-caption">度数全偶但不连通 → 不是欧拉图！（24-25 A卷第9题就是这个坑）</div>
+
+<!-- ==================== 哈密顿图 ==================== -->
+<h2>二、哈密顿图 — "周游世界"</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">📖 定义</h3>
+<div class="box-hamilton">
+  <p><strong>哈密顿通路</strong>：经过图中<span class="highlight2">每个顶点恰好一次</span>的通路</p>
+  <p><strong>哈密顿回路</strong>：经过图中<span class="highlight2">每个顶点恰好一次</span>的回路（起点=终点）</p>
+  <p><strong>哈密顿图</strong>：存在<span class="highlight2">哈密顿回路</span>的图</p>
+</div>
+</div>
+
+<!-- 哈密顿图示例 -->
+<div class="card">
+<h3 style="margin-top:0;">🎨 哈密顿图示例</h3>
+<canvas id="hamilton1" width="560" height="280"></canvas>
+<div class="fig-caption">哈密顿回路：1→2→3→4→5→6→1，每个顶点恰好访问一次</div>
+</div>
+
+<!-- 判定 -->
+<div class="card">
+<h3 style="margin-top:0;">📋 哈密顿图判定定理</h3>
+<div class="callout callout-warn">
+  <strong>⚠️ 与欧拉图最大的区别：</strong>哈密顿图<strong>没有简洁的充要条件</strong>！这是 NP-完全问题。
+</div>
+
+<div style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:1rem;">
+  <div style="flex:1; min-width:240px;" class="card2">
+    <h4 style="margin-top:0; color:var(--red);">🔴 必要条件</h4>
+    <p>删去 k 个顶点，连通分支数 ≤ k</p>
+    <p style="color:var(--text2); font-size:0.9rem;">不满足 ⇒ 一定不是哈密顿图<br>满足 ⇒ 不一定是🙁</p>
+  </div>
+  <div style="flex:1; min-width:240px;" class="card2">
+    <h4 style="margin-top:0; color:var(--green);">🟢 充分条件</h4>
+    <p><strong>狄拉克定理：</strong>n ≥ 3，每点 d(v) ≥ n/2，则为哈密顿图</p>
+    <p style="color:var(--text2); font-size:0.9rem;">不满足 ⇒ 不一定是🙁<br>满足 ⇒ 一定是哈密顿图</p>
+  </div>
+</div>
+</div>
+
+<!-- 彼得森图 -->
+<div class="card">
+<h3 style="margin-top:0;">🏴‍☠️ 著名的反例：彼得森图</h3>
+<canvas id="petersen" width="560" height="300"></canvas>
+<div class="fig-caption">
+  彼得森图：满足哈密顿必要条件但<strong>不是</strong>哈密顿图！<br>
+  说明必要条件不够"强"，也是A卷证明题的压轴考点
+</div>
+</div>
+
+<!-- ==================== 对比 ==================== -->
+<h2>三、一张表彻底分清</h2>
+
+<div class="card">
+<table class="vs-table">
+  <tr>
+    <th></th>
+    <th style="text-align:center;"><span class="tag tag-euler" style="font-size:1rem;">欧拉图</span></th>
+    <th style="text-align:center;"><span class="tag tag-hamilton" style="font-size:1rem;">哈密顿图</span></th>
+  </tr>
+  <tr>
+    <td>遍历对象</td>
+    <td style="text-align:center;"><span class="highlight">边</span>（Edge）</td>
+    <td style="text-align:center;"><span class="highlight2">顶点</span>（Vertex）</td>
+  </tr>
+  <tr>
+    <td>形象记忆</td>
+    <td style="text-align:center;">🖊️ 一笔画</td>
+    <td style="text-align:center;">🌍 周游世界</td>
+  </tr>
+  <tr>
+    <td>充要条件</td>
+    <td style="text-align:center;"><span style="color:var(--green);">✅ 有！</span> 度数全偶+连通</td>
+    <td style="text-align:center;"><span style="color:var(--red);">❌ 无！</span> 只有充分/必要条件</td>
+  </tr>
+  <tr>
+    <td>考试题型</td>
+    <td style="text-align:center;">判断题：是否欧拉图</td>
+    <td style="text-align:center;">判断题/证明题：判断+证明</td>
+  </tr>
+  <tr>
+    <td>关键坑</td>
+    <td style="text-align:center;">漏了<span class="highlight">连通性</span></td>
+    <td style="text-align:center;">必要条件满足 ≠ 一定哈密顿</td>
+  </tr>
+</table>
+</div>
+
+<!-- ==================== 同一个图对比 ==================== -->
+<h2>四、同一个图，两种视角</h2>
+
+<div class="card">
+<canvas id="compare" width="560" height="360"></canvas>
+<div class="fig-caption">
+  欧拉回路关注"边" ← 需要每条边走一次 → 每点进出平衡，度数必偶数<br>
+  哈密顿回路关注"顶点" ← 需要每个点访一次 → 和边、度数没有直接关系
+</div>
+</div>
+
+<!-- summary -->
+<div class="callout callout-info" style="font-size:1.05rem; text-align:center;">
+  <strong>🎯 考场速记：</strong><br>
+  欧拉≈<span class="highlight">边</span>·一笔画·度数偶+连通 ·
+  哈密顿≈<span class="highlight2">点</span>·周游·无充要条件
+</div>
+
+</div>
+
+<script>
+// ==================== Canvas 绘图 ====================
+
+function circle(ctx, x, y, r, fill, stroke, label, labelColor) {
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fillStyle = fill || '#1e293b';
+  ctx.fill();
+  ctx.strokeStyle = stroke || '#e2e8f0';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  if (label) {
+    ctx.fillStyle = labelColor || '#e2e8f0';
+    ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, x, y);
+  }
+}
+
+function line(ctx, x1, y1, x2, y2, color, width, dash) {
+  ctx.beginPath();
+  ctx.setLineDash(dash || []);
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width || 2;
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// ==================== 图1：欧拉图示例 ====================
+(function() {
+  var c = document.getElementById('euler1');
+  var ctx = c.getContext('2d');
+  // K5 加一些修饰 - 每点度4
+  var pts = [
+    [280, 55], [495, 210], [413, 310], [147, 310], [65, 210]
+  ];
+  var eulerPath = [0,1,2,3,4,0,2,4,1,3,0];
+  for (var i = 0; i < eulerPath.length - 1; i++) {
+    var a = pts[eulerPath[i]], b = pts[eulerPath[i + 1]];
+    var t = i / (eulerPath.length - 2);
+    var r = Math.round(56 + t * 100), g = Math.round(189 - t * 50), bb = Math.round(248 - t * 80);
+    line(ctx, a[0], a[1], b[0], b[1], 'rgba(' + r + ',' + g + ',' + bb + ',0.6)', 3.5);
+  }
+  for (var i = 0; i < eulerPath.length - 1; i++) {
+    var a = pts[eulerPath[i]], b = pts[eulerPath[i + 1]];
+    var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    var ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
+    ctx.fillStyle = '#38bdf8';
+    ctx.beginPath();
+    ctx.moveTo(mx + 4 * Math.cos(ang), my + 4 * Math.sin(ang));
+    ctx.lineTo(mx - 6 * Math.cos(ang - 0.8), my - 6 * Math.sin(ang - 0.8));
+    ctx.lineTo(mx - 6 * Math.cos(ang + 0.8), my - 6 * Math.sin(ang + 0.8));
+    ctx.fill();
+  }
+  for (var i = 0; i < pts.length; i++) {
+    circle(ctx, pts[i][0], pts[i][1], 22, '#1e293b', '#38bdf8', '' + (i + 1));
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '11px "PingFang SC","Microsoft YaHei",sans-serif';
+    var ang = i * Math.PI * 2 / 5 - Math.PI / 2;
+    ctx.fillText('d=4', pts[i][0] + 38 * Math.cos(ang), pts[i][1] + 38 * Math.sin(ang));
+  }
+})();
+
+// ==================== 图2：度数偶数解释 ====================
+(function() {
+  var c = document.getElementById('euler2');
+  var ctx = c.getContext('2d');
+  var cx = 280, cy = 140, r = 110;
+  circle(ctx, cx, cy, 26, '#1e293b', '#38bdf8', 'V');
+  for (var i = 0; i < 4; i++) {
+    var ang = i * Math.PI * 2 / 4 - Math.PI / 2;
+    var x = cx + r * Math.cos(ang), y = cy + r * Math.sin(ang);
+    circle(ctx, x, y, 22, '#1e293b', '#e2e8f0', '' + (i + 1));
+    line(ctx, cx, cy, x, y, '#64748b', 2.5);
+  }
+  for (var i = 0; i < 4; i++) {
+    var ang1 = i * Math.PI * 2 / 4 - Math.PI / 2;
+    var ang2 = ((i + 1) % 4) * Math.PI * 2 / 4 - Math.PI / 2;
+    line(ctx, cx + r * Math.cos(ang1), cy + r * Math.sin(ang1), cx + r * Math.cos(ang2), cy + r * Math.sin(ang2), '#64748b', 2.5);
+  }
+  for (var i = 0; i < 4; i++) {
+    var ang = i * Math.PI * 2 / 4 - Math.PI / 2;
+    var x = cx + (r / 2) * Math.cos(ang), y = cy + (r / 2) * Math.sin(ang);
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    if (i === 0) { ctx.fillText('↑出', x, y - 16); ctx.fillText('↓进', x, y + 16); }
+    else if (i === 2) { ctx.fillText('↓进', x, y - 16); ctx.fillText('↑出', x, y + 16); }
+    else { ctx.fillText(i === 3 ? '←进' : '→出', x + (i === 3 ? -20 : 20), y); ctx.fillText(i === 3 ? '→出' : '←进', x + (i === 3 ? 20 : -20), y); }
+  }
+  ctx.fillStyle = '#4ade80';
+  ctx.font = 'bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('d(V) = 4 (偶数!)', cx, cy + 48);
+})();
+
+// ==================== 图3：非欧拉图 ====================
+(function() {
+  var c = document.getElementById('euler3');
+  var ctx = c.getContext('2d');
+  // 左图：2个奇度顶点
+  var ptsL = [[80, 180], [140, 100], [200, 180], [140, 260]];
+  var edgesL = [[0,1],[1,2],[1,3]];
+  for (var i = 0; i < edgesL.length; i++) {
+    line(ctx, ptsL[edgesL[i][0]][0], ptsL[edgesL[i][0]][1], ptsL[edgesL[i][1]][0], ptsL[edgesL[i][1]][1], '#94a3b8', 2.5);
+  }
+  for (var i = 0; i < ptsL.length; i++) {
+    var deg = (i === 1) ? 3 : 1;
+    var col = (deg % 2 === 0) ? '#38bdf8' : '#f87171';
+    circle(ctx, ptsL[i][0], ptsL[i][1], 20, '#1e293b', col, '' + (i + 1));
+    ctx.fillStyle = col; ctx.font = '10px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('d=' + deg, ptsL[i][0], ptsL[i][1] + 32);
+  }
+  ctx.fillStyle = '#e2e8f0'; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('⚠ 2个奇度顶点', 140, 310);
+  ctx.fillText('(仅欧拉通路,非欧拉图)', 140, 328);
+
+  // 右图：K4 每点度3
+  var ptsR = [[440, 100], [520, 180], [440, 260], [360, 180]];
+  for (var i = 0; i < ptsR.length; i++) {
+    for (var j = i + 1; j < ptsR.length; j++) {
+      line(ctx, ptsR[i][0], ptsR[i][1], ptsR[j][0], ptsR[j][1], '#64748b', 2.5);
+    }
+  }
+  for (var i = 0; i < ptsR.length; i++) {
+    circle(ctx, ptsR[i][0], ptsR[i][1], 20, '#1e293b', '#f87171', '' + (i + 1));
+    ctx.fillStyle = '#f87171'; ctx.font = '10px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('d=3', ptsR[i][0], ptsR[i][1] + 32);
+  }
+  ctx.fillStyle = '#e2e8f0'; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('✗ 4个奇度顶点', 440, 310);
+  ctx.fillText('(无欧拉通路)', 440, 328);
+
+  ctx.strokeStyle = '#334155'; ctx.lineWidth = 1; ctx.setLineDash([5, 8]);
+  ctx.beginPath(); ctx.moveTo(310, 80); ctx.lineTo(310, 290); ctx.stroke();
+  ctx.setLineDash([]);
+})();
+
+// ==================== 图4：不连通反例 ====================
+(function() {
+  var c = document.getElementById('euler4');
+  var ctx = c.getContext('2d');
+  var tri1 = [[105, 80], [175, 80], [140, 140]];
+  var tri2 = [[385, 80], [455, 80], [420, 140]];
+  function drawTri(pts, offset) {
+    line(ctx, pts[0][0], pts[0][1], pts[1][0], pts[1][1], '#64748b', 2.5);
+    line(ctx, pts[1][0], pts[1][1], pts[2][0], pts[2][1], '#64748b', 2.5);
+    line(ctx, pts[2][0], pts[2][1], pts[0][0], pts[0][1], '#64748b', 2.5);
+    for (var i = 0; i < 3; i++) {
+      circle(ctx, pts[i][0], pts[i][1], 18, '#1e293b', '#38bdf8', '' + (i + 1 + offset));
+    }
+  }
+  drawTri(tri1, 0); drawTri(tri2, 3);
+  ctx.fillStyle = '#94a3b8'; ctx.font = '12px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('每个顶点 d=2（偶数✓）', 140, 25);
+  ctx.fillText('每个顶点 d=2（偶数✓）', 420, 25);
+  ctx.fillText('K₃', 140, 162); ctx.fillText('K₃', 420, 162);
+  ctx.fillStyle = '#f87171'; ctx.font = 'bold 16px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('✗ 不连通 → 不是欧拉图！', 280, 125);
+})();
+
+// ==================== 图5：哈密顿图示例 ====================
+(function() {
+  var c = document.getElementById('hamilton1');
+  var ctx = c.getContext('2d');
+  var n = 6, cx = 280, cy = 140, r = 100;
+  var pts = [];
+  for (var i = 0; i < n; i++) {
+    var ang = i * Math.PI * 2 / n - Math.PI / 2;
+    pts.push([cx + r * Math.cos(ang), cy + r * Math.sin(ang)]);
+  }
+  var allEdges = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,2],[2,4],[4,0],[1,3],[3,5],[5,1]];
+  for (var i = 0; i < allEdges.length; i++) {
+    line(ctx, pts[allEdges[i][0]][0], pts[allEdges[i][0]][1], pts[allEdges[i][1]][0], pts[allEdges[i][1]][1], '#475569', 1.8);
+  }
+  var hamPath = [0, 1, 2, 3, 4, 5];
+  for (var i = 0; i < hamPath.length; i++) {
+    var j = (i + 1) % hamPath.length;
+    var a = pts[hamPath[i]], b = pts[hamPath[j]];
+    line(ctx, a[0], a[1], b[0], b[1], '#f472b6', 3.5);
+    var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    var ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
+    ctx.fillStyle = '#f472b6';
+    ctx.beginPath();
+    ctx.moveTo(mx + 5 * Math.cos(ang), my + 5 * Math.sin(ang));
+    ctx.lineTo(mx - 7 * Math.cos(ang - 0.7), my - 7 * Math.sin(ang - 0.7));
+    ctx.lineTo(mx - 7 * Math.cos(ang + 0.7), my - 7 * Math.sin(ang + 0.7));
+    ctx.fill();
+  }
+  for (var i = 0; i < pts.length; i++) {
+    circle(ctx, pts[i][0], pts[i][1], 22, '#1e293b', '#f472b6', '' + (i + 1));
+  }
+  ctx.fillStyle = '#f472b6'; ctx.font = 'bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('哈密顿回路 (粉色)', cx, cy + r + 38);
+})();
+
+// ==================== 彼得森图 ====================
+(function() {
+  var c = document.getElementById('petersen');
+  var ctx = c.getContext('2d');
+  var cx = 280, cy = 140, outerR = 105, innerR = 52;
+  var outer = [], inner = [];
+  for (var i = 0; i < 5; i++) {
+    var ang = i * Math.PI * 2 / 5 - Math.PI / 2;
+    outer.push([cx + outerR * Math.cos(ang), cy + outerR * Math.sin(ang)]);
+    inner.push([cx + innerR * Math.cos(ang), cy + innerR * Math.sin(ang)]);
+  }
+  for (var i = 0; i < 5; i++) {
+    var j = (i + 1) % 5;
+    line(ctx, outer[i][0], outer[i][1], outer[j][0], outer[j][1], '#64748b', 2.5);
+  }
+  for (var i = 0; i < 5; i++) {
+    var j = (i + 2) % 5;
+    line(ctx, inner[i][0], inner[i][1], inner[j][0], inner[j][1], '#64748b', 2.5);
+  }
+  for (var i = 0; i < 5; i++) {
+    line(ctx, outer[i][0], outer[i][1], inner[i][0], inner[i][1], '#64748b', 2.5);
+  }
+  for (var i = 0; i < 5; i++) {
+    circle(ctx, outer[i][0], outer[i][1], 18, '#1e293b', '#e2e8f0', '' + (i + 1));
+    circle(ctx, inner[i][0], inner[i][1], 18, '#1e293b', '#f87171', '' + (i + 6));
+  }
+  ctx.fillStyle = '#f87171'; ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('不是哈密顿图！', cx, cy + outerR + 50);
+  ctx.fillStyle = '#94a3b8'; ctx.font = '12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('满足必要条件，但不满足充分条件', cx, cy + outerR + 72);
+})();
+
+// ==================== 同一个图对比 ====================
+(function() {
+  var c = document.getElementById('compare');
+  var ctx = c.getContext('2d');
+  var pts = [[160, 60], [340, 60], [420, 210], [300, 330], [60, 210]];
+  var edges = [[0,1],[1,2],[2,3],[3,4],[4,0],[0,2],[1,3],[2,4],[0,3]];
+  for (var i = 0; i < edges.length; i++) {
+    line(ctx, pts[edges[i][0]][0], pts[edges[i][0]][1], pts[edges[i][1]][0], pts[edges[i][1]][1], '#334155', 1.5);
+  }
+  ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('🔵 欧拉回路 (关注边)', 20, 32);
+  ctx.fillStyle = '#f472b6';
+  ctx.fillText('🩷 哈密顿回路 (关注顶点)', 350, 32);
+  for (var i = 0; i < pts.length; i++) {
+    circle(ctx, pts[i][0], pts[i][1], 20, '#1e293b', '#e2e8f0', '' + (i + 1));
+  }
+  ctx.fillStyle = '#94a3b8'; ctx.font = '11px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('每点度: d(1)=3 d(2)=3 d(3)=4 d(4)=3 d(5)=3', 140, 355);
+  ctx.fillText('有4个奇度顶点 → 不是欧拉图！', 168, 372);
+})();
+</script>
+
+</body>
+</html>

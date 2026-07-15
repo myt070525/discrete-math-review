@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>25-26 A卷 · 选择题全解析</title>
+<style>
+  :root {
+    --bg: #0f172a; --card: #1e293b; --border: #334155;
+    --text: #e2e8f0; --text2: #94a3b8;
+    --green: #4ade80; --red: #f87171; --accent: #f59e0b;
+    --blue: #38bdf8; --purple: #c084fc; --pink: #f472b6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.85; padding-bottom: 4rem;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+  h1 {
+    text-align: center; font-size: 1.9rem; margin: 1.5rem 0 0.5rem;
+    background: linear-gradient(135deg, var(--green), var(--blue), var(--purple));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle { text-align: center; color: var(--text2); margin-bottom: 2rem; font-size: 1.05rem; }
+  h2 {
+    font-size: 1.4rem; margin: 2rem 0 0.8rem; padding-left: 0.75rem;
+    border-left: 4px solid var(--accent);
+    display: flex; align-items:center; gap:0.5rem;
+  }
+  .answer-badge {
+    display: inline-block; padding: 0.15em 0.7em; border-radius: 20px;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;
+  }
+  .ans-a { background: rgba(56,189,248,0.2); color: var(--blue); }
+  .ans-b { background: rgba(244,114,182,0.2); color: var(--pink); }
+  .ans-c { background: rgba(192,132,252,0.2); color: var(--purple); }
+  .ans-d { background: rgba(74,222,128,0.2); color: var(--green); }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.5rem 1.8rem; margin: 1.2rem 0;
+  }
+  .q-header {
+    font-size: 1.05rem; font-weight: 700; margin-bottom: 0.8rem;
+    padding-bottom: 0.6rem; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .q-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--accent); color: #000; font-weight: 700; font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .options {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem 1.5rem;
+    margin: 0.5rem 0 0.8rem;
+  }
+  .opt { padding: 0.3rem 0.5rem; border-radius: 6px; font-size: 0.95rem; }
+  .opt.correct { background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.4); font-weight: 700; }
+  .opt.wrong { background: rgba(248,113,113,0.08); }
+  .explain {
+    background: rgba(255,255,255,0.03); border-radius: 8px;
+    padding: 0.8rem 1rem; margin-top: 0.8rem; font-size: 0.93rem;
+  }
+  .highlight { background: rgba(245,158,11,0.2); padding:0.08em 0.35em; border-radius:4px; color:var(--accent); font-weight:600; }
+  .highlight-green { background: rgba(74,222,128,0.2); padding:0.08em 0.35em; border-radius:4px; color:var(--green); font-weight:600; }
+  .highlight-red { background: rgba(248,113,113,0.2); padding:0.08em 0.35em; border-radius:4px; color:var(--red); font-weight:600; }
+  .highlight-blue { background: rgba(56,189,248,0.2); padding:0.08em 0.35em; border-radius:4px; color:var(--blue); font-weight:600; }
+  .callout {
+    border-radius: 10px; padding: 1rem 1.3rem; margin: 0.8rem 0;
+  }
+  .callout-info { background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); }
+  .callout-warn { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); }
+  .tag {
+    display: inline-block; padding: 0.15em 0.55em; border-radius: 20px;
+    font-size: 0.78rem; font-weight: 600;
+  }
+  .tag-green { background: rgba(74,222,128,0.2); color: var(--green); }
+  .tag-red { background: rgba(248,113,113,0.2); color: var(--red); }
+  .formula {
+    font-family: "Times New Roman","Courier New",serif;
+    font-style: italic; color: inherit;
+  }
+  .formula-block {
+    display: inline-block; padding: 0.35rem 0.8rem;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    background: rgba(0,0,0,0.3); font-family: "Times New Roman","Courier New",serif;
+    font-size: 1.05rem; margin: 0.2rem 0;
+  }
+  @media (max-width:640px) {
+    .options { grid-template-columns: 1fr; }
+  }
+  .emoji-bullet { margin-right:0.3rem; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>📝 2025-2026 学年 A卷 · 选择题全解析</h1>
+<p class="subtitle">10 道题 × 逐题精讲 = 拿稳 20 分</p>
+
+<!-- 难度概览 -->
+<div class="card" style="text-align:center;">
+  <table style="margin:0 auto; width:auto;">
+    <tr><th>题号</th><th>知识点</th><th>答案</th><th>难度</th></tr>
+    <tr><td>1</td><td>命题符号化</td><td><span class="tag tag-green">A</span></td><td>⭐</td></tr>
+    <tr><td>2</td><td>公式类型判定</td><td><span class="tag tag-green">B</span></td><td>⭐</td></tr>
+    <tr><td>3</td><td>幂集 + 笛卡尔积</td><td><span class="tag tag-green">A</span></td><td>⭐⭐</td></tr>
+    <tr><td>4</td><td>谓词逻辑等值式</td><td><span class="tag tag-green">D</span></td><td>⭐⭐⭐</td></tr>
+    <tr><td>5</td><td>正则图</td><td><span class="tag tag-green">A</span></td><td>⭐⭐</td></tr>
+    <tr><td>6</td><td>关系幂运算</td><td><span class="tag tag-green">C</span></td><td>⭐⭐⭐</td></tr>
+    <tr><td>7</td><td>函数复合 + 单射/满射</td><td><span class="tag tag-green">A</span></td><td>⭐⭐</td></tr>
+    <tr><td>8</td><td>生成子图 + 同构</td><td><span class="tag tag-green">C</span></td><td>⭐⭐⭐</td></tr>
+    <tr><td>9</td><td>自同态</td><td><span class="tag tag-green">D</span></td><td>⭐⭐</td></tr>
+    <tr><td>10</td><td>群的定义</td><td><span class="tag tag-green">C</span></td><td>⭐⭐</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 第1题 ==================== -->
+<div class="card">
+  <div class="q-header">
+    <span style="display:flex;align-items:center;gap:0.7rem;">
+      <span class="q-num">1</span>
+      <span>命题符号化 — "除非…否则…"</span>
+    </span>
+    <span class="answer-badge ans-a">答案：A</span>
+  </div>
+  <p>设 p：天下大雨，q：他在室内运动。命题 "<strong>除非天下大雨，否则他不在室内运动</strong>"。</p>
+
+  <div class="options">
+    <div class="opt correct">✅ A. p → q</div>
+    <div class="opt wrong">B. q → p</div>
+    <div class="opt wrong">C. q → ¬p</div>
+    <div class="opt wrong">D. p → ¬q</div>
+  </div>
+
+  <div class="explain">
+    <strong>🔑 关键公式：</strong>
+    <div class="formula-block">"除非 p，否则 q" ⇔ "¬p → q" ⇔ "p ∨ q"</div>
+    <br>
+    本题："除非天下大雨，<strong>否则他不在室内运动</strong>"<br>
+    → ¬p → ¬q （如果天没下大雨，则他不在室内运动）<br>
+    → 等价于 <span class="highlight-green">p → q</span>（逆否命题）<br>
+    → 等价于 "如果天下大雨，则他在室内运动"
+  </div>
+
+  <div class="callout callout-info">
+    <strong>💡 记忆技巧：</strong>"除非A否则B" = "如果不A则B" = ¬A → B。<br>
+    本题 B = ¬q，所以 ¬p → ¬q，等价于 p → q。
+  </div>
+</div>
+
+<!-- ==================== 第2题 ==================== -->
+<div class="card">
+  <div class="q-header">
+    <span style="display:flex;align-items:center;gap:0.7rem;">
+      <span class="q-num">2</span>
+      <span>命题公式类型判定</span>
+    </span>
+    <span class="answer-badge ans-b">答案：B</span>
+  </div>
+  <p>公式：<span class="formula-block">(p ∧ (p → q)) → q</span></p>
+
+  <div class="options">
+    <div class="opt wrong">A. 矛盾式</div>
+    <div class="opt correct">✅ B. 重言式</div>
+    <div class="opt wrong">C. 非重言式的可满足式</div>
+    <div class="opt wrong">D. 无法判定</div>
+  </div>
+
+  <div class="explain">
+    <strong>🔑 化简：</strong><br>
+    p ∧ (p → q) ⇔ p ∧ (¬p ∨ q) ⇔ (p ∧ ¬p) ∨ (p ∧ q) ⇔ <span class="highlight">p ∧ q</span><br><br>
+    原式 ⇔ (p ∧ q) → q<br>
+    ⇔ ¬(p ∧ q) ∨ q ⇔ (¬p ∨ ¬q) ∨ q ⇔ ¬p ∨ <span class="highlight-green">T</span> ⇔ <strong>T</strong><br><br>
+    <strong>真值恒为T</strong> → <span class="highlight-green">重言式（永真式）</span>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>💡 这就是"假言推理"的有效性：</strong>(p ∧ (p→q)) → q 是重言式，说明假言推理是有效的推理规则。
+  </div>
+</div>
+
+<!-- ==================== 第3题 ==================== -->
+<div class="card">
+  <div class="q-header">
+    <span style="display:flex;align-items:center;gap:0.7rem;">
+      <span class="q-num">3</span>
+      <span>幂集的基数 + 笛卡尔积</span>
+    </span>
+    <span class="answer-badge ans-a">答案：A</span>
+  </div>
+  <p>A = {a, b}，P(A) 是 A 的幂集，求 |A × P(A)|。</p>
+
+  <div class="options">
+    <div class="opt correct">✅ A. 8</div>
+    <div class="opt wrong">B. 16</div>
+    <div class="opt wrong">C. 12</div>
+    <div class="opt wrong">D. 无法判定</div>
+  </div>
+
+  <div class="explain">
+    <strong>🔑 分两步：</strong><br>
+    ① |A| = 2，P(A) = {∅, {a}, {b}, {a,b}}，<span class="highlight">|P(A)| = 2² = 4</span><br>
+    ② |A × P(A)| = |A| × |P(A)| = 2 × 4 = <span class="highlight-green">8</span><br><br>
+    展开验证：A × P(A) = {⟨a,∅⟩,⟨a,{a}⟩,⟨a,{b}⟩,⟨a,{a,b}⟩,⟨b,∅⟩,⟨b,{a}⟩,⟨b,{b}⟩,⟨b,{a,b}⟩}，共 8 个。
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>⚠️ 陷阱：</strong>|A × B| = |A| × |B| = 2 × 4 = 8，不要误算成 2⁴=16！<br>
+    2⁴=16 是 |A→B|（函数个数）或混淆了笛卡尔积和幂集运算。
+  </div>
+</div>
+
+<!-- ==================== 第4题 ==================== -->
+<div class="card">
+  <div class="q-header">
+    <span style="display:flex;align-items:center;gap:0.7rem;">
+      <span class="q-num">4</span>
+      <span>谓词逻辑等值式</span>
+    </span>
+    <span class="answer-badge ans-d">答案：D</span>
+  </div>
+  <p>下列谓词公式<strong>不等值</strong>的是（注意题目问的是"不等值"！）。</p>
+
+  <div class="options">
+    <div class="opt wrong">A. ¬∀xA(x) ⇔ ∃x¬A(x)</div>
+    <div class="opt wrong">B. ∀x¬A(x) ⇔ ¬∃xA(x)</div>
+    <div class="opt wrong">C. ¬∃x(M(x)∧¬F(x)) ⇔ ∀x(M(x)→F(x))</div>
+    <div class="opt correct">✅ D. ¬∀x(F(x)→G(x)) ⇔ ∃x(F(x)∧G(x))</div>
+  </div>
+
+  <div class="explain">
+    <strong>🔑 逐项验算：</strong><br><br>
+    <strong>A ✅（等值）：</strong>量词否定律：¬∀ = ∃¬<br>
+    <strong>B ✅（等值）：</strong>量词否定律：∀¬ = ¬∃<br>
+    <strong>C ✅（等值）：</strong>左边 ¬∃x(M(x)∧¬F(x)) ⇔ ∀x¬(M(x)∧¬F(x)) ⇔ ∀x(¬M(x)∨F(x)) ⇔ ∀x(M(x)→F(x)) = 右边<br>
+    <strong>D ❌（不等值！）：</strong>正确公式是<br>
+    <span class="formula-block">¬∀x(F(x)→G(x)) ⇔ ∃x(F(x) ∧ <span class="highlight-red">¬</span>G(x))</span><br>
+    题目D写的是 ∃x(F(x)∧G(x))，<span class="highlight-red">缺了 ¬！</span>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>⚠️ 考试大坑：</strong>题目问的是"<strong>不等值</strong>"，不是"等值"！<br>
+    别急着勾第一个等值的，要找那个"错误"的。D 漏了 ¬G(x)，所以不等值。
+  </div>
+</div>
+
+<!-- ==================== 第5题 ==================== -->
+<div class="card">
+  <div class="q-header">
+    <span style="display:flex;align-items:center;gap:0.7rem;">
+      <span class="q-num">5</span>
+      <span>3-正则图求 n 和 m</span>
+    </span>
+    <span class="answer-badge ans-a">答案：A</span>
+  </div>
+  <p>n 阶无向图 G 是 3-正则图，m 为边数，且 2n − 3 = m。求 n 和 m。</p>
+
+  <div class="options">
+    <div class="opt correct">✅ A. n = 6，m = 9</div>
+    <div class="opt wrong">B. n = 5，m = 7</div>
+    <div class="opt wrong">C. n = 3，m = 3</div>
+    <div class="opt wrong">D. n = 7，m = 5</div>
+  </div>
+
+  <div class="explain">
+    <strong>🔑 3-正则图：每个顶点度数为 3</strong><br><br>
+    握手定理：∑d(v) = 3n = 2m → <span class="highlight">m = 3n/2</span><br>
+    结合条件：2n − 3 = m<br><br>
+    联立：2n − 3 = 3n/2<br>
+    → 4n − 6 = 3n<br>
+    → <span class="highlight-green">n = 6</span><br>
+    → m = 2×6 − 3 = <span class="highlight-green">9</span><br>
+    → 验证：3n/2 = 18/2 = 9 ✓
+  </div>
+
+  <div class="callout callout-info">
+    <strong>💡 k-正则图通用公式：</strong>∑d(v) = kn = 2m → m = kn/2。<br>
+    k 必须是偶数或 n 必须是偶数（因为 m 必须是整数）。
+  </div>
+</div>
+
+<!-- ==================== 第6题 ==================== -->
+<div class="card">
+  <div class="q-header">
+    <span style="display:flex;align-items:center;gap:0.7rem;">
+      <span class="q-num">6</span>
+      <span>关系幂运算 — 周期规律</span>
+    </span>
+    <span class="answer-badge ans-c">答案：C</span>
+  </div>
+  <p>R 是 A 上的关系，已知 R³ = R⁶，求 R⁴⁴。</p>
+
+  <div class="options">
+    <div class="opt wrong">A. R³</div>
+    <div class="opt wrong">B. R⁶</div>
+    <div class="opt correct">✅ C. R⁵</div>
+    <div class="opt wrong">D. R⁰</div>
+  </div>
+
+  <div class="explain">
+    <strong>🔑 从 R³ = R⁶ 推出周期：</strong><br>
+    R³ = R⁶ = R³ ∘ R³<br>
+    两边合成 R³：R⁶ = R⁹<br>
+    再合成：R⁹ = R¹² ...<br>
+    → 从 R³ 开始，每 3 步一个循环：<span class="highlight">R³ = R⁶ = R⁹ = R¹² = ...</span><br><br>
+    R⁴⁴ = R³⁺⁴¹ = R³ ∘ R⁴¹<br>
+    找 44 除以 3：44 = 3×14 + 2，不行，因为周期从 R³ 开始<br>
+    关键：<span class="highlight">R³ = R⁶</span>，则对于 k ≥ 3，Rᵏ = Rᵏ⁺³<br><br>
+    R⁴⁴ = R⁴⁴⁻³ = R⁴¹ = ... = R³⁺² = R⁵（不断减3直到落在 [3,5] 内）<br>
+    44 − 3×13 = 44 − 39 = <span class="highlight-green">5</span> → R⁴⁴ = R⁵
+  </div>
+
+  <div class="callout callout-info">
+    <strong>💡 更简单的方法：</strong>R³=R⁶ ⇒ R³=R³∘R³ ⇒ 对任意k≥3，Rᵏ=R³∘Rᵏ⁻³。<br>
+    当 k≥6 时 Rᵏ=Rᵏ⁻³。反复减 3：44→41→38→...→5。
+  </div>
+</div>
+
+<!-- ==================== 第7题 ==================== -->
+<div class="card">
+  <div class="q-header">
+    <span style="display:flex;align-items:center;gap:0.7rem;">
+      <span class="q-num">7</span>
+      <span>函数复合 — f(x)=x², g(x)=x+2</span>
+    </span>
+    <span class="answer-badge ans-a">答案：A</span>
+  </div>
+  <p>f: R→R, g: R→R，f(x)=x²，g(x)=x+2，求 f∘g 的性质。</p>
+
+  <div class="options">
+    <div class="opt correct">✅ A. 既不是单射也不是满射</div>
+    <div class="opt wrong">B. 是单射但不是满射</div>
+    <div class="opt wrong">C. 是满射但不是单射</div>
+    <div class="opt wrong">D. 是双射</div>
+  </div>
+
+  <div class="explain">
+    <strong>🔑 先求 f∘g(x)：</strong><br>
+    (f∘g)(x) = f(g(x)) = f(x+2) = <span class="formula-block">(x+2)²</span><br><br>
+
+    <strong>单射判断：</strong>(x₁+2)² = (x₂+2)² 是否 ⇒ x₁=x₂？<br>
+    取 x₁=−4 (得 4)，x₂=0 (得 4)，值相同但 x₁≠x₂ → <span class="highlight-red">不是单射</span><br><br>
+
+    <strong>满射判断：</strong>值域 = [0, +∞) ≠ R（取不到负数）→ <span class="highlight-red">不是满射</span><br><br>
+
+    → <span class="highlight-green">既不是单射也不是满射</span>
+  </div>
+</div>
+
+<!-- ==================== 第8题 ==================== -->
+<div class="card">
+  <div class="q-header">
+    <span style="display:flex;align-items:center;gap:0.7rem;">
+      <span class="q-num">8</span>
+      <span>K₄ 含3条边的生成子图（不同构）</span>
+    </span>
+    <span class="answer-badge ans-c">答案：C</span>
+  </div>
+  <p>4 阶完全无向图 K₄ 中含 3 条边的<strong>不同构</strong>的生成子图有几个？</p>
+
+  <div class="options">
+    <div class="opt wrong">A. 5</div>
+    <div class="opt wrong">B. 2</div>
+    <div class="opt correct">✅ C. 3</div>
+    <div class="opt wrong">D. 以上都不对</div>
+  </div>
+
+  <div class="explain">
+    <strong>🔑 生成子图 = 顶点全保留，只选部分边。K₄ 有 6 条边，选 3 条。</strong><br><br>
+    选 3 条边的所有可能结构（不同构！）：<br><br>
+
+    <strong>① 3 条边构成一条路径 P₄：</strong>●━●━●━● （不闭合的链）<br>
+    <strong>② 3 条边构成一个三角形 K₃ + 1 孤立点：</strong>△ + ●（3 条边在一个三角形上）<br>
+    <strong>③ 3 条边构成星形 K₁,₃：</strong>一个中心点连三个叶子<br><br>
+
+    一共 <span class="highlight-green">3 种不同构</span> 的结构。<br>
+    （注意：3条边不能构成含回路的 4 顶点结构除了三角形——回路需至少 3 条边，含 4 个点的回路需 4 条边。）
+  </div>
+</div>
+
+<!-- ==================== 第9题 ==================== -->
+<div class="card">
+  <div class="q-header">
+    <span style="display:flex;align-items:center;gap:0.7rem;">
+      <span class="q-num">9</span>
+      <span>自同态 — V = ⟨R*, ·⟩</span>
+    </span>
+    <span class="answer-badge ans-d">答案：D</span>
+  </div>
+  <p>V = ⟨R*, ·⟩（非零实数乘法群），下列哪个是 V 的<strong>自同态</strong>？</p>
+
+  <div class="options">
+    <div class="opt wrong">A. f(x) = −x</div>
+    <div class="opt wrong">B. f(x) = 2x</div>
+    <div class="opt wrong">C. f(x) = x＋1</div>
+    <div class="opt correct">✅ D. f(x) = |x|</div>
+  </div>
+
+  <div class="explain">
+    <strong>🔑 自同态条件：</strong>f(x·y) = f(x)·f(y)（<span class="highlight">保持运算</span>）<br><br>
+
+    <strong>A：</strong>f(x·y) = −xy，但 f(x)·f(y) = (−x)(−y) = xy ≠ −xy &nbsp;<span class="tag tag-red">✗</span><br>
+    <strong>B：</strong>f(x·y) = 2xy，但 f(x)·f(y) = 4xy ≠ 2xy &nbsp;<span class="tag tag-red">✗</span><br>
+    <strong>C：</strong>f(x·y) = xy+1，但 f(x)·f(y) = (x+1)(y+1) = xy+x+y+1 &nbsp;<span class="tag tag-red">✗</span><br>
+    <strong>D：</strong>f(x·y) = |xy| = |x|·|y| = f(x)·f(y) &nbsp;<span class="tag tag-green">✓</span><br><br>
+
+    → <span class="highlight-green">|x| 保持乘法运算</span>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>💡 同态 vs 自同态：</strong>同态 = 保持运算的映射。自同态 = 到自身的同态。<br>
+    判断就是验证 f(x∘y) = f(x)∘f(y) 是否恒成立。
+  </div>
+</div>
+
+<!-- ==================== 第10题 ==================== -->
+<div class="card">
+  <div class="q-header">
+    <span style="display:flex;align-items:center;gap:0.7rem;">
+      <span class="q-num">10</span>
+      <span>群的定义 — 哪个是群？</span>
+    </span>
+    <span class="answer-badge ans-c">答案：C</span>
+  </div>
+  <p>下列代数系统中，哪个是<strong>群</strong>？</p>
+
+  <div class="options">
+    <div class="opt wrong">A. ⟨N, ＋⟩</div>
+    <div class="opt wrong">B. ⟨Z, ×⟩</div>
+    <div class="opt correct">✅ C. ⟨Zₙ, ⊕⟩</div>
+    <div class="opt wrong">D. ⟨P(S), ∩⟩</div>
+  </div>
+
+  <div class="explain">
+    <strong>群 = 封闭 + 结合 + 幺元 + 每个元素有逆元</strong><br><br>
+
+    <strong>A ⟨N,＋⟩：</strong>自然数加法，没有逆元（如 1 的逆元 −1 ∉ N）&nbsp;<span class="tag tag-red">✗</span><br>
+    <strong>B ⟨Z,×⟩：</strong>整数乘法，除 ±1 外没逆元（如 2⁻¹ = 1/2 ∉ Z）&nbsp;<span class="tag tag-red">✗</span><br>
+    <strong>C ⟨Zₙ,⊕⟩：</strong>模 n 加法群！封闭✓ 结合✓ 幺元0✓ 逆元n−a✓ &nbsp;<span class="tag tag-green">✓</span><br>
+    <strong>D ⟨P(S),∩⟩：</strong>交运算，一般没有逆元（A∩B=∅ 不能恢复）&nbsp;<span class="tag tag-red">✗</span><br><br>
+
+    → <span class="highlight-green">⟨Zₙ, ⊕⟩ 是群（模 n 加法群）</span>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>⚠️ 常见群和非群对比：</strong><br>
+    是群：⟨Z,＋⟩、⟨R*,×⟩、⟨Zₙ,⊕⟩<br>
+    不是群：⟨N,＋⟩（无逆元）、⟨Z,×⟩（无逆元）、⟨P(S),∩⟩（无逆元）
+  </div>
+</div>
+
+<!-- ==================== 总结 ==================== -->
+<h2>📊 十题知识点分布</h2>
+
+<div class="card">
+<table>
+  <tr><th>知识板块</th><th>题号</th><th>分值</th></tr>
+  <tr><td>命题逻辑</td><td>1, 2</td><td>4分</td></tr>
+  <tr><td>一阶逻辑（谓词逻辑）</td><td>4</td><td>2分</td></tr>
+  <tr><td>集合·关系·函数</td><td>3, 6, 7, 8</td><td>8分</td></tr>
+  <tr><td>图论</td><td>5</td><td>2分</td></tr>
+  <tr><td>代数系统</td><td>9, 10</td><td>4分</td></tr>
+</table>
+</div>
+
+<div class="callout callout-info" style="font-size:1.05rem; text-align:center;">
+  <strong>🎯 选择题目标：20分全拿！</strong><br>
+  涉及5大板块，以集合·关系·函数比重最大（8分）
+</div>
+
+</div>
+</body>
+</html>

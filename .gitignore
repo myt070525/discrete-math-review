@@ -1,0 +1,15 @@
+# 原始试卷和答案不传
+*.docx
+*.doc
+*.pdf
+
+# 临时文件
+temp_*
+temp_images/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+.claude/
+.reasonix/
+node_modules/

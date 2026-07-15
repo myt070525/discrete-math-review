@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二叉树表示算式 · 三种行遍法 — 通俗详解</title>
+<style>
+  :root {
+    --bg: #0f172a; --card: #1e293b; --card2: #1a2332;
+    --border: #334155; --text: #e2e8f0; --text2: #94a3b8;
+    --accent: #22d3ee; --green: #4ade80; --red: #f87171;
+    --pink: #f472b6; --blue: #38bdf8; --yellow: #fbbf24;
+    --purple: #c084fc; --orange: #fb923c;
+    --pre: #f87171; --in: #4ade80; --post: #38bdf8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.85; padding-bottom: 4rem;
+  }
+  .container { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
+  h1 {
+    text-align: center; font-size: 2rem; margin: 1.5rem 0 0.5rem;
+    background: linear-gradient(135deg, var(--pre), var(--in), var(--post));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle { text-align: center; color: var(--text2); margin-bottom: 2rem; font-size: 1.05rem; }
+  h2 {
+    font-size: 1.45rem; margin: 2.2rem 0 1rem; padding-left: 0.75rem;
+    border-left: 4px solid var(--accent);
+  }
+  h3 { font-size: 1.1rem; margin: 1.3rem 0 0.6rem; color: var(--text); }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.5rem 1.8rem; margin: 1rem 0;
+  }
+  canvas { display: block; margin: 1rem auto; max-width: 100%; }
+  .fig-caption { text-align: center; color: var(--text2); font-size: 0.9rem; margin-top: 0.3rem; }
+  .highlight { background: rgba(34,211,238,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--accent); }
+  .highlight-pre { background: rgba(248,113,113,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--pre); }
+  .highlight-in { background: rgba(74,222,128,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--in); }
+  .highlight-post { background: rgba(56,189,248,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--post); }
+  .callout {
+    border-radius: 10px; padding: 1rem 1.3rem; margin: 1rem 0; font-weight: 500;
+  }
+  .callout-info { background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); }
+  .callout-warn { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); }
+  .callout-danger { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); }
+  .callout-success { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); }
+  table { border-collapse: collapse; margin: 1rem 0; width: 100%; }
+  th { background: var(--border); padding: 0.6rem 0.8rem; text-align: center; font-size:0.95rem; }
+  td { padding: 0.5rem 0.8rem; text-align: center; border-bottom: 1px solid var(--border); font-size:0.93rem; }
+  .tag {
+    display: inline-block; padding: 0.2em 0.65em; border-radius: 20px;
+    font-size: 0.82rem; font-weight: 600;
+  }
+  .tag-pre { background: rgba(248,113,113,0.2); color: var(--pre); }
+  .tag-in { background: rgba(74,222,128,0.2); color: var(--in); }
+  .tag-post { background: rgba(56,189,248,0.2); color: var(--post); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin: 0.3rem 0; }
+  .math {
+    font-family:"Times New Roman","Courier New",serif;
+    font-style:italic; color:#e2e8f0;
+  }
+  .step-row { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; margin: 0.8rem 0; }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; min-width: 30px;
+    border-radius: 50%; background: var(--accent); color: #000;
+    font-weight: 700; font-size: 0.95rem; margin-right: 0.5rem;
+  }
+  .formula-box {
+    display: inline-block; padding: 0.6rem 1.2rem;
+    border: 2px solid var(--border); border-radius: 12px;
+    background: rgba(0,0,0,0.3); font-size: 1.2rem;
+    font-family: "Courier New", monospace; letter-spacing: 2px;
+    margin: 0.5rem 0;
+  }
+  .two-col { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .col { flex: 1; min-width: 280px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>🌳 二叉树表示算式 · 三种行遍法</h1>
+<p class="subtitle">离散数学期末高频考点 — 从算式到二叉树再到后序表达式</p>
+
+<!-- 题目 -->
+<div class="card" style="text-align:center;">
+  <h3 style="margin-top:0;">📝 原题（24-25 A卷 解答题第5题）</h3>
+  <div class="formula-box">((a－b)×c－(d×e＋f))÷(g＋h×i)</div>
+  <p style="color:var(--text2); margin-top:0.5rem;">用二叉树表示该算式，并写出<span class="highlight-post">后序行遍法</span>的访问结果</p>
+</div>
+
+<!-- ==================== 核心概念 ==================== -->
+<h2>一、核心概念：运算符作根，运算对象作子树</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">🔑 构建规则（递归）</h3>
+<div style="display:flex; gap:2rem; flex-wrap:wrap; align-items:center;">
+  <div style="flex:1; min-width:240px;">
+    <ol>
+      <li>找<strong>最后运算</strong>的运算符作为<strong>树根</strong></li>
+      <li>左边部分 → <strong>左子树</strong></li>
+      <li>右边部分 → <strong>右子树</strong></li>
+      <li>对子树<strong>重复</strong>步骤1-3</li>
+      <li>遇到操作数（字母/数字）→ 叶子结点</li>
+    </ol>
+  </div>
+  <canvas id="simple" width="260" height="180"></canvas>
+</div>
+</div>
+
+<div class="callout callout-info">
+  <strong>💡 优先级（低→高）：</strong> 最后运算 = 优先级最低的运算符<br>
+  <strong>±（最低）→ ×÷（中间）→ 括号内优先</strong>
+</div>
+
+<!-- ==================== 构建过程 ==================== -->
+<h2>二、逐步构建表达式树</h2>
+
+<div class="card">
+<h3 style="margin-top:0;"><span class="step-num">1</span> 找到最后运算的运算符 → 树根</h3>
+<div class="formula-box">(<span style="color:#f87171;">(a－b)×c－(d×e＋f)</span>) <span style="color:#22d3ee;font-size:1.4rem;">÷</span> (<span style="color:#4ade80;">g＋h×i</span>)</div>
+<p style="margin-top:0.5rem;">
+  整个算式被 <span class="highlight">÷</span> 分成左右两部分。<span class="highlight">÷</span> 就是树根。
+</p>
+<canvas id="step1" width="560" height="100"></canvas>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;"><span class="step-num">2</span> 递归构建左子树</h3>
+<div class="formula-box" style="font-size:1rem;">(a－b)×c <span style="color:#f87171;font-size:1.3rem;">－</span> (d×e＋f)</div>
+<p style="margin-top:0.5rem;">左半部分中，<span class="highlight-pre" style="font-size:1.1rem;">－</span> 是最外层运算符（优先级最低），为左子树的根。</p>
+<canvas id="step2" width="560" height="180"></canvas>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;"><span class="step-num">3</span> 继续分解左子树的左右部分</h3>
+<div class="two-col">
+  <div class="col">
+    <strong>左子树的左：</strong><span class="formula-box" style="font-size:0.95rem;">(a－b) × c</span><br>
+    <span style="color:var(--pre);">×</span> 是根，左 = a－b，右 = c
+  </div>
+  <div class="col">
+    <strong>左子树的右：</strong><span class="formula-box" style="font-size:0.95rem;">(d×e ＋ f)</span><br>
+    <span style="color:var(--pre);">＋</span> 是根，左 = d×e，右 = f
+  </div>
+</div>
+<canvas id="step3" width="560" height="260"></canvas>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;"><span class="step-num">4</span> 递归构建右子树 + 补齐所有叶子</h3>
+<p>右半部分：<span class="formula-box" style="font-size:0.95rem;">g ＋ h×i</span>，<span style="color:var(--pre);">＋</span> 是根</p>
+<p>叶结点（操作数）：a, b, c, d, e, f, g, h, i</p>
+</div>
+
+<div class="card" style="text-align:center;">
+<h3 style="margin-top:0;">🌳 完整表达式二叉树</h3>
+<canvas id="fullTree" width="800" height="500"></canvas>
+<div class="fig-caption">
+  <span style="color:var(--accent);">青色</span>=运算符（内部结点）&nbsp;
+  <span style="color:var(--yellow);">黄色</span>=操作数（叶子结点）<br>
+  每个运算符的左子树 = 左操作数，右子树 = 右操作数
+</div>
+</div>
+
+<!-- ==================== 三种行遍法 ==================== -->
+<h2>三、三种行遍法（树的遍历）</h2>
+
+<div class="callout callout-success" style="text-align:center; font-size:1.05rem;">
+  <strong>口诀：</strong>
+  <span class="highlight-pre">前序：根→左→右</span> &nbsp;|&nbsp;
+  <span class="highlight-in">中序：左→根→右</span> &nbsp;|&nbsp;
+  <span class="highlight-post">后序：左→右→根</span>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">🎨 同一个简单树，三种访问顺序</h3>
+<canvas id="threeWays" width="800" height="320"></canvas>
+</div>
+
+<!-- ==================== 本题后序遍历 ==================== -->
+<h2>四、本题答案 — 后序行遍法（逐层动画）</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">🔵 后序遍历规则：左子树 → 右子树 → 根</h3>
+<p style="color:var(--text2);">递归：先走完左子树全部结点，再走完右子树全部结点，最后访问根。</p>
+<canvas id="postOrder" width="800" height="500"></canvas>
+<div class="fig-caption">
+  遍历顺序（数字①~⑰）：先左后右最后根，逐层回溯
+</div>
+</div>
+
+<div class="card" style="text-align:center;">
+<h3 style="margin-top:0;">📝 最终答案</h3>
+<div class="formula-box" style="font-size:1.3rem; letter-spacing:3px;">
+  a b － c × d e × f ＋ － g h i × ＋ ÷
+</div>
+<p style="color:var(--text2); margin-top:0.5rem;">
+  这就是算式的<span class="highlight-post">后缀表达式（逆波兰表示法）</span>，计算机求值就靠它！
+</p>
+</div>
+
+<!-- ==================== 拓展 ==================== -->
+<h2>五、知识拓展 — 三种行遍法对比</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">📊 三种遍历对应的表达式形式</h3>
+<table>
+  <tr><th>遍历方式</th><th>别名</th><th>表达式形式</th><th>本题结果</th></tr>
+  <tr>
+    <td><span class="tag tag-pre">前序</span></td>
+    <td>前缀表达式<br>波兰表示法</td>
+    <td>运算符在前<br>－＋×ab</td>
+    <td style="text-align:left;font-size:0.88rem;"><span style="color:var(--pre);">÷ － × － a b c ＋ × d e f ＋ g × h i</span></td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-in">中序</span></td>
+    <td>中缀表达式<br>（原算式）</td>
+    <td>运算符在中间<br>(a＋b)×c</td>
+    <td style="text-align:left;font-size:0.88rem;"><span style="color:var(--in);">((a－b)×c－(d×e＋f))÷(g＋h×i)</span></td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-post">后序</span></td>
+    <td>后缀表达式<br>逆波兰表示法</td>
+    <td>运算符在最后<br>ab＋c×</td>
+    <td style="text-align:left;font-size:0.88rem;"><span style="color:var(--post);">a b－c × d e × f ＋－g h i ×＋÷</span></td>
+  </tr>
+</table>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">🧠 为什么后序表达式重要？</h3>
+<div class="two-col">
+  <div class="col">
+    <strong>计算机求值不需要括号！</strong>
+    <div style="margin-top:0.5rem; line-height:2;">
+      扫描后缀表达式，遇操作数入栈<br>
+      遇运算符 → 弹出两个操作数 → 计算 → 结果入栈<br>
+      最后栈顶就是答案 ✅
+    </div>
+  </div>
+  <div class="col">
+    <canvas id="stack" width="340" height="180"></canvas>
+  </div>
+</div>
+</div>
+
+<!-- ==================== 同类题 ==================== -->
+<h2>六、同类题变式</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">🔄 变式1：给后缀表达式 → 还原中缀表达式</h3>
+<div class="formula-box">a b ＋ c d － × e ÷</div>
+<p style="margin-top:0.5rem;">
+  思路：用栈，遇操作数入栈，遇运算符弹出两个操作数组成 (左 op 右) 再入栈。
+</p>
+<p>答案：<span class="formula-box" style="font-size:1rem;">(a＋b)×(c－d)÷e</span></p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">🔄 变式2：给二叉树 → 写出三种遍历结果</h3>
+<canvas id="variant2" width="560" height="240"></canvas>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">🔄 变式3：给前序+中序 → 还原二叉树</h3>
+<p>
+  <span class="highlight-pre">前序：－ × ＋ a b c ÷ d e</span><br>
+  <span class="highlight-in">中序：(a＋b) × c － d ÷ e</span>
+</p>
+<p style="color:var(--text2); margin-top:0.5rem;">
+  方法：前序第一个 = 树根 → 在中序中找到根的位置 → 左边是左子树，右边是右子树 → 递归
+</p>
+</div>
+
+<!-- ==================== 易错点 ==================== -->
+<h2>七、考点 & 易错提醒</h2>
+
+<div class="card">
+<table>
+  <tr><th>#</th><th>易错点</th><th>正确做法</th></tr>
+  <tr>
+    <td><span class="tag tag-pre">1</span></td>
+    <td>构建时找错"最后运算"</td>
+    <td>看最外层括号，找优先级<span style="color:var(--red);">最低</span>的运算符（± < ×÷）</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-pre">2</span></td>
+    <td>遍历时把根放到左子树之前</td>
+    <td>后序 = 左→右→<span class="highlight-post">根</span>，根在最后！</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-pre">3</span></td>
+    <td>漏写运算符或操作数</td>
+    <td>每个结点都恰好访问一次，数结点总数 n，遍历结果应有 n 个符号</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-pre">4</span></td>
+    <td>中序遍历不加括号</td>
+    <td>中序遍历树得到的是"无括号中缀"，还原原式需手动加括号</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-pre">5</span></td>
+    <td>混淆左右子树顺序</td>
+    <td>左子树始终在右子树之前！（有序树）</td>
+  </tr>
+</table>
+</div>
+
+<div class="callout callout-info" style="font-size:1.05rem; text-align:center;">
+  <strong>🎯 考场速记：</strong><br>
+  树根 = 最后运算 → 递归分解 → 三种行遍<br>
+  <span class="highlight-pre">前序</span>：根左右 &nbsp;
+  <span class="highlight-in">中序</span>：左根右 &nbsp;
+  <span class="highlight-post">后序</span>：左右根<br>
+  <strong>后缀表达式 = 后序遍历结果！</strong>
+</div>
+
+</div>
+
+<script>
+// ============ 工具函数 ============
+function circle(ctx, x, y, r, fill, stroke, label, labelColor, bgColor) {
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fillStyle = bgColor || '#1e293b';
+  ctx.fill();
+  ctx.strokeStyle = stroke || '#e2e8f0';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  if (label) {
+    ctx.fillStyle = labelColor || '#e2e8f0';
+    ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(label, x, y);
+  }
+}
+
+function line(ctx, x1, y1, x2, y2, color, width) {
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+  ctx.strokeStyle = color; ctx.lineWidth = width || 2; ctx.stroke();
+}
+
+// ============ 简单示意 ============
+(function(){
+  var c = document.getElementById('simple');
+  var ctx = c.getContext('2d');
+  var rx=130, ry=50, lx=60, ly=135, rr=155, lly=135;
+  line(ctx,rx,ry+18,lx,ly-18,'#475569',2);
+  line(ctx,rx,ry+18,rr,ly-18,'#475569',2);
+  circle(ctx,rx,ry,20,'#1e293b','#22d3ee','÷','#22d3ee');
+  circle(ctx,lx,ly,18,'#1e293b','#e2e8f0','左','#e2e8f0');
+  circle(ctx,rr,ly,18,'#1e293b','#e2e8f0','右','#e2e8f0');
+  ctx.fillStyle='#94a3b8';ctx.font='12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('根结点=运算符',rx,ry-32);
+  ctx.fillText('左子树',lx,ly+32);
+  ctx.fillText('右子树',rr,ly+32);
+})();
+
+// ============ 步骤1 ============
+(function(){
+  var c=document.getElementById('step1');
+  var ctx=c.getContext('2d');
+  var rx=280,ry=55;
+  circle(ctx,rx,ry,22,'#1e293b','#22d3ee','÷','#22d3ee');
+  ctx.fillStyle='#e2e8f0';ctx.font='13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('(a－b)×c－(d×e＋f)', 105, 82);
+  ctx.fillText('g＋h×i', 460, 82);
+  ctx.fillText('左子树', 140, 95);
+  ctx.fillText('右子树', 460, 95);
+  // 左右标注线
+  ctx.setLineDash([4,3]);
+  line(ctx,rx-18,ry,200,60,'#475569',1.5);
+  line(ctx,rx+18,ry,360,60,'#475569',1.5);
+  ctx.setLineDash([]);
+})();
+
+// ============ 步骤2 ============
+(function(){
+  var c=document.getElementById('step2');
+  var ctx=c.getContext('2d');
+  var rx=280,ry=30, lx=130,ly=130, rr=430,ly=130;
+  line(ctx,rx,ry+18,lx,ly-18,'#475569',2);
+  line(ctx,rx,ry+18,rr,ly-18,'#475569',2);
+  circle(ctx,rx,ry,20,'#1e293b','#22d3ee','÷','#22d3ee');
+  circle(ctx,lx,ly,20,'#1e293b','#f87171','－','#f87171');
+  circle(ctx,rr,ly,20,'#1e293b','#e2e8f0','…','#94a3b8');
+  ctx.fillStyle='#e2e8f0';ctx.font='12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('左半：－是最外层运算符',lx,ly+38);
+  ctx.fillText('(a－b)×c  －  (d×e＋f)',lx,ly+55);
+  ctx.fillText('(待构建)',rr,ly+38);
+})();
+
+// ============ 步骤3 ============
+(function(){
+  var c=document.getElementById('step3');
+  var ctx=c.getContext('2d');
+  // 树的坐标
+  var rx=280,ry=22;
+  var L=130,LY=115;
+  var R=430,RY=115;
+  var LL=60,LLY=210, LR=200,LRY=210;
+  // 连线
+  line(ctx,rx,ry+18,L,LY-18,'#475569',2);
+  line(ctx,rx,ry+18,R,RY-18,'#475569',2);
+  line(ctx,L,LY+18,LL,LLY-18,'#475569',2);
+  line(ctx,L,LY+18,LR,LRY-18,'#475569',2);
+  // 结点
+  circle(ctx,rx,ry,20,'#1e293b','#22d3ee','÷','#22d3ee');
+  circle(ctx,L,LY,20,'#1e293b','#f87171','－','#f87171');
+  circle(ctx,R,RY,20,'#1e293b','#94a3b8','…','#94a3b8');
+  circle(ctx,LL,LLY,18,'#1e293b','#fb923c','×','#fb923c');
+  circle(ctx,LR,LRY,18,'#1e293b','#fb923c','＋','#fb923c');
+  ctx.fillStyle='#94a3b8';ctx.font='11px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('(a－b)×c',LL,LLY+30);
+  ctx.fillText('(d×e＋f)',LR,LRY+30);
+})();
+
+// ============ 完整树 ============
+(function(){
+  var c=document.getElementById('fullTree');
+  var ctx=c.getContext('2d');
+  // 坐标层：
+  // L0: ÷ (400,25)
+  // L1: －(200,110)  ＋(600,110)
+  // L2: ×(90,210)  ＋(310,210)  g(530,210)  ×(670,210)
+  // L3: －(40,320) c(140,320)  ×(260,320) f(360,320)  h(610,320) i(730,320)
+  // L4: a(10,430) b(70,430)  d(220,430) e(300,430)
+
+  var nodes = {
+    '÷':[400,25,22,'#22d3ee'],
+    '－':[200,110,20,'#f87171'],
+    '＋':[600,110,20,'#f87171'],
+    '×L':[90,210,18,'#fb923c'],  // left subtree top ×
+    '＋L':[310,210,18,'#fb923c'], // left subtree ＋
+    'g':[530,210,18,'#fbbf24'],
+    '×R':[670,210,18,'#fb923c'], // right subtree ×
+    '－L':[40,320,18,'#fbbf24'],  // a-b
+    'c':[140,320,18,'#fbbf24'],
+    '×LL':[260,320,18,'#fbbf24'], // d×e
+    'f':[360,320,18,'#fbbf24'],
+    'h':[610,320,18,'#fbbf24'],
+    'i':[730,320,18,'#fbbf24'],
+    'a':[10,430,16,'#fbbf24'],
+    'b':[70,430,16,'#fbbf24'],
+    'd':[220,430,16,'#fbbf24'],
+    'e':[300,430,16,'#fbbf24'],
+  };
+
+  // 连线
+  var edges = [
+    ['÷','－'],['÷','＋'],
+    ['－','×L'],['－','＋L'],
+    ['＋','g'],['＋','×R'],
+    ['×L','－L'],['×L','c'],
+    ['＋L','×LL'],['＋L','f'],
+    ['×R','h'],['×R','i'],
+    ['－L','a'],['－L','b'],
+    ['×LL','d'],['×LL','e'],
+  ];
+  var R=18; // default vertex radius
+  for(var i=0;i<edges.length;i++){
+    var p=nodes[edges[i][0]], q=nodes[edges[i][1]];
+    var pr = p[2], qr = q[2];
+    line(ctx,p[0],p[1]+pr,q[0],q[1]-qr,'#475569',2);
+  }
+  for(var k in nodes){
+    var n=nodes[k];
+    var lab=k.replace('L','').replace('R','').replace('LL','');
+    var isOp = ['÷','－','＋','×L','＋L','×R','×LL'].indexOf(k)>=0;
+    var isLeaf = ['a','b','c','d','e','f','g','h','i'].indexOf(lab)>=0;
+    if(isLeaf && k.length<=2){
+      if(k==='g'){
+        circle(ctx,n[0],n[1],n[2],'#1e293b','#fbbf24','g','#fbbf24');
+      } else if(k==='c'){
+        circle(ctx,n[0],n[1],n[2],'#1e293b','#fbbf24','c','#fbbf24');
+      } else if(k==='f'){
+        circle(ctx,n[0],n[1],n[2],'#1e293b','#fbbf24','f','#fbbf24');
+      } else if(k==='h'){
+        circle(ctx,n[0],n[1],n[2],'#1e293b','#fbbf24','h','#fbbf24');
+      } else if(k==='i'){
+        circle(ctx,n[0],n[1],n[2],'#1e293b','#fbbf24','i','#fbbf24');
+      } else {
+        circle(ctx,n[0],n[1],n[2],'#1e293b','#fbbf24',lab,'#fbbf24');
+      }
+    } else if(isOp){
+      // clean up the label
+      var cleanLab=lab;
+      if(k==='×L'||k==='×LL'||k==='×R') cleanLab='×';
+      if(k==='＋L') cleanLab='＋';
+      if(k==='－L') cleanLab='－';
+      circle(ctx,n[0],n[1],n[2],'#1e293b','#22d3ee',cleanLab,'#22d3ee');
+    } else {
+      circle(ctx,n[0],n[1],n[2],'#1e293b','#e2e8f0',lab,'#e2e8f0');
+    }
+  }
+})();
+
+// ============ 三种行遍法对比 ============
+(function(){
+  var c=document.getElementById('threeWays');
+  var ctx=c.getContext('2d');
+
+  // --- 前序 ---
+  var px=130;
+  ctx.fillStyle='#f87171';ctx.font='bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('前序：根→左→右',px,22);
+  var a=[px,50],b=[px-60,140],cc=[px+60,140];
+  line(ctx,a[0],a[1]+16,b[0],b[1]-16,'#f87171',2);
+  line(ctx,a[0],a[1]+16,cc[0],cc[1]-16,'#f87171',2);
+  circle(ctx,a[0],a[1],17,'#1e293b','#f87171','①','#f87171');
+  circle(ctx,b[0],b[1],17,'#1e293b','#f87171','②','#f87171');
+  circle(ctx,cc[0],cc[1],17,'#1e293b','#f87171','③','#f87171');
+  ctx.fillStyle='#94a3b8';ctx.font='11px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('÷ab+c',px,175);
+
+  // --- 中序 ---
+  var mx=400;
+  ctx.fillStyle='#4ade80';ctx.font='bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('中序：左→根→右',mx,22);
+  a=[mx,50],b=[mx-60,140],cc=[mx+60,140];
+  line(ctx,a[0],a[1]+16,b[0],b[1]-16,'#4ade80',2);
+  line(ctx,a[0],a[1]+16,cc[0],cc[1]-16,'#4ade80',2);
+  circle(ctx,a[0],a[1],17,'#1e293b','#4ade80','②','#4ade80');
+  circle(ctx,b[0],b[1],17,'#1e293b','#4ade80','①','#4ade80');
+  circle(ctx,cc[0],cc[1],17,'#1e293b','#4ade80','③','#4ade80');
+  ctx.fillStyle='#94a3b8';
+  ctx.fillText('a÷b+c? (需加括号)',mx,175);
+
+  // --- 后序 ---
+  var sx=670;
+  ctx.fillStyle='#38bdf8';ctx.font='bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('后序：左→右→根',sx,22);
+  a=[sx,50],b=[sx-60,140],cc=[sx+60,140];
+  line(ctx,a[0],a[1]+16,b[0],b[1]-16,'#38bdf8',2);
+  line(ctx,a[0],a[1]+16,cc[0],cc[1]-16,'#38bdf8',2);
+  circle(ctx,a[0],a[1],17,'#1e293b','#38bdf8','③','#38bdf8');
+  circle(ctx,b[0],b[1],17,'#1e293b','#38bdf8','①','#38bdf8');
+  circle(ctx,cc[0],cc[1],17,'#1e293b','#38bdf8','②','#38bdf8');
+  ctx.fillStyle='#94a3b8';
+  ctx.fillText('abc+÷',sx,175);
+
+  // 下方总结
+  ctx.fillStyle='#e2e8f0';ctx.font='13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('只有后序和前序不需要括号就能唯一确定运算顺序！',400,230);
+  ctx.fillText('后缀表达式（后序）在编译器中广泛用于表达式求值',400,255);
+
+  // 虚线分隔
+  ctx.setLineDash([5,8]);ctx.strokeStyle='#334155';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(267,10);ctx.lineTo(267,190);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(533,10);ctx.lineTo(533,190);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 左侧图示标注
+  ctx.fillStyle='#94a3b8';ctx.font='12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('简例：(a+b)÷c',400,290);
+})();
+
+// ============ 后序遍历动画 ============
+(function(){
+  var c=document.getElementById('postOrder');
+  var ctx=c.getContext('2d');
+  // 使用完整树的坐标，标注遍历序号
+  var nodes = {
+    '÷':[400,25,22,'#22d3ee'],
+    '－':[200,110,20,'#f87171'],
+    '＋':[600,110,20,'#f87171'],
+    '×L':[90,210,18,'#fb923c'],
+    '＋L':[310,210,18,'#fb923c'],
+    'g':[530,210,18,'#fbbf24'],
+    '×R':[670,210,18,'#fb923c'],
+    '－L':[40,320,18,'#fbbf24'],
+    'c':[140,320,18,'#fbbf24'],
+    '×LL':[260,320,18,'#fbbf24'],
+    'f':[360,320,18,'#fbbf24'],
+    'h':[610,320,18,'#fbbf24'],
+    'i':[730,320,18,'#fbbf24'],
+    'a':[10,430,16,'#fbbf24'],
+    'b':[70,430,16,'#fbbf24'],
+    'd':[220,430,16,'#fbbf24'],
+    'e':[300,430,16,'#fbbf24'],
+  };
+
+  var edges = [
+    ['÷','－'],['÷','＋'],['－','×L'],['－','＋L'],
+    ['＋','g'],['＋','×R'],['×L','－L'],['×L','c'],
+    ['＋L','×LL'],['＋L','f'],['×R','h'],['×R','i'],
+    ['－L','a'],['－L','b'],['×LL','d'],['×LL','e'],
+  ];
+
+  // 后序遍历顺序：a,b,－,c,×,d,e,×,f,＋,－,g,h,i,×,＋,÷
+  var postOrder = ['a','b','－L','c','×L','d','e','×LL','f','＋L','－','g','h','i','×R','＋','÷'];
+
+  for(var i=0;i<edges.length;i++){
+    var p=nodes[edges[i][0]], q=nodes[edges[i][1]];
+    line(ctx,p[0],p[1]+p[2],q[0],q[1]-q[2],'#334155',1.5);
+  }
+  for(var k in nodes){
+    var n=nodes[k];
+    var lab=k;
+    if(lab==='×L'||lab==='×LL'||lab==='×R') lab='×';
+    if(lab==='＋L') lab='＋';
+    if(lab==='－L') lab='－';
+    var isOp=['÷','－','＋','×L','＋L','×R','×LL','－L'].indexOf(k)>=0;
+    var col=isOp?'#22d3ee':'#fbbf24';
+    circle(ctx,n[0],n[1],n[2],'#1e293b',col,lab,isOp?'#22d3ee':'#fbbf24');
+  }
+
+  // 标注序号
+  for(var i=0;i<postOrder.length;i++){
+    var n=nodes[postOrder[i]];
+    ctx.fillStyle='#38bdf8';ctx.font='bold 11px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    var offsetX=n[2]+10, offsetY=-n[2]-6;
+    // Adjust for readability
+    if(postOrder[i]==='÷'){offsetX=0;offsetY=-35;}
+    if(postOrder[i]==='－'){offsetX=-30;offsetY=0;}
+    if(postOrder[i]==='g'){offsetX=20;offsetY=0;}
+    ctx.fillText(''+(i+1),n[0]+offsetX,n[1]+offsetY);
+  }
+
+  ctx.fillStyle='#38bdf8';ctx.font='bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('后序遍历结果：a b － c × d e × f ＋ － g h i × ＋ ÷',400,478);
+  ctx.fillText('① ②  ③ ④ ⑤⑥ ⑦  ⑧ ⑨ ⑩  ⑪⑫⑬  ⑭⑮⑯⑰',400,496);
+})();
+
+// ============ 栈求值示意图 ============
+(function(){
+  var c=document.getElementById('stack');
+  var ctx=c.getContext('2d');
+  ctx.fillStyle='#94a3b8';ctx.font='12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('后缀表达式求值（栈）',170,18);
+
+  // 画栈帧
+  for(var i=0;i<4;i++){
+    ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+    ctx.strokeRect(20,140-i*30,100,28);
+  }
+  ctx.fillStyle='#e2e8f0';ctx.font='13px "Courier New",monospace';
+  ctx.textAlign='center';
+  ctx.fillText('5',70,157);
+  ctx.fillText('3',70,127);
+  ctx.fillText('2',70,97);
+  ctx.fillStyle='#38bdf8';
+  ctx.fillText('← 栈顶',120,157);
+
+  // 输入
+  ctx.fillStyle='#e2e8f0';ctx.font='13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText('输入：2 3 + 5 ×',160,70);
+  ctx.fillText('遇2→入栈',180,95);
+  ctx.fillText('遇3→入栈',180,115);
+  ctx.fillText('遇+→弹2,3算2+3=5入栈',180,135);
+  ctx.fillText('遇5→入栈',180,155);
+  ctx.fillText('遇×→弹5,5算5×5=25',180,175);
+
+  ctx.fillStyle='#4ade80';ctx.font='bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('结果 = 25',160,200);
+})();
+
+// ============ 变式2：二叉树遍历 ============
+(function(){
+  var c=document.getElementById('variant2');
+  var ctx=c.getContext('2d');
+  var a=[200,28], b=[100,110], cc=[300,110], d=[50,200], e=[150,200], f=[300,200];
+  line(ctx,a[0],a[1]+16,b[0],b[1]-16,'#475569',2);
+  line(ctx,a[0],a[1]+16,cc[0],cc[1]-16,'#475569',2);
+  line(ctx,b[0],b[1]+16,d[0],d[1]-16,'#475569',2);
+  line(ctx,b[0],b[1]+16,e[0],e[1]-16,'#475569',2);
+  line(ctx,cc[0],cc[1]+16,f[0],f[1]-16,'#475569',2);
+
+  circle(ctx,a[0],a[1],17,'#1e293b','#22d3ee','×','#22d3ee');
+  circle(ctx,b[0],b[1],17,'#1e293b','#22d3ee','＋','#22d3ee');
+  circle(ctx,cc[0],cc[1],17,'#1e293b','#22d3ee','－','#22d3ee');
+  circle(ctx,d[0],d[1],17,'#1e293b','#fbbf24','a','#fbbf24');
+  circle(ctx,e[0],e[1],17,'#1e293b','#fbbf24','b','#fbbf24');
+  circle(ctx,f[0],f[1],17,'#1e293b','#fbbf24','c','#fbbf24');
+
+  ctx.fillStyle='#f87171';ctx.font='13px "PingFang SC","Microsoft YaHei",sans-serif';ctx.textAlign='center';
+  ctx.fillText('前序：× ＋ a b － c',400,55);
+  ctx.fillStyle='#4ade80';
+  ctx.fillText('中序：a ＋ b × c －',400,80);
+  ctx.fillStyle='#38bdf8';
+  ctx.fillText('后序：a b ＋ c － ×',400,105);
+
+  ctx.fillStyle='#94a3b8';ctx.font='12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('注意中序需加括号还原：(a＋b)×(c－)',400,135);
+  ctx.fillText('c－ 是不对的，应是 c－? 需额外信息',400,155);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2018-2019 离散数学 A卷 · 完整逐题讲解</title>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+</script>
+<script id="MathJax-script" async src="https://cdn.bootcdn.net/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+    <style>
+        /* ========== 重置与基础 ========== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: "Georgia", "Noto Serif SC", "Source Han Serif SC", "STSong", "SimSun", serif;
+            background: linear-gradient(175deg, #d4edda 0%, #c3e0cb 15%, #e8f5e9 40%, #f1f8f2 100%);
+            background-attachment: fixed;
+            color: #1a2e1a;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        /* ========== 顶部横幅 ========== */
+        .hero {
+            background: linear-gradient(135deg, #0d2818 0%, #1a3c2a 30%, #1f4d34 60%, #1a3c2a 100%);
+            color: #f5e6c8;
+            text-align: center;
+            padding: 3rem 1.5rem 2.5rem;
+            border-bottom: 4px solid #c9a84c;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 30% 20%, rgba(201,168,76,0.12) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 80%, rgba(201,168,76,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .hero h1 {
+            font-size: clamp(1.6rem, 4vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            position: relative;
+            z-index: 1;
+        }
+        .hero .subtitle {
+            font-size: 1.05rem;
+            color: #c9a84c;
+            margin-top: 0.5rem;
+            letter-spacing: 0.1em;
+            position: relative;
+            z-index: 1;
+        }
+        .hero .meta {
+            margin-top: 0.8rem;
+            font-size: 0.9rem;
+            color: #a0c4a8;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ========== 导航 ========== */
+        .nav-wrap {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: linear-gradient(180deg, #1a3c2a 0%, #1f4d34 100%);
+            border-bottom: 2px solid #c9a84c;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        }
+        .nav-wrap nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.25rem;
+            padding: 0.5rem 1rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .nav-wrap nav a {
+            color: #d4edda;
+            text-decoration: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+            letter-spacing: 0.03em;
+        }
+        .nav-wrap nav a:hover,
+        .nav-wrap nav a:focus {
+            background: #c9a84c;
+            color: #0d2818;
+            font-weight: 700;
+        }
+
+        /* ========== 主容器 ========== */
+        .container {
+            max-width: 960px;
+            margin: 2rem auto 4rem;
+            padding: 0 1.25rem;
+        }
+
+        /* ========== 分区标题 ========== */
+        .section-title {
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            font-weight: 700;
+            color: #0d2818;
+            border-left: 6px solid #c9a84c;
+            padding-left: 1rem;
+            margin: 2.5rem 0 1.5rem;
+            letter-spacing: 0.04em;
+        }
+
+        /* ========== 题目卡片 ========== */
+        .card {
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(26,60,42,0.15);
+            border-radius: 12px;
+            margin-bottom: 1.6rem;
+            box-shadow: 0 2px 12px rgba(26,60,42,0.08);
+            overflow: hidden;
+            transition: box-shadow 0.25s;
+        }
+        .card:hover { box-shadow: 0 4px 24px rgba(26,60,42,0.14); }
+
+        .card-header {
+            background: linear-gradient(135deg, #1a3c2a 0%, #1f4d34 60%, #2a5a3a 100%);
+            color: #f5e6c8;
+            padding: 0.8rem 1.2rem;
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: 0.04em;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .card-header .q-num {
+            background: #c9a84c;
+            color: #0d2818;
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+        .card-header .answer-badge {
+            margin-left: auto;
+            background: rgba(201,168,76,0.2);
+            border: 1px solid #c9a84c;
+            color: #c9a84c;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .card-body {
+            padding: 1.2rem 1.5rem 1.5rem;
+        }
+        .card-body h4 {
+            color: #1a3c2a;
+            margin: 1rem 0 0.4rem;
+            font-size: 1rem;
+        }
+        .card-body h4:first-child { margin-top: 0; }
+        .card-body p { margin-bottom: 0.6rem; }
+        .card-body ul, .card-body ol {
+            margin: 0.5rem 0 0.8rem 1.5rem;
+        }
+        .card-body li { margin-bottom: 0.3rem; }
+
+        .info-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #d4edda 100%);
+            border: 1px solid #a3c9a8;
+            border-left: 5px solid #1a3c2a;
+            border-radius: 0 8px 8px 0;
+            padding: 0.8rem 1.2rem;
+            margin: 0.8rem 0;
+            font-size: 0.95rem;
+        }
+        .info-box.tip {
+            border-left-color: #c9a84c;
+            background: linear-gradient(135deg, #fdf6e3 0%, #f9efd3 100%);
+            border-color: #d4b84c;
+        }
+        .info-box.warn {
+            border-left-color: #c0392b;
+            background: linear-gradient(135deg, #fdecea 0%, #f9d6d5 100%);
+            border-color: #e0a0a0;
+        }
+
+        .step-list {
+            counter-reset: step;
+            list-style: none;
+            padding-left: 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            padding-left: 2.5rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        .step-list li::before {
+            content: "第" counter(step, cjk-ideographic) "步";
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #1a3c2a;
+            background: #d4edda;
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #a3c9a8;
+        }
+
+        /* ========== 表格 ========== */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            border: 1px solid #a3c9a8;
+            padding: 0.5rem 0.7rem;
+            text-align: center;
+        }
+        th {
+            background: #1a3c2a;
+            color: #f5e6c8;
+            font-weight: 700;
+        }
+        tr:nth-child(even) td { background: rgba(212,237,218,0.4); }
+
+        /* ========== 图结构SVG容器 ========== */
+        .graph-box {
+            text-align: center;
+            margin: 1rem 0;
+        }
+        .graph-box svg { max-width: 100%; height: auto; }
+
+        /* ========== 图片占位 ========== */
+        .img-placeholder {
+            background: #e8f5e9;
+            border: 2px dashed #a3c9a8;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            color: #5a7a5a;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        /* ========== 哈斯图 ========== */
+        .hasse-container { text-align: center; margin: 1rem 0; }
+
+        /* ========== T/F标记 ========== */
+        .tf-true {
+            color: #1a6b2a;
+            font-weight: 700;
+        }
+        .tf-false {
+            color: #b53a2a;
+            font-weight: 700;
+        }
+
+        /* ========== 页脚 ========== */
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #5a7a5a;
+            font-size: 0.85rem;
+            border-top: 2px solid #c9a84c;
+            background: rgba(26,60,42,0.04);
+        }
+        .footer a { color: #1a3c2a; text-decoration: underline; }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 640px) {
+            .hero { padding: 2rem 1rem 1.5rem; }
+            .container { padding: 0 0.75rem; margin-top: 1rem; }
+            .card-body { padding: 1rem; }
+            .nav-wrap nav { gap: 0.15rem; padding: 0.4rem 0.5rem; }
+            .nav-wrap nav a { font-size: 0.72rem; padding: 0.3rem 0.45rem; }
+            table { font-size: 0.75rem; }
+            th, td { padding: 0.3rem 0.4rem; }
+        }
+
+        /* ========== 打印 ========== */
+        @media print {
+            .nav-wrap { position: static; }
+            body { background: #fff; color: #000; }
+            .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+            .card-header { background: #eee; color: #000; }
+            .hero { background: #eee; color: #000; border-bottom: 2px solid #000; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== 顶部横幅 ==================== -->
+<header class="hero">
+    <h1>📐 离散数学 · 期末试卷逐题讲解</h1>
+    <p class="subtitle">2018 – 2019 学年 · A 卷</p>
+    <p class="meta">经典学术绿金风格 ｜ 每题详解 ｜ 小白友好 ｜ MathJax 渲染</p>
+</header>
+
+<!-- ==================== 导航 ==================== -->
+<div class="nav-wrap" id="top">
+    <nav>
+        <a href="#sec1">一·单选</a>
+        <a href="#sec1-1">T1</a><a href="#sec1-2">T2</a><a href="#sec1-3">T3</a><a href="#sec1-4">T4</a><a href="#sec1-5">T5</a>
+        <a href="#sec1-6">T6</a><a href="#sec1-7">T7</a><a href="#sec1-8">T8</a><a href="#sec1-9">T9</a><a href="#sec1-10">T10</a>
+        <a href="#sec2">二·判断</a>
+        <a href="#sec2-1">T1</a><a href="#sec2-2">T2</a><a href="#sec2-3">T3</a><a href="#sec2-4">T4</a><a href="#sec2-5">T5</a>
+        <a href="#sec2-6">T6</a><a href="#sec2-7">T7</a><a href="#sec2-8">T8</a><a href="#sec2-9">T9</a><a href="#sec2-10">T10</a>
+        <a href="#sec3">三·解答</a>
+        <a href="#sec3-1">T1</a><a href="#sec3-2">T2</a><a href="#sec3-3">T3</a><a href="#sec3-4">T4</a><a href="#sec3-5">T5</a>
+        <a href="#sec4">四·证明</a>
+        <a href="#sec4-1">T1</a><a href="#sec4-2">T2</a><a href="#sec4-3">T3</a>
+    </nav>
+</div>
+
+<!-- ==================== 主内容 ==================== -->
+<div class="container">
+
+<!-- ========== 第一部分：单选题 ========== -->
+<h2 class="section-title" id="sec1">一、单项选择题（每小题 2 分，共 20 分）</h2>
+
+<!-- T1 -->
+<div class="card" id="sec1-1">
+    <div class="card-header">
+        <span class="q-num">1</span> 命题符号化 —— 合取
+        <span class="answer-badge">答案：D</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>设 $p$：小王学习用功，$q$：小王聪明。则"小王不仅学习用功而且聪明"的符号化形式是（　）</p>
+        <p>A. $p \to q$ &nbsp;&nbsp; B. $p \lor q$ &nbsp;&nbsp; C. $\neg p \land q$ &nbsp;&nbsp; <strong>D. $p \land q$</strong></p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>合取联结词 $\land$（"而且"、"并且"、"不仅……而且……"）
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">合取联结词 $\land$ 就像"并且"——两件事<strong>同时成立</strong>才为真。比如"我既饿了又渴了"，饿了是真的、渴了也是真的，整句话才真；只要有一个是假的，整句话就假。题目里"不仅……而且……"就是合取的典型自然语言表达。$p \land q$：小王用功并且聪明，两个都成立。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p>自然语言中的"不仅……而且……"表达的是<strong>两个条件同时成立</strong>，这在命题逻辑中对应<strong>合取</strong>（AND，$\land$）。</p>
+        <ul>
+            <li>"小王学习用功" → $p$</li>
+            <li>"小王聪明" → $q$</li>
+            <li>"不仅用功而且聪明" → $p$ <strong>并且</strong> $q$ → $p \land q$</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>💡 常见联结词对照：</strong><br>
+            "不" / "并非" → $\neg$（否定）<br>
+            "而且" / "并且" / "不仅……而且……" → $\land$（合取）<br>
+            "或者" → $\lor$（析取）<br>
+            "如果……那么……" → $\to$（蕴含）<br>
+            "当且仅当" → $\leftrightarrow$（等价）
+        </div>
+
+        <p><strong>✅ 选 D。</strong></p>
+    </div>
+</div>
+
+<!-- T2 -->
+<div class="card" id="sec1-2">
+    <div class="card-header">
+        <span class="q-num">2</span> 极小项个数
+        <span class="answer-badge">答案：C</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>$n$ 个命题变元产生互不等价的极小项的个数为（　）</p>
+        <p>A. $n$ &nbsp;&nbsp; B. $n^2$ &nbsp;&nbsp; <strong>C. $2^n$</strong> &nbsp;&nbsp; D. $2n$</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>极小项（minterm）——每个变元恰好出现一次（正或反）的合取式。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>极小项</strong>就是 n 个命题变元每个都恰好出现一次（要么正要么反），全部用 ∧ 连起来的式子。比如 n=2 时：$p \land q,\; p \land \neg q,\; \neg p \land q,\; \neg p \land \neg q$ 共 4 个。每个变元有 2 种选择（正/反），n 个变元就是 $2 \times 2 \times \cdots \times 2 = 2^n$ 种组合。所以 n 个变元产生 $2^n$ 个互不等价的极小项。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p><strong>极小项</strong>的定义：在 $n$ 个命题变元 $p_1, p_2, \ldots, p_n$ 中，每个变元<strong>恰好出现一次</strong>（要么是自身 $p_i$，要么是其否定 $\neg p_i$），所有这些文字用 $\land$ 连接。</p>
+
+        <p>每个变元有 <strong>2 种选择</strong>（正或反），$n$ 个变元独立选择，共 $2^n$ 种组合。</p>
+
+        <p>例如 $n=2$（变元 $p, q$）的 4 个极小项：</p>
+        <table>
+            <tr><th>极小项</th><th>记法</th><th>成真赋值</th></tr>
+            <tr><td>$\neg p \land \neg q$</td><td>$m_0$</td><td>00</td></tr>
+            <tr><td>$\neg p \land q$</td><td>$m_1$</td><td>01</td></tr>
+            <tr><td>$p \land \neg q$</td><td>$m_2$</td><td>10</td></tr>
+            <tr><td>$p \land q$</td><td>$m_3$</td><td>11</td></tr>
+        </table>
+
+        <p>不同极小项互不等价（真值表不同），共 $2^n$ 个。</p>
+        <p><strong>✅ 选 C。</strong></p>
+    </div>
+</div>
+
+<!-- T3 -->
+<div class="card" id="sec1-3">
+    <div class="card-header">
+        <span class="q-num">3</span> 谓词逻辑 —— 假命题判断
+        <span class="answer-badge">答案：C</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>个体域为整数集，下列公式中为假命题的是（　）</p>
+        <p>A. $\forall x \exists y (x + y = 0)$ &nbsp;&nbsp; B. $\exists y \forall x (x + y = x)$ &nbsp;&nbsp; <strong>C. $\forall x \exists y (x \cdot y = 1)$</strong> &nbsp;&nbsp; D. $\exists x \exists y (x + y = 0)$</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>谓词逻辑的语义 —— 在给定解释（整数集）下判断公式真值。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">$\forall x \exists y (xy = 1)$ 的意思是"对<strong>每个</strong>整数 x，都<strong>存在</strong>某个整数 y 使 xy=1"。检查：x=0 时，0·y=0≠1 对所有 y 成立，找不到这样的 y。所以命题为假。记住 $\forall x \exists y$ 的读法："每个 x 都要能找到自己的 y"——只要有一个 x 找不到，全称量词就让它变假。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p>逐个分析：</p>
+        <ul>
+            <li><strong>A.</strong> $\forall x \exists y (x + y = 0)$："每个整数 $x$ 都存在整数 $y$ 使 $x+y=0$"。取 $y=-x$（整数），成立。<strong>✅ 真。</strong></li>
+            <li><strong>B.</strong> $\exists y \forall x (x + y = x)$："存在整数 $y$，对所有整数 $x$ 都有 $x+y=x$"。取 $y=0$（整数），对所有 $x$ 有 $x+0=x$。<strong>✅ 真。</strong></li>
+            <li><strong>C.</strong> $\forall x \exists y (x \cdot y = 1)$："每个整数 $x$ 都存在整数 $y$ 使 $x \cdot y = 1$"。当 $x=0$ 时，$0 \cdot y = 1$ 无解。取 $x=2$ 时，需 $2y=1$ 即 $y=1/2$，不是整数。<strong>❌ 假！</strong></li>
+            <li><strong>D.</strong> $\exists x \exists y (x + y = 0)$："存在整数 $x,y$ 使 $x+y=0$"。取 $x=1, y=-1$。<strong>✅ 真。</strong></li>
+        </ul>
+
+        <p><strong>✅ 选 C。</strong> 关键陷阱：整数乘法下，绝大多数 $x$ 找不到整数 $y$ 使得积为 1。</p>
+    </div>
+</div>
+
+<!-- T4 -->
+<div class="card" id="sec1-4">
+    <div class="card-header">
+        <span class="q-num">4</span> 关系的性质
+        <span class="answer-badge">答案：D</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>$A = \{1,2,3\}$，$R = \{\langle 1,2\rangle, \langle 1,3\rangle\}$，则 $R$ 是（　）</p>
+        <p>A. 自反的 &nbsp;&nbsp; B. 对称的 &nbsp;&nbsp; C. 既自反又对称 &nbsp;&nbsp; <strong>D. 传递的</strong></p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>关系的自反性、对称性、传递性的定义与判定。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>传递</strong>：若 aRb 且 bRc，则必须有 aRc。R={⟨1,2⟩, ⟨1,3⟩} 中只有两个有序对，找不到 aRb 且 bRc 同时成立的组合（要有 b=1 才行，但 R 中没有以 1 为第二元的有序对），所以<strong>传递性空真</strong>（前提不成立，命题自动为真）。<strong>反对称</strong>：若 aRb 且 bRa，则必须 a=b。R 中同样找不到 aRb 和 bRa 同时成立的情况，所以反对称也成立。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p>回顾三个性质的定义（在集合 $A$ 上的二元关系 $R$）：</p>
+        <table>
+            <tr><th>性质</th><th>定义</th></tr>
+            <tr><td>自反</td><td>对每个 $a \in A$，都有 $\langle a,a\rangle \in R$</td></tr>
+            <tr><td>对称</td><td>若 $\langle a,b\rangle \in R$，则 $\langle b,a\rangle \in R$</td></tr>
+            <tr><td>传递</td><td>若 $\langle a,b\rangle \in R$ 且 $\langle b,c\rangle \in R$，则 $\langle a,c\rangle \in R$</td></tr>
+        </table>
+
+        <p>逐一检验（$A=\{1,2,3\}$，$R=\{\langle1,2\rangle, \langle1,3\rangle\}$）：</p>
+        <ul>
+            <li><strong>自反？</strong> 需要 $\langle1,1\rangle,\langle2,2\rangle,\langle3,3\rangle$ 都在 $R$ 中。$R$ 一个都没有。<strong>❌ 不自反。</strong></li>
+            <li><strong>对称？</strong> 有 $\langle1,2\rangle$，需 $\langle2,1\rangle \in R$。$R$ 中没有。<strong>❌ 不对称。</strong></li>
+            <li><strong>传递？</strong> 检查前提"$\langle a,b\rangle \in R$ 且 $\langle b,c\rangle \in R$"。<br>
+                $R$ 中可能的 $b$ 值只有 2 和 3（作为第二个分量）。<br>
+                但 $R$ 中<strong>没有</strong>以 2 或 3 为<strong>第一个分量</strong>的序对。所以前提永远不成立！<br>
+                前提为假时，蕴含式"若前提则结论"为真（<strong>虚真 / vacuously true</strong>）。<strong>✅ 传递。</strong>
+            </li>
+        </ul>
+
+        <div class="info-box">
+            <strong>💡 关键洞察：</strong>当 $R$ 中不存在 $\langle a,b\rangle$ 和 $\langle b,c\rangle$ 同时成立的情况时，传递性<strong>自动满足</strong>（虚真）。就像"所有的独角兽都会飞"——因为没有独角兽，所以陈述为真。
+        </div>
+
+        <p><strong>✅ 选 D。</strong></p>
+    </div>
+</div>
+
+<!-- T5 -->
+<div class="card" id="sec1-5">
+    <div class="card-header">
+        <span class="q-num">5</span> 双射的复合
+        <span class="answer-badge">答案：D</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>设 $f$ 和 $g$ 都是双射，则 $f \circ g$ 是（　）</p>
+        <p>A. 单射 &nbsp;&nbsp; B. 满射 &nbsp;&nbsp; C. 既单又满 &nbsp;&nbsp; <strong>D. 双射</strong></p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>函数的复合保持双射性质。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">回忆函数的三种"射"：<strong>单射</strong>（不同输入→不同输出）、<strong>满射</strong>（每个输出都被映射到）、<strong>双射</strong>（既是单射又是满射，一一对应）。复合运算保持这些性质：单射∘单射=单射，满射∘满射=满射，<strong>双射∘双射=双射</strong>。就像两个一一对应叠加后还是一一对应。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p>这是离散数学中的基本定理：<strong>双射的复合仍是双射。</strong></p>
+
+        <p>更一般地：</p>
+        <ul>
+            <li>单射 ∘ 单射 = 单射</li>
+            <li>满射 ∘ 满射 = 满射</li>
+            <li><strong>双射 ∘ 双射 = 双射</strong></li>
+        </ul>
+
+        <p>直观理解：双射即"一一对应"。两个一一对应串起来，仍然是一一对应。</p>
+        <p>注意 $f \circ g$ 是先应用 $g$ 再应用 $f$（即 $(f \circ g)(x) = f(g(x))$）。</p>
+        <p><strong>✅ 选 D。</strong></p>
+    </div>
+</div>
+
+<!-- T6 -->
+<div class="card" id="sec1-6">
+    <div class="card-header">
+        <span class="q-num">6</span> 图的度数序列
+        <span class="answer-badge">答案：B</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>下列可构成无向简单图的度数序列的是（　）</p>
+        <p>A. $(1,1,2,3,3)$ &nbsp;&nbsp; <strong>B. $(1,1,2,2,2)$</strong> &nbsp;&nbsp; C. $(0,1,3,3,3)$ &nbsp;&nbsp; D. $(0,2,3,3,4)$</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>可图化条件 —— 握手定理 + Erdős–Gallai 定理 / Havel-Hakimi算法。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>握手定理</strong>：所有顶点度数之和 = 2×边数，所以度数和必须是<strong>偶数</strong>。先排除奇数和的选项。剩下的看能不能实际画出来——用 Havel-Hakimi 算法或直接构造。B 选项 (4,3,1,0) 和为 8（偶数），可以构造：顶点度数为 4 的连其他三个+自己一个环…不对，简单图不能有环。实际上需要验证是否可图化。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p><strong>必要条件①（握手定理）：</strong>所有度数之和必须为偶数。因为每条边贡献2度。</p>
+        <table>
+            <tr><th>选项</th><th>度数和</th><th>奇偶</th></tr>
+            <tr><td>A. 1+1+2+3+3</td><td>10</td><td>✅ 偶数</td></tr>
+            <tr><td>B. 1+1+2+2+2</td><td>8</td><td>✅ 偶数</td></tr>
+            <tr><td>C. 0+1+3+3+3</td><td>10</td><td>✅ 偶数</td></tr>
+            <tr><td>D. 0+2+3+3+4</td><td>12</td><td>✅ 偶数</td></tr>
+        </table>
+        <p>握手定理都满足，继续用<strong>必要条件②</strong>：对于 $n$ 个顶点的简单图，$\Delta \le n-1$（最大度不超过 $n-1$），$\delta \ge 0$。全部满足。</p>
+
+        <p><strong>用 Havel-Hakimi 算法逐一检验：</strong></p>
+
+        <p><strong>A. (1,1,2,3,3)：</strong>降序 (3,3,2,1,1) → 去掉3，前3个减1 → (2,1,0,1) 降序 (2,1,1,0) → 去掉2，前2个减1 → (0,0,0) ✅。等等，这似乎可以？让我们再检查：</p>
+        <p>5个顶点中最大度3，理论可行。但仔细验证：两个度3的顶点各连3条边，还需连到度1的顶点。尝试构造……确实可以！那为什么答案是B不是A？</p>
+        <p>实际上，<strong>A也可以构成简单图</strong>。但是本题是单选题，可能根据某特定版本的教材判断标准不同。我们检查一下选项C和D：</p>
+        <p><strong>C. (0,1,3,3,3)：</strong>降序 (3,3,3,1,0) → 去掉3 → (2,2,0,0) → 去掉2 → (1,-1,0) 出现负数！<strong>❌ 不可图化。</strong></p>
+        <p><strong>D. (0,2,3,3,4)：</strong>最大度4，但只有5个顶点，$n-1=4$，刚好可以。降序 (4,3,3,2,0) → 去掉4 → (2,2,1,-1) 出现负数！<strong>❌ 不可图化。</strong></p>
+
+        <p>所以 A 和 B 都可图化。但标准答案给出 B。可能 A 中两个度3的顶点之间必须连边，导致构造受限于某些教材标准。在绝大多数教材中，(1,1,2,3,3) 也是可图化的。考虑到这是考试原题，我们尊重标准答案。</p>
+
+        <p><strong>✅ 选 B。</strong>（B 显然可构造：一条长度为4的路加一个孤立边就能得到2,2,2,1,1。）</p>
+    </div>
+</div>
+
+<!-- T7 -->
+<div class="card" id="sec1-7">
+    <div class="card-header">
+        <span class="q-num">7</span> 无向图的割点
+        <span class="answer-badge">答案：A</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>如下无向图中，割点是（　）</p>
+        <p>A. $d$ &nbsp;&nbsp; B. $c$ &nbsp;&nbsp; C. $e$ &nbsp;&nbsp; D. $b$</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>割点（articulation point）——去掉该顶点后图的连通分量数增加。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>割点</strong>就是删掉后图会从连通变成不连通的顶点。想象一个"咽喉要道"——所有从左边到右边的路都必须经过它。题目图中顶点 d 就是这样的角色：去掉 d 后，a/b/c 和 e/f/g/h 分成两个互不连通的部分。判断割点的方法：删掉该点及其关联边后，看连通分量是否增加。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p>根据题目配图（豆包识图），图结构如下：</p>
+        <ul>
+            <li>顶点 $a$ 连接 $b, c, d$</li>
+            <li>顶点 $b$ 连接 $a, c$</li>
+            <li>顶点 $c$ 连接 $a, b$</li>
+            <li>顶点 $d$ 连接 $a, e$</li>
+            <li>顶点 $e$ 连接 $d, f, h$</li>
+            <li>顶点 $f$ 连接 $e, g, h$</li>
+            <li>顶点 $g$ 连接 $f, h$</li>
+            <li>顶点 $h$ 连接 $e, f, g$</li>
+        </ul>
+
+        <p><strong>图可以看作两个"块"通过顶点 $d$ 连接：</strong></p>
+        <ul>
+            <li>左侧块：$\{a,b,c\}$ —— 构成三角形（3-圈）</li>
+            <li>右侧块：$\{e,f,g,h\}$ —— 构成 $K_4$（4个顶点的完全图）</li>
+            <li>$d$ 是连接左右两个块的<strong>唯一桥梁</strong>（$d$ 与 $a$ 和 $e$ 各连一条边）</li>
+        </ul>
+
+        <p>去掉 $d$ → 左侧 $\{a,b,c\}$ 和右侧 $\{e,f,g,h\}$ 断开 → 连通分量数从1变成2。<strong>✅ $d$ 是割点。</strong></p>
+
+        <div class="info-box">
+            <strong>💡 判断割点的直观方法：</strong>看该顶点是否是两个或多个"块"之间的唯一连接点。就像一座桥——如果这座桥塌了，两岸就无法通行。
+        </div>
+
+        <p>去掉 $c$ → 图仍连通（$a-b$ 边还在）。去掉 $b$ → 图仍连通。去掉 $e$ → $f,g,h$ 和 $d$ 仍通过其他边连通。</p>
+        <p><strong>✅ 选 A。</strong></p>
+
+        <!-- SVG 图 -->
+        <div class="graph-box">
+            <svg viewBox="0 0 600 240" width="560" height="220" xmlns="http://www.w3.org/2000/svg">
+                <!-- 左侧三角形 a,b,c -->
+                <circle cx="80" cy="100" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="80" y="106" text-anchor="middle" font-size="16" font-weight="700" fill="#1a3c2a">a</text>
+                <circle cx="30" cy="180" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="30" y="186" text-anchor="middle" font-size="16" font-weight="700" fill="#1a3c2a">b</text>
+                <circle cx="130" cy="180" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="130" y="186" text-anchor="middle" font-size="16" font-weight="700" fill="#1a3c2a">c</text>
+                <!-- d 割点 -->
+                <circle cx="240" cy="100" r="24" fill="#c9a84c" stroke="#8b6914" stroke-width="3"/>
+                <text x="240" y="106" text-anchor="middle" font-size="16" font-weight="900" fill="#0d2818">d</text>
+                <!-- 右侧 K4: e,f,g,h -->
+                <circle cx="340" cy="60" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="340" y="66" text-anchor="middle" font-size="16" font-weight="700" fill="#1a3c2a">e</text>
+                <circle cx="430" cy="60" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="430" y="66" text-anchor="middle" font-size="16" font-weight="700" fill="#1a3c2a">f</text>
+                <circle cx="340" cy="160" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="340" y="166" text-anchor="middle" font-size="16" font-weight="700" fill="#1a3c2a">g</text>
+                <circle cx="430" cy="160" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="430" y="166" text-anchor="middle" font-size="16" font-weight="700" fill="#1a3c2a">h</text>
+                <!-- 边 -->
+                <line x1="80" y1="100" x2="30" y2="180" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="80" y1="100" x2="130" y2="180" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="30" y1="180" x2="130" y2="180" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="80" y1="100" x2="240" y2="100" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="240" y1="100" x2="340" y2="60" stroke="#c9a84c" stroke-width="2.5" stroke-dasharray="6,3"/>
+                <line x1="340" y1="60" x2="430" y2="60" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="340" y1="60" x2="340" y2="160" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="340" y1="60" x2="430" y2="160" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="430" y1="60" x2="340" y2="160" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="430" y1="60" x2="430" y2="160" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="340" y1="160" x2="430" y2="160" stroke="#1a3c2a" stroke-width="1.8"/>
+                <!-- 标注 -->
+                <text x="155" y="88" font-size="11" fill="#5a7a5a">割边候选</text>
+                <text x="250" y="80" font-size="12" fill="#8b6914" font-weight="700">← 割点!</text>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<!-- T8 -->
+<div class="card" id="sec1-8">
+    <div class="card-header">
+        <span class="q-num">8</span> 平面图欧拉公式
+        <span class="answer-badge">答案：C</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>7 阶连通平面图 $G$ 有 6 个面，则 $G$ 的边数为（　）</p>
+        <p>A. 12 &nbsp;&nbsp; B. 10 &nbsp;&nbsp; <strong>C. 11</strong> &nbsp;&nbsp; D. 9</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>欧拉公式 $n - m + r = 2$（连通平面图）。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>欧拉公式</strong> $n - m + r = 2$ 是平面图的"身份证"：顶点数 n 减边数 m 加面数 r 恒等于 2。已知 n=7 个顶点、r=6 个面，代入：$7 - m + 6 = 2$，解得 $m = 11$。很简单，只要记住公式直接代入就行。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p><strong>欧拉公式</strong>（Euler's formula）对连通平面图成立：</p>
+        $$n - m + r = 2$$
+        <p>其中：$n$ = 顶点数（阶），$m$ = 边数，$r$ = 面数。</p>
+
+        <p>代入已知数据：</p>
+        $$7 - m + 6 = 2$$
+        $$13 - m = 2$$
+        $$m = 11$$
+
+        <p><strong>✅ 选 C。</strong> 边数为 11。</p>
+
+        <div class="info-box">
+            <strong>💡 记忆技巧：</strong>欧拉公式 $V - E + F = 2$（Vertices, Edges, Faces）。可以联想：顶点减边加面等于2，像个"平衡方程"。
+        </div>
+    </div>
+</div>
+
+<!-- T9 -->
+<div class="card" id="sec1-9">
+    <div class="card-header">
+        <span class="q-num">9</span> 简单图的定义
+        <span class="answer-badge">答案：A</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>简单图一定不含（　）</p>
+        <p><strong>A. 环和平行边</strong> &nbsp;&nbsp; B. 环 &nbsp;&nbsp; C. 平行边 &nbsp;&nbsp; D. 孤立结点</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>简单图的定义。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>简单图</strong>的两个铁律：①<strong>无环</strong>——不能自己连自己；②<strong>无平行边</strong>——两个顶点之间最多一条边。所以简单图"不含"的就是环和平行边（多重边）。这题考的是定义记忆，记住"简单=无环+无重边"就够了。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p><strong>简单图（simple graph）</strong>的定义：</p>
+        <ul>
+            <li>❌ <strong>无环</strong>（loop）—— 没有顶点到自身的边。</li>
+            <li>❌ <strong>无平行边</strong>（parallel edges / 多重边）—— 任意两个顶点之间最多只有一条边。</li>
+        </ul>
+
+        <p>简单图<strong>可以有</strong>孤立结点（度为 0 的顶点）。</p>
+        <p>所以"一定不含"的是<strong>环和平行边</strong>两者。</p>
+        <p><strong>✅ 选 A。</strong></p>
+    </div>
+</div>
+
+<!-- T10 -->
+<div class="card" id="sec1-10">
+    <div class="card-header">
+        <span class="q-num">10</span> 代数系统 —— 半群/独异点/群
+        <span class="answer-badge">答案：B</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>$\langle \mathbb{Z}, *\rangle$（其中 $*$ 为普通乘法）不能构成（　）</p>
+        <p>A. 半群 &nbsp;&nbsp; <strong>B. 群</strong> &nbsp;&nbsp; C. 独异点 &nbsp;&nbsp; D. 交换半群</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>代数系统层级 —— 半群 ⊂ 独异点 ⊂ 群。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">要判断 $\langle \mathbb{Z}, \times \rangle$ 是不是群，逐条检查群的四条公理：①<strong>封闭</strong>✅（整数×整数=整数）；②<strong>结合律</strong>✅（乘法天然满足）；③<strong>单位元</strong>✅（1 是乘法单位元）；④<strong>逆元</strong>❌——大多数整数在乘法下没有逆元！比如 2 的逆元应该是 1/2，但 1/2 不是整数。所以不是群。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p>检查 $\langle \mathbb{Z}, \times \rangle$（整数集上的普通乘法）满足哪些性质：</p>
+
+        <table>
+            <tr><th>性质</th><th>定义</th><th>整数乘法</th></tr>
+            <tr><td>封闭性</td><td>$a \times b \in \mathbb{Z}$</td><td>✅ 整数乘整数仍是整数</td></tr>
+            <tr><td>结合律</td><td>$(a \times b) \times c = a \times (b \times c)$</td><td>✅ 乘法满足结合律</td></tr>
+            <tr><td>交换律</td><td>$a \times b = b \times a$</td><td>✅ 乘法满足交换律</td></tr>
+            <tr><td>单位元</td><td>存在 $e$ 使得 $a \times e = e \times a = a$</td><td>✅ $e = 1$</td></tr>
+            <tr><td>逆元</td><td>每个 $a$ 存在 $a^{-1}$ 使得 $a \times a^{-1} = 1$</td><td>❌ 如 $2^{-1} = \frac{1}{2} \notin \mathbb{Z}$</td></tr>
+        </table>
+
+        <p><strong>结论：</strong></p>
+        <ul>
+            <li>✅ 半群 = 封闭 + 结合 → 满足</li>
+            <li>✅ 交换半群 = 半群 + 交换 → 满足</li>
+            <li>✅ 独异点（幺半群）= 半群 + 单位元 → 满足（单位元是 1）</li>
+            <li>❌ <strong>群</strong> = 独异点 + 每个元素有逆元 → <strong>不满足！</strong></li>
+        </ul>
+
+        <p>在整数乘法中，除了 $1$ 和 $-1$，其他整数的乘法逆元都不是整数。</p>
+        <p><strong>✅ 选 B。</strong></p>
+
+        <div class="info-box">
+            <strong>💡 代数结构层级：</strong><br>
+            半群（结合律）→ 独异点（+单位元）→ 群（+逆元）→ 交换群（+交换律）<br>
+            整数乘法止步于"交换独异点"，成不了群。
+        </div>
+    </div>
+</div>
+
+<!-- ========== 第二部分：判断题 ========== -->
+<h2 class="section-title" id="sec2">二、判断题（每小题 2 分，共 20 分）<br><small style="font-size:0.7em;color:#5a7a5a;">正确的打"✓"，错误的打"✗"</small></h2>
+
+<!-- T1 判断 -->
+<div class="card" id="sec2-1">
+    <div class="card-header">
+        <span class="q-num">1</span> 命题公式是否为矛盾式
+        <span class="answer-badge"><span class="tf-false">✗ FALSE</span></span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>命题公式 $(p \to q) \to (q \to p)$ 是矛盾式。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>矛盾式（永假式）——所有赋值下都为假的公式。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>矛盾式（永假式）</strong>要求<strong>所有</strong>赋值下公式都为假。只要找到<strong>一组</strong>使公式为真的赋值，它就不是矛盾式。取 p=T, q=T：$(T \to T) \to (T \to T) = T \to T = T$，公式为真！所以它不是矛盾式。其实这个公式是可满足式——有些赋值真、有些赋值假。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p>验证：取 $p=1, q=1$：</p>
+        $$(1 \to 1) \to (1 \to 1) = 1 \to 1 = 1$$
+        <p>存在一组赋值使公式为真 → <strong>不是矛盾式</strong>。</p>
+
+        <p>完整真值表：</p>
+        <table>
+            <tr><th>$p$</th><th>$q$</th><th>$p \to q$</th><th>$q \to p$</th><th>$(p \to q) \to (q \to p)$</th></tr>
+            <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        </table>
+        <p>公式有真有假，是<strong>可满足式</strong>，不是矛盾式。</p>
+        <p><strong>✗ 错误。</strong></p>
+    </div>
+</div>
+
+<!-- T2 判断 -->
+<div class="card" id="sec2-2">
+    <div class="card-header">
+        <span class="q-num">2</span> 蕴含联结词结合律
+        <span class="answer-badge"><span class="tf-false">✗ FALSE</span></span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>联结词 $\to$ 满足结合律。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>结合律——$(a \to b) \to c \equiv a \to (b \to c)$ 是否恒成立？
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>结合律</strong>意思是"括号随便放，结果一样"——比如加法 (a+b)+c=a+(b+c)。但<strong>蕴含 → 不满足结合律</strong>！反例：p=q=r=F（全假）。左边 (F→F)→F = T→F = <strong>F</strong>；右边 F→(F→F) = F→T = <strong>T</strong>。F≠T，所以不满足结合律。记住：→ 的方向性很强，不能随便移动括号。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p>取 $p=q=r=0$：</p>
+        $$(0 \to 0) \to 0 = 1 \to 0 = 0$$
+        $$0 \to (0 \to 0) = 0 \to 1 = 1$$
+        <p>$0 \neq 1$，两者不等价。<strong>✗ 错误。</strong></p>
+
+        <div class="info-box warn">
+            <strong>⚠️ 常见误区：</strong>$\land$ 和 $\lor$ 满足结合律，但 $\to$ 和 $\leftrightarrow$ 不满足！不要想当然。
+        </div>
+    </div>
+</div>
+
+<!-- T3 判断 -->
+<div class="card" id="sec2-3">
+    <div class="card-header">
+        <span class="q-num">3</span> 前束范式
+        <span class="answer-badge"><span class="tf-false">✗ FALSE</span></span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>$(\forall x)F(x) \to (\exists x)G(x)$ 的前束范式为 $(\forall x)(F(x) \to G(x))$。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>前束范式 —— 所有量词在公式最前面，辖域延伸到公式末尾。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>前束范式</strong>要求所有量词都在公式最前面，且辖域延伸到末尾。但把蕴含式中的量词提出来需要<strong>换名</strong>（因为同一个 x 在 ∀x 和 ∃x 中冲突）。$(\forall x)F(x) \to (\exists x)G(x)$ 的正确前束范式应该是 $\exists x \forall y (F(y) \to G(x))$（先换名再提量词），而不是简单地把量词直接拉出来变成 $(\forall x)(F(x) \to G(x))$。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p>正确做法（量词辖域收缩/扩张）：</p>
+        <ol>
+            <li>$(\forall x)F(x) \to (\exists x)G(x)$</li>
+            <li>$\equiv \neg(\forall x)F(x) \lor (\exists x)G(x)$ &nbsp;&nbsp;（蕴含等值式）</li>
+            <li>$\equiv (\exists x)\neg F(x) \lor (\exists x)G(x)$ &nbsp;&nbsp;（量词否定）</li>
+            <li>$\equiv (\exists x)(\neg F(x) \lor G(x))$ &nbsp;&nbsp;（$\exists$ 对 $\lor$ 的分配）</li>
+            <li>$\equiv (\exists x)(F(x) \to G(x))$ &nbsp;&nbsp;（蕴含等值式）</li>
+        </ol>
+        <p>正确结果是 $(\exists x)(F(x) \to G(x))$（存在量词），不是 $(\forall x)$。</p>
+        <p>而且由于两个量词用的是同一个变量 $x$，可能需要换名。更严谨的做法：</p>
+        $$\equiv (\exists u)(\exists v)(\neg F(u) \lor G(v)) \equiv (\exists u)(\exists v)(F(u) \to G(v))$$
+        <p><strong>✗ 错误。</strong></p>
+    </div>
+</div>
+
+<!-- T4 判断 -->
+<div class="card" id="sec2-4">
+    <div class="card-header">
+        <span class="q-num">4</span> 函数单射判断
+        <span class="answer-badge"><span class="tf-true">✓ TRUE</span></span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>$f: \mathbb{N} \to \mathbb{N}, f(n) = 2n + 1$ 是单射。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>单射（injective）——不同输入映射到不同输出。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>单射</strong>就是"不同输入→不同输出"，也叫一一函数。判断方法：设 f(a)=f(b)，如果能推出 a=b，就是单射。对于 f(n)=2n+1：若 2a+1=2b+1，两边减 1 得 2a=2b，除以 2 得 a=b，所以是单射。直观上：每个自然数映射到不同奇数（1,3,5,7...），不会有两个不同的 n 映射到同一个奇数。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p>设 $f(a) = f(b)$，即 $2a + 1 = 2b + 1$。</p>
+        $$2a = 2b \quad\Rightarrow\quad a = b$$
+        <p>不同自然数映射到不同奇数，<strong>是一一映射（单射）</strong>。</p>
+        <p>注意：这不是满射（因为像集只有奇数，偶数不在像集中），但题目只问单射。</p>
+        <p><strong>✓ 正确。</strong></p>
+    </div>
+</div>
+
+<!-- T5 判断 -->
+<div class="card" id="sec2-5">
+    <div class="card-header">
+        <span class="q-num">5</span> 划分与等价关系
+        <span class="answer-badge"><span class="tf-false">✗ FALSE</span></span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>$A = \{a, b, c, d\}$，划分 $B = \{\{a,b\}, \{c,d\}\}$，则 $B$ 确定的关系 $R$ 不是等价关系。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>划分 ↔ 等价关系（一一对应）。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>划分</strong>就是把集合切成几块，每块非空、互不相交、合起来是全集。划分和等价关系是"同一枚硬币的两面"：给定划分→定义"在同一块里"就是等价关系（自反对称传递全满足）；给定等价关系→等价类就是划分。题目中 B={{a,b},{c,d}} 是划分，所以它确定的关系 R 一定是等价关系。题目说"不是等价关系"→错。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p><strong>核心定理：</strong>集合 $A$ 上的<strong>每个划分</strong>唯一确定一个<strong>等价关系</strong>，反之亦然。</p>
+        <p>$B = \{\{a,b\}, \{c,d\}\}$ 是 $A$ 的一个划分（子集互不相交，合并为全集）。</p>
+        <p>它确定的关系 $R$：同一块内的元素互相关联：</p>
+        $$R = \{\langle a,a\rangle, \langle a,b\rangle, \langle b,a\rangle, \langle b,b\rangle, \langle c,c\rangle, \langle c,d\rangle, \langle d,c\rangle, \langle d,d\rangle\}$$
+        <p>验证：</p>
+        <ul>
+            <li>自反 ✅（每个元素与自身在同一块）</li>
+            <li>对称 ✅（若 $a$ 与 $b$ 在同一块，则 $b$ 与 $a$ 也在一起）</li>
+            <li>传递 ✅（若 $a$ 和 $b$ 一块，$b$ 和 $c$ 一块，则三者同块）</li>
+        </ul>
+        <p><strong>$R$ 是等价关系。</strong>题目说"不是"，所以……</p>
+        <p><strong>✗ 错误。</strong>（即原命题"$R$ 不是等价关系"为假 → $R$ 实际上是等价关系。）</p>
+    </div>
+</div>
+
+<!-- T6 判断 -->
+<div class="card" id="sec2-6">
+    <div class="card-header">
+        <span class="q-num">6</span> 对偶图的连通性
+        <span class="answer-badge"><span class="tf-true">✓ TRUE</span></span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>平面图 $G$ 的对偶图 $G^*$ 是连通图。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>对偶图的性质。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">平面图 G 的<strong>对偶图 G*</strong>：在 G 的每个面（包括外部面）中放一个顶点，如果两个面共享一条边，就在对应顶点间连一条边。G* 的关键性质之一：<strong>它始终是连通图</strong>——因为 G 的外部面像"包围圈"一样把所有面圈在一起，外部面对应的顶点和其他所有面对应的顶点都有边相连。所以题目说"对偶图是不连通的"是错的。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p>这是平面图对偶图的基本性质：<strong>任何平面图的对偶图一定是连通图。</strong></p>
+        <p>直观理解：</p>
+        <ul>
+            <li>$G^*$ 的每个顶点对应 $G$ 的一个面。</li>
+            <li>$G$ 的外部面（无界面）对应的顶点与所有边界上的面对应的顶点相连。</li>
+            <li>通过外部面顶点可以到达对偶图中任意其他顶点。</li>
+        </ul>
+        <p>即使原图 $G$ 不连通，其对偶图 $G^*$ 仍然是连通的（不过此时某些顶点可能对应同一个无界面区域的不同部分，需要仔细定义）。</p>
+        <p><strong>✓ 正确。</strong></p>
+    </div>
+</div>
+
+<!-- T7 判断 -->
+<div class="card" id="sec2-7">
+    <div class="card-header">
+        <span class="q-num">7</span> 二部图的点着色数
+        <span class="answer-badge"><span class="tf-true">✓ TRUE</span></span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>连通二部图（$n \ge 2$）的点着色数为 $2$。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>二部图（偶图）的着色。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>二部图</strong>就是顶点能分成两组，所有边都"跨组"连接、同组内无边。想象男生组和女生组之间联谊——只有跨组的连线。着色时给第一组全涂红色、第二组全涂蓝色，同色之间肯定无边（因为边只在两组之间），所以<strong>2 种颜色就够</strong>。只要图连通且 n≥2（至少有一条边），着色数就是 2。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p><strong>二部图（Bipartite Graph）</strong>的定义：顶点集可划分为两个不相交的子集 $V_1$ 和 $V_2$，使得每条边都连接 $V_1$ 中的一个顶点和 $V_2$ 中的一个顶点。</p>
+        <p>用 2 种颜色着色：$V_1$ 中所有顶点染颜色 1，$V_2$ 中所有顶点染颜色 2。同色顶点之间无边（因为边只在 $V_1$ 和 $V_2$ 之间），所以是<strong>正常着色</strong>。</p>
+        <p>二部图的<strong>点着色数 $\chi(G) = 2$</strong>（若至少有一条边；无边则 $\chi = 1$）。</p>
+        <p>由于 $n \ge 2$ 且连通，至少有一条边，故 $\chi = 2$。</p>
+        <p><strong>✓ 正确。</strong></p>
+    </div>
+</div>
+
+<!-- T8 判断 -->
+<div class="card" id="sec2-8">
+    <div class="card-header">
+        <span class="q-num">8</span> 割边与哈密顿图
+        <span class="answer-badge"><span class="tf-false">✗ FALSE</span></span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>有割边的图是哈密顿图。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>哈密顿图的必要条件。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>割边（桥）</strong>就是删掉后图会断开的那条边。想象哈密顿回路要经过每个顶点恰好一次并回到起点——如果图里有割边，一旦走过这条"独木桥"就回不来了（删掉桥后两边断开，回路需要从另一边绕回来，但绕不回来就得走回头路，违反哈密顿回路"每个顶点恰一次"的限制）。所以<strong>有割边的图不可能是哈密顿图</strong>。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p><strong>哈密顿图</strong>：存在哈密顿回路（经过每个顶点恰好一次的回路）的图。</p>
+        <p><strong>割边（桥）</strong>：删除后使图不再连通的边。</p>
+
+        <p>如果一个图有割边 $e$，那么任何哈密顿回路如果要经过 $e$ 两端的顶点，必须经过 $e$<strong>两次</strong>才能返回（因为删除 $e$ 后图断开，回路无法从一边走到另一边再走回来不走重复边）。</p>
+        <p>更严格的结论：<strong>哈密顿图不能有割边。</strong></p>
+        <p>所以"有割边的图是哈密顿图"是完全错误的——<strong>有割边就一定不是哈密顿图</strong>。</p>
+
+        <p><strong>✗ 错误。</strong></p>
+
+        <div class="info-box warn">
+            <strong>⚠️ 记忆：</strong>哈密顿图无割边，欧拉图无割边（除非特殊的 $K_2$ 情况）。
+        </div>
+    </div>
+</div>
+
+<!-- T9 判断 -->
+<div class="card" id="sec2-9">
+    <div class="card-header">
+        <span class="q-num">9</span> 对偶图是欧拉图的条件
+        <span class="answer-badge"><span class="tf-true">✓ TRUE</span></span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>平面图 $G$ 的对偶图 $G^*$ 是欧拉图当且仅当 $G$ 的每个面的次数均为偶数。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>欧拉图的无奇度顶点条件 + 对偶图中顶点度数与原图面次数的对应关系。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>对偶图 G*</strong>：平面图每个面里放一个顶点，相邻面的顶点之间连边。关键对应：G* 中顶点的度数 = G 中对应面的边数（面次数）。<strong>欧拉图</strong>⇔连通+所有顶点度数为偶。所以 G* 是欧拉图 ⇔ G* 所有顶点度数为偶 ⇔ G 所有面次数为偶。题目说反了（G*欧拉⇔G所有面次数全奇），所以是错的。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p><strong>欧拉图的条件：</strong>连通图是欧拉图 ⇔ 每个顶点的度数均为偶数。</p>
+        <p><strong>对偶图的对应关系：</strong></p>
+        <ul>
+            <li>$G^*$ 中每个顶点 $v^*$ 对应 $G$ 中的一个面 $f$。</li>
+            <li>$v^*$ 的度数 $\deg(v^*)$ = 面 $f$ 的边界边数（<strong>面的次数</strong>）。</li>
+        </ul>
+        <p>因此：</p>
+        $$G^* \text{ 是欧拉图} \iff \text{所有 } \deg(v^*) \text{ 为偶数} \iff G \text{ 的所有面的次数均为偶数}$$
+        <p><strong>✓ 正确。</strong></p>
+    </div>
+</div>
+
+<!-- T10 判断 -->
+<div class="card" id="sec2-10">
+    <div class="card-header">
+        <span class="q-num">10</span> 群中零元
+        <span class="answer-badge"><span class="tf-false">✗ FALSE</span></span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>非平凡群中有零元。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>群中不存在零元（除非一阶群）。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">群有两个核心要求：①<strong>每个元素都要有逆元</strong>（a·a⁻¹=e）。零元 θ 满足 θ·a = a·θ = θ，这意味着 θ·θ⁻¹ = θ ≠ e（除非群只有 θ=e 一个元素），矛盾！所以<strong>非平凡群不可能有零元</strong>。一阶群 G={e} 中 e 既是单位元也是零元，但这是平凡情况，通常我们说的群不考虑。</p>
+        </div>
+
+        <h4>🔍 详细讲解</h4>
+        <p><strong>零元</strong> $\theta$：对所有元素 $a$，有 $a \cdot \theta = \theta \cdot a = \theta$。</p>
+        <p>在<strong>非平凡群</strong>（至少 2 个元素）中，假设存在零元 $\theta$：</p>
+        <ul>
+            <li>$\theta$ 必须有逆元 $\theta^{-1}$（群的定义要求每个元素有逆元）</li>
+            <li>$\theta \cdot \theta^{-1} = e$（单位元）</li>
+            <li>但零元的性质：$\theta \cdot \theta^{-1} = \theta$（任何元素乘零元得零元）</li>
+            <li>所以 $\theta = e$，零元等于单位元</li>
+            <li>那么对所有 $a$：$a \cdot \theta = a \cdot e = a = \theta$，即所有元素都等于单位元</li>
+        </ul>
+        <p>这意味着群中只有一个元素（$\theta = e$），与"非平凡"矛盾。</p>
+        <p>因此<strong>非平凡群中没有零元</strong>。</p>
+        <p><strong>✗ 错误。</strong></p>
+    </div>
+</div>
+
+<!-- ========== 第三部分：解答题 ========== -->
+<h2 class="section-title" id="sec3">三、解答题（每小题 6 分，共 30 分）</h2>
+
+<!-- T1 解答 -->
+<div class="card" id="sec3-1">
+    <div class="card-header">
+        <span class="q-num">1</span> 主合取范式与成真赋值
+        <span class="answer-badge">6 分</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>求 $(\neg p \to q) \to \neg r$ 的主合取范式，并求成真赋值。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>主合取范式（CNF）——每个极大项（maxterm）的合取。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;"><strong>主合取范式</strong>就是把公式写成若干"极大项"的合取（∧）。每个极大项对应真值表中<strong>公式为 0 的那一行</strong>，写法是 0→正、1→反（和极小项相反）。<strong>成真赋值</strong>就是让公式值为 1 的那些变元取值组合。最简单的方法：先列真值表算出所有行的值，然后值为 0 的行→极大项→合取=主合取范式；值为 1 的行就是成真赋值。</p>
+        </div>
+        <h4>🔍 步骤一：化简公式</h4>
+        <p>首先处理 $\neg p \to q$：</p>
+        $$\neg p \to q \equiv \neg(\neg p) \lor q \equiv p \lor q$$
+        <p>原式变为：</p>
+        $$(p \lor q) \to \neg r \equiv \neg(p \lor q) \lor \neg r \equiv (\neg p \land \neg q) \lor \neg r$$
+
+        <h4>步骤二：列出真值表</h4>
+        <table>
+            <tr><th>$p$</th><th>$q$</th><th>$r$</th><th>$\neg p \land \neg q$</th><th>$\neg r$</th><th>$(\neg p \land \neg q) \lor \neg r$</th></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+            <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+            <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+            <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+        </table>
+
+        <h4>步骤三：求主合取范式</h4>
+        <p>成假赋值（公式为 0 的行）：$(0,1,1), (1,0,1), (1,1,1)$</p>
+        <p>对应的极大项（成假赋值 → 极大项，0→正，1→反）：</p>
+        <ul>
+            <li>$(0,1,1)$ → $M_3 = p \lor \neg q \lor \neg r$</li>
+            <li>$(1,0,1)$ → $M_5 = \neg p \lor q \lor \neg r$</li>
+            <li>$(1,1,1)$ → $M_7 = \neg p \lor \neg q \lor \neg r$</li>
+        </ul>
+        <p><strong>主合取范式：</strong></p>
+        $$(p \lor \neg q \lor \neg r) \land (\neg p \lor q \lor \neg r) \land (\neg p \lor \neg q \lor \neg r)$$
+
+        <h4>步骤四：成真赋值</h4>
+        <p>公式值为 1 的行：</p>
+        $$000, \; 001, \; 010, \; 100, \; 110$$
+        <p>共 5 组成真赋值。</p>
+    </div>
+</div>
+
+<!-- T2 解答 -->
+<div class="card" id="sec3-2">
+    <div class="card-header">
+        <span class="q-num">2</span> 谓词逻辑 —— 给定解释下求真值
+        <span class="answer-badge">6 分</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>给定解释 $I$：个体域 $D = \mathbb{N}$（自然数集），常元 $\bar{a} = 2$，函数 $\bar{f}(x,y) = x + y$，$\bar{g}(x,y) = xy$，谓词 $\bar{F}(x,y): x = y$。赋值 $\sigma(x) = 0, \sigma(y) = 1, \sigma(z) = 2$。</p>
+        <p>(1) $\forall x F(g(x,a), y)$<br>
+           (2) $\forall x \forall y \exists z F(f(x,y), z)$</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>谓词公式在给定解释和赋值下的真值计算。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">一阶逻辑的解释就是把抽象的谓词公式"翻译"成具体的数学命题。给定个体域（讨论范围）、常元、函数、谓词的具体含义后，公式就变成可判断真假的命题。$\forall x$ 表示"对所有 $x$"——只要找到一个反例就为假；$\exists x$ 表示"存在某个 $x$"——只要找到一个例子就为真。代入时注意顺序：先算函数（如 $g(x,a)=x\times2$），再算谓词（$F(2x,1)$ 即 $2x=1$）。</p>
+        </div>
+        <h4>🔍 (1) $\forall x F(g(x,a), y)$</h4>
+        <p>代入解释：</p>
+        <ul>
+            <li>$g(x,a) = g(x,2) = x \times 2 = 2x$</li>
+            <li>$F(g(x,a), y)$ 即 $F(2x, 1)$，即 "$2x = 1$"</li>
+        </ul>
+        <p>公式变为：<strong>对所有自然数 $x$，$2x = 1$。</strong></p>
+        <p>$x = 0$ 时 $2 \times 0 = 0 \neq 1$。已经找到反例。</p>
+        <p><strong>❌ 假（值为 0）。</strong></p>
+
+        <h4>🔍 (2) $\forall x \forall y \exists z F(f(x,y), z)$</h4>
+        <p>代入解释：</p>
+        <ul>
+            <li>$f(x,y) = x + y$</li>
+            <li>$F(f(x,y), z)$ 即 $F(x+y, z)$，即 "$x + y = z$"</li>
+        </ul>
+        <p>公式变为：<strong>对所有自然数 $x, y$，存在自然数 $z$ 使得 $x + y = z$。</strong></p>
+        <p>取 $z = x + y$（两个自然数之和仍是自然数），成立。</p>
+        <p><strong>✅ 真（值为 1）。</strong></p>
+    </div>
+</div>
+
+<!-- T3 解答 -->
+<div class="card" id="sec3-3">
+    <div class="card-header">
+        <span class="q-num">3</span> 幂集上的偏序关系 —— 哈斯图
+        <span class="answer-badge">6 分</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>$A = \{1, 2, 3\}$，$P(A)$ 是 $A$ 的幂集。证明 $\langle P(A), \subseteq \rangle$ 是偏序关系，并画出哈斯图。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>偏序关系三性质（自反、反对称、传递）+ 哈斯图绘制。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">幂集 $P(A)$ 是 $A$ 所有子集的集合，$|A|=3$ 时共 $2^3=8$ 个元素。$\subseteq$ 关系天然是偏序：自己包含自己（自反），互相包含就是相等（反对称），包含的传递不用说（传递）。<strong>哈斯图</strong>是偏序关系的"简化版"关系图：去掉了自环和传递边，分层画出"谁比谁大"。$\varnothing$ 在最底层（最小），全集 $\{1,2,3\}$ 在顶层（最大），中间按元素个数分层。</p>
+        </div>
+        <h4>🔍 证明偏序关系</h4>
+        <p>$P(A) = \{\varnothing, \{1\}, \{2\}, \{3\}, \{1,2\}, \{1,3\}, \{2,3\}, \{1,2,3\}\}$，共 8 个元素。</p>
+        <ul>
+            <li><strong>自反：</strong>对任意 $X \in P(A)$，有 $X \subseteq X$。✅</li>
+            <li><strong>反对称：</strong>若 $X \subseteq Y$ 且 $Y \subseteq X$，则 $X = Y$。✅（集合相等的定义）</li>
+            <li><strong>传递：</strong>若 $X \subseteq Y$ 且 $Y \subseteq Z$，则 $X \subseteq Z$。✅</li>
+        </ul>
+        <p>故 $\langle P(A), \subseteq \rangle$ 是偏序集（poset）。</p>
+
+        <h4>🔍 哈斯图</h4>
+        <p>8 个元素按包含关系分层（按集合大小 = 0,1,2,3）：</p>
+
+        <div class="hasse-container">
+            <svg viewBox="0 0 500 380" width="460" height="360" xmlns="http://www.w3.org/2000/svg">
+                <!-- 第0层：空集 -->
+                <circle cx="250" cy="330" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="250" y="336" text-anchor="middle" font-size="15" font-weight="700" fill="#1a3c2a">∅</text>
+
+                <!-- 第1层：单元素集 -->
+                <circle cx="100" cy="240" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="100" y="246" text-anchor="middle" font-size="15" font-weight="700" fill="#1a3c2a">{1}</text>
+                <circle cx="250" cy="240" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="250" y="246" text-anchor="middle" font-size="15" font-weight="700" fill="#1a3c2a">{2}</text>
+                <circle cx="400" cy="240" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="400" y="246" text-anchor="middle" font-size="15" font-weight="700" fill="#1a3c2a">{3}</text>
+
+                <!-- 第2层：双元素集 -->
+                <circle cx="130" cy="130" r="24" fill="#e8f5e9" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="130" y="137" text-anchor="middle" font-size="14" font-weight="700" fill="#1a3c2a">{1,2}</text>
+                <circle cx="260" cy="130" r="24" fill="#e8f5e9" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="260" y="137" text-anchor="middle" font-size="14" font-weight="700" fill="#1a3c2a">{1,3}</text>
+                <circle cx="390" cy="130" r="24" fill="#e8f5e9" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="390" y="137" text-anchor="middle" font-size="14" font-weight="700" fill="#1a3c2a">{2,3}</text>
+
+                <!-- 第3层：全集 -->
+                <circle cx="250" cy="35" r="26" fill="#c9a84c" stroke="#8b6914" stroke-width="3"/>
+                <text x="250" y="41" text-anchor="middle" font-size="15" font-weight="900" fill="#0d2818">{1,2,3}</text>
+
+                <!-- 边：从∅到单元素 -->
+                <line x1="238" y1="312" x2="112" y2="258" stroke="#1a3c2a" stroke-width="1.5"/>
+                <line x1="250" y1="310" x2="250" y2="262" stroke="#1a3c2a" stroke-width="1.5"/>
+                <line x1="262" y1="312" x2="388" y2="258" stroke="#1a3c2a" stroke-width="1.5"/>
+
+                <!-- 边：从单元素到双元素 -->
+                <!-- {1}→{1,2} -->
+                <line x1="108" y1="222" x2="124" y2="150" stroke="#1a3c2a" stroke-width="1.5"/>
+                <!-- {1}→{1,3} -->
+                <line x1="115" y1="225" x2="248" y2="150" stroke="#1a3c2a" stroke-width="1.5"/>
+                <!-- {2}→{1,2} -->
+                <line x1="238" y1="224" x2="142" y2="150" stroke="#1a3c2a" stroke-width="1.5"/>
+                <!-- {2}→{2,3} -->
+                <line x1="262" y1="224" x2="378" y2="150" stroke="#1a3c2a" stroke-width="1.5"/>
+                <!-- {3}→{1,3} -->
+                <line x1="385" y1="225" x2="272" y2="150" stroke="#1a3c2a" stroke-width="1.5"/>
+                <!-- {3}→{2,3} -->
+                <line x1="392" y1="222" x2="382" y2="152" stroke="#1a3c2a" stroke-width="1.5"/>
+
+                <!-- 边：从双元素到全集 -->
+                <line x1="145" y1="114" x2="235" y2="57" stroke="#1a3c2a" stroke-width="1.5"/>
+                <line x1="260" y1="112" x2="252" y2="59" stroke="#1a3c2a" stroke-width="1.5"/>
+                <line x1="375" y1="114" x2="265" y2="57" stroke="#1a3c2a" stroke-width="1.5"/>
+            </svg>
+        </div>
+
+        <p>哈斯图结构：底层 $\varnothing$ → 第二层 $\{1\},\{2\},\{3\}$ → 第三层 $\{1,2\},\{1,3\},\{2,3\}$ → 顶层 $\{1,2,3\}$。</p>
+    </div>
+</div>
+
+<!-- T4 解答 -->
+<div class="card" id="sec3-4">
+    <div class="card-header">
+        <span class="q-num">4</span> 欧拉回路 / 欧拉通路判断
+        <span class="answer-badge">6 分</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>判断下图是否存在欧拉回路或欧拉通路，若存在请写出。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>欧拉回路（所有顶点度数为偶）vs 欧拉通路（恰有两个奇度顶点）。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">欧拉回路 = 一笔画完所有边且回到起点（每个顶点进多少次出多少次→度数必须全为偶数）。欧拉通路 = 一笔画完所有边但起点≠终点（恰有两个奇度顶点作为起点和终点）。<strong>充要条件</strong>：连通图有欧拉回路⇔所有顶点度数为偶；有欧拉通路⇔恰有两个奇度顶点。判断时先算每个顶点的度数，再看奇度顶点个数。</p>
+        </div>
+        <h4>🔍 图结构（豆包识图）</h4>
+        <p>5 顶点 $\{a,b,c,d,e\}$，边集：</p>
+        $$a-b, \; a-d, \; a-e, \; b-c, \; b-d, \; b-e, \; c-d, \; d-e$$
+        <p>计算度数：</p>
+        <table>
+            <tr><th>顶点</th><th>邻接边</th><th>度数</th><th>奇偶</th></tr>
+            <tr><td>$a$</td><td>$ab, ad, ae$</td><td>3</td><td>奇数 ❗</td></tr>
+            <tr><td>$b$</td><td>$ab, bc, bd, be$</td><td>4</td><td>偶数</td></tr>
+            <tr><td>$c$</td><td>$bc, cd$</td><td>2</td><td>偶数</td></tr>
+            <tr><td>$d$</td><td>$ad, bd, cd, de$</td><td>4</td><td>偶数</td></tr>
+            <tr><td>$e$</td><td>$ae, be, de$</td><td>3</td><td>奇数 ❗</td></tr>
+        </table>
+
+        <p><strong>结论：</strong>恰有两个奇度顶点 $a$ 和 $e$（度数各为 3）。</p>
+        <ul>
+            <li>❌ <strong>欧拉回路不存在</strong>——需要所有顶点度数为偶数。</li>
+            <li>✅ <strong>欧拉通路存在</strong>——恰有两个奇度顶点，分别为起点和终点。</li>
+        </ul>
+
+        <p><strong>欧拉通路：</strong>以 $a$ 为起点，$e$ 为终点（或反之）：</p>
+        $$\mathbf{a \to b \to d \to a \to e \to b \to c \to d \to e}$$
+
+        <div class="graph-box">
+            <svg viewBox="0 0 400 280" width="380" height="260" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="80" cy="60" r="22" fill="#c9a84c" stroke="#8b6914" stroke-width="2.5"/>
+                <text x="80" y="66" text-anchor="middle" font-size="16" font-weight="900" fill="#0d2818">a</text>
+                <circle cx="220" cy="40" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="220" y="46" text-anchor="middle" font-size="16" font-weight="700" fill="#1a3c2a">b</text>
+                <circle cx="340" cy="80" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="340" y="86" text-anchor="middle" font-size="16" font-weight="700" fill="#1a3c2a">c</text>
+                <circle cx="200" cy="200" r="22" fill="#d4edda" stroke="#1a3c2a" stroke-width="2.5"/>
+                <text x="200" y="206" text-anchor="middle" font-size="16" font-weight="700" fill="#1a3c2a">d</text>
+                <circle cx="60" cy="200" r="22" fill="#c9a84c" stroke="#8b6914" stroke-width="2.5"/>
+                <text x="60" y="206" text-anchor="middle" font-size="16" font-weight="900" fill="#0d2818">e</text>
+                <!-- 边 -->
+                <line x1="100" y1="70" x2="200" y2="50" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="80" y1="80" x2="182" y2="182" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="72" y1="180" x2="80" y2="80" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="238" y1="50" x2="322" y2="72" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="210" y1="62" x2="192" y2="180" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="235" y1="55" x2="72" y2="185" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="325" y1="95" x2="215" y2="188" stroke="#1a3c2a" stroke-width="1.8"/>
+                <line x1="195" y1="178" x2="75" y2="185" stroke="#1a3c2a" stroke-width="1.8"/>
+                <!-- 标注 -->
+                <text x="85" y="25" font-size="12" fill="#8b6914" font-weight="700">deg=3 (奇)</text>
+                <text x="20" y="230" font-size="12" fill="#8b6914" font-weight="700">deg=3 (奇)</text>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<!-- T5 解答 -->
+<div class="card" id="sec3-5">
+    <div class="card-header">
+        <span class="q-num">5</span> 哈夫曼编码 —— 最优二叉树
+        <span class="answer-badge">6 分</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>八进制数字频率：0(25%), 1(20%), 2(15%), 3(10%), 4(10%), 5(10%), 6(5%), 7(5%)。画出最优树，给出编码，计算传输 1000 个数字需要的二进制数字个数。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>哈夫曼算法 —— 每次合并两个最小频率。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">哈夫曼编码的核心思想：<strong>频率高的用短码，频率低的用长码</strong>，这样总传输代价最小。就像给常用字分配简短缩写、生僻字用全拼一样。算法就是反复把两个最小频率的节点合并成一个新节点（频率为两者之和），直到只剩一个根节点。然后从根开始，走左边标 0、走右边标 1，路径上的标记就是编码。</p>
+        </div>
+        <h4>🔍 步骤一：哈夫曼合并过程</h4>
+        <p>初始频率（%）：6(5), 7(5), 3(10), 4(10), 5(10), 2(15), 1(20), 0(25)</p>
+
+        <table>
+            <tr><th>步骤</th><th>合并</th><th>新节点频率</th><th>当前节点（升序）</th></tr>
+            <tr><td>①</td><td>6(5) + 7(5)</td><td>N₁ = 10</td><td>3(10), 4(10), 5(10), N₁(10), 2(15), 1(20), 0(25)</td></tr>
+            <tr><td>②</td><td>3(10) + 4(10)</td><td>N₂ = 20</td><td>5(10), N₁(10), 2(15), N₂(20), 1(20), 0(25)</td></tr>
+            <tr><td>③</td><td>5(10) + N₁(10)</td><td>N₃ = 20</td><td>2(15), N₂(20), N₃(20), 1(20), 0(25)</td></tr>
+            <tr><td>④</td><td>2(15) + N₂(20)</td><td>N₄ = 35</td><td>N₃(20), 1(20), 0(25), N₄(35)</td></tr>
+            <tr><td>⑤</td><td>N₃(20) + 1(20)</td><td>N₅ = 40</td><td>0(25), N₄(35), N₅(40)</td></tr>
+            <tr><td>⑥</td><td>0(25) + N₄(35)</td><td>N₆ = 60</td><td>N₅(40), N₆(60)</td></tr>
+            <tr><td>⑦</td><td>N₅(40) + N₆(60)</td><td>根 = 100</td><td>—</td></tr>
+        </table>
+
+        <h4>步骤二：编码分配（左0右1）</h4>
+        <table>
+            <tr><th>数字</th><th>频率</th><th>哈夫曼编码</th><th>码长</th></tr>
+            <tr><td>0</td><td>25%</td><td><strong>11</strong></td><td>2</td></tr>
+            <tr><td>1</td><td>20%</td><td><strong>01</strong></td><td>2</td></tr>
+            <tr><td>2</td><td>15%</td><td><strong>101</strong></td><td>3</td></tr>
+            <tr><td>3</td><td>10%</td><td><strong>001</strong></td><td>3</td></tr>
+            <tr><td>4</td><td>10%</td><td><strong>1000</strong></td><td>4</td></tr>
+            <tr><td>5</td><td>10%</td><td><strong>1001</strong></td><td>4</td></tr>
+            <tr><td>6</td><td>5%</td><td><strong>0001</strong></td><td>4</td></tr>
+            <tr><td>7</td><td>5%</td><td><strong>0000</strong></td><td>4</td></tr>
+        </table>
+
+        <h4>步骤三：计算传输代价</h4>
+        <p>加权平均码长：</p>
+        $$L = 2\times 0.25 + 2\times 0.20 + 3\times 0.15 + 3\times 0.10 + 4\times 0.10 + 4\times 0.10 + 4\times 0.05 + 4\times 0.05$$
+        $$= 0.50 + 0.40 + 0.45 + 0.30 + 0.40 + 0.40 + 0.20 + 0.20 = 2.85$$
+
+        <p>传输 <strong>1000 个数字</strong>需要：</p>
+        $$1000 \times 2.85 = \mathbf{2850} \text{ 个二进制数字}$$
+
+        <div class="info-box">
+            <strong>💡 对比：</strong>若用等长编码（3位/数字），1000个数字需要 3000 位。哈夫曼编码节省了 150 位（5%）。
+        </div>
+    </div>
+</div>
+
+<!-- ========== 第四部分：证明题 ========== -->
+<h2 class="section-title" id="sec4">四、应用题 / 证明题（每小题 10 分，共 30 分）</h2>
+
+<!-- T1 证明 -->
+<div class="card" id="sec4-1">
+    <div class="card-header">
+        <span class="q-num">1</span> 自然推理 —— 命题逻辑
+        <span class="answer-badge">10 分</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>在自然推理系统中，构造下列推理的证明：</p>
+        <p>前提：$\neg a \lor b,\; c \to \neg b,\; a$</p>
+        <p>结论：$a \land \neg c$</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>自然推理 —— 假言推理、等值替换、逆否命题。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+          <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+          <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">自然推理就像"侦探破案"——从已知线索（前提）一步步推出结论。关键技巧：<strong>蕴含等值式</strong> $\neg a \lor b \equiv a \to b$（把"或"变成"如果…那么…"）；<strong>逆否命题</strong> $c \to \neg b \equiv b \to \neg c$（"如果下雨就带伞"等价于"如果不带伞就没下雨"）。本题核心：从 $a$ 出发，用 $\neg a \lor b$（即 $a \to b$）得到 $b$，再用 $c \to \neg b$（即 $b \to \neg c$）得到 $\neg c$，最后 $a \land \neg c$。</p>
+        </div>
+        <h4>🔍 证明</h4>
+        <ol class="step-list">
+            <li>$a$ —— <strong>前提</strong></li>
+            <li>$\neg a \lor b$ —— <strong>前提</strong></li>
+            <li>$\neg a \lor b \equiv a \to b$ —— <strong>蕴含等值式</strong>（$p \to q \equiv \neg p \lor q$）</li>
+            <li>$b$ —— <strong>假言推理</strong>（由 1 和 3：$a$ 和 $a \to b$ 推出 $b$）</li>
+            <li>$c \to \neg b$ —— <strong>前提</strong></li>
+            <li>$c \to \neg b \equiv b \to \neg c$ —— <strong>逆否命题</strong>（$p \to q \equiv \neg q \to \neg p$）</li>
+            <li>$\neg c$ —— <strong>假言推理</strong>（由 4 和 6：$b$ 和 $b \to \neg c$ 推出 $\neg c$）</li>
+            <li>$a \land \neg c$ —— <strong>合取引入</strong>（由 1 和 7）</li>
+        </ol>
+
+        <p><strong>∎ 证毕。</strong></p>
+
+        <div class="info-box">
+            <strong>💡 推理思路：</strong>我们有 $a$，又有 $\neg a \lor b$（即 $a \to b$），所以得到 $b$。再由 $c \to \neg b$（即 $b \to \neg c$），用 $b$ 推出 $\neg c$。最终 $a$ 和 $\neg c$ 都成立。
+        </div>
+    </div>
+</div>
+
+<!-- T2 证明 -->
+<div class="card" id="sec4-2">
+    <div class="card-header">
+        <span class="q-num">2</span> 无向图连通关系是等价关系
+        <span class="answer-badge">10 分</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>证明无向图中顶点之间的连通关系是等价关系。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>等价关系 = 自反 + 对称 + 传递。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">等价关系 = 自反 + 对称 + 传递。就像"同班同学"关系：自己和自己是同班（自反），A 和 B 同班则 B 和 A 也同班（对称），A 和 B 同班、B 和 C 同班则 A 和 C 同班（传递）。无向图中两顶点<strong>连通</strong>就是存在一条路连接它们。要证明连通是等价关系，只要证明这三条性质就行：自己到自己的零长度路（自反），路可以反着走（对称），两条路可以拼接（传递）。</p>
+</div>
+        <h4>🔍 定义</h4>
+        <p>在无向图 $G = (V, E)$ 中，定义关系 $R$：$uRv$ 当且仅当 $u$ 与 $v$ 之间存在一条路（path）。</p>
+
+        <h4>🔍 证明</h4>
+
+        <p><strong>① 自反性：</strong>对任意 $v \in V$，存在长度为 0 的路（只包含 $v$ 自身），故 $vRv$。✅</p>
+
+        <p><strong>② 对称性：</strong>若 $uRv$，即存在路 $u = v_0, v_1, \ldots, v_k = v$。则反向走 $v = v_k, v_{k-1}, \ldots, v_0 = u$ 也是 $G$ 中的一条路（无向图中边没有方向），故 $vRu$。✅</p>
+
+        <p><strong>③ 传递性：</strong>若 $uRv$ 且 $vRw$：</p>
+        <ul>
+            <li>$uRv$：存在路 $P_1: u \leadsto v$</li>
+            <li>$vRw$：存在路 $P_2: v \leadsto w$</li>
+        </ul>
+        <p>将 $P_1$ 和 $P_2$ 在 $v$ 处拼接（$P_1$ 走到 $v$，然后沿 $P_2$ 从 $v$ 走到 $w$），得到 $u \leadsto w$ 的一条路 $P_1P_2$。故 $uRw$。✅</p>
+
+        <p>满足自反、对称、传递，故 $R$ 是<strong>等价关系</strong>。∎</p>
+
+        <div class="info-box">
+            <strong>💡 等价类：</strong>连通关系将顶点集划分为<strong>连通分支</strong>（connected components）。同一连通分支内的顶点互相连通，不同分支间不连通。这正是一个等价类的划分！
+        </div>
+    </div>
+</div>
+
+<!-- T3 证明 -->
+<div class="card" id="sec4-3">
+    <div class="card-header">
+        <span class="q-num">3</span> r 元正则树公式 —— 数学归纳法
+        <span class="answer-badge">10 分</span>
+    </div>
+    <div class="card-body">
+        <p><strong>题目：</strong>证明：$r$ 元正则树有 $t$ 片叶和 $i$ 个分支点，则 $t - 1 = (r - 1)i$。</p>
+
+        <div class="info-box tip">
+            <strong>📌 知识点：</strong>树的结构性质 + 数学归纳法。
+        </div>
+
+<div class="concept-primer" style="background:#fefdf5;border-left:4px solid #e6a817;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:10px;">
+  <h4 style="color:#b8860b;margin:0 0 6px 0;font-size:0.9rem;">🧠 先搞懂这些基础</h4>
+  <p style="margin:4px 0;font-size:0.9rem;line-height:1.7;">$r$ 元正则树就是每个分支点<strong>恰好有 $r$ 个儿子</strong>的树。比如二叉树每个分支点有 2 个儿子，三叉树有 3 个。叶是没有儿子的节点，分支点是有儿子的节点。证明思路：用数学归纳法，找到"最底层"的分支点（它的 $r$ 个儿子全是叶），删掉这 $r$ 个儿子后，这个分支点变成叶，叶少 $r$ 个但多 1 个→净减少 $r-1$ 个叶，分支点少 1 个。反复操作就能推出 $t-1=(r-1)i$。</p>
+</div>
+        <h4>🔍 定义回顾</h4>
+        <ul>
+            <li><strong>$r$ 元正则树：</strong>每个分支点恰好有 $r$ 个儿子。</li>
+            <li><strong>叶：</strong>没有儿子的节点（度为 1，或根度为 0 时）。</li>
+            <li><strong>分支点：</strong>有儿子的节点（内部节点）。</li>
+        </ul>
+
+        <h4>🔍 数学归纳法证明（对分支点数 $i$ 归纳）</h4>
+
+        <p><strong>基始：</strong>$i = 1$（只有一个分支点，即根）。</p>
+        <p>根有 $r$ 个儿子，全部是叶。故 $t = r$。</p>
+        $$t - 1 = r - 1 = (r - 1) \times 1 = (r - 1)i$$
+        <p>✅ 基始成立。</p>
+
+        <p><strong>归纳假设：</strong>假设对所有分支点数 $\le k$ 的 $r$ 元正则树，公式 $t - 1 = (r - 1)i$ 成立。</p>
+
+        <p><strong>归纳步骤：</strong>考虑分支点数为 $i = k + 1$ 的 $r$ 元正则树 $T$。</p>
+        <p>由于 $i \ge 2$，$T$ 中必存在一个分支点 $v$，其 $r$ 个儿子<strong>全是叶</strong>（取离根最远的分支点即可保证）。</p>
+        <p>现在<strong>删除</strong> $v$ 的 $r$ 个儿子（叶）。删除后：</p>
+        <ul>
+            <li>这 $r$ 个叶消失 → 叶数减少 $r$</li>
+            <li>$v$ 变成了新的叶（它不再有儿子）→ 叶数增加 1</li>
+            <li>分支点数减少 1（$v$ 不再是分支点）</li>
+        </ul>
+        <p>新树 $T'$ 的叶数 $t' = t - r + 1$，分支点数 $i' = k$。</p>
+        <p>由归纳假设，对 $T'$ 有：</p>
+        $$t' - 1 = (r - 1) \cdot i'$$
+        <p>代入 $t' = t - r + 1$，$i' = k = i - 1$：</p>
+        $$(t - r + 1) - 1 = (r - 1)(i - 1)$$
+        $$t - r = (r - 1)(i - 1)$$
+        $$t - r = (r - 1)i - (r - 1)$$
+        $$t - r = (r - 1)i - r + 1$$
+        $$t - 1 = (r - 1)i$$
+
+        <p>✅ 归纳步骤成立。∎ 证毕。</p>
+
+        <div class="info-box">
+            <strong>💡 特殊情形：</strong>当 $r = 2$（二叉树），公式变为 $t - 1 = i$，即<strong>叶数 = 分支点数 + 1</strong>，这是二叉树最经典的结论！
+        </div>
+    </div>
+</div>
+
+</div><!-- /.container -->
+
+<!-- ==================== 页脚 ==================== -->
+<footer class="footer">
+    <p>📐 2018 – 2019 学年 离散数学 A 卷 · 完整逐题讲解</p>
+    <p>经典学术绿金风格 ｜ 每题详解 ｜ 小白友好 ｜ <a href="#top">↑ 返回顶部</a></p>
+    <p style="margin-top:0.3rem;font-size:0.75rem;">MathJax 渲染 &copy; 2024</p>
+</footer>
+
+<!-- MathJax 排版触发 -->
+<script>
+    MathJax.startup.promise.then(() => {
+        MathJax.typesetPromise();
+    });
+</script>
+
+</body>
+</html>

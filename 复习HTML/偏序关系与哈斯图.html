@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>偏序关系 · 哈斯图 · 上下界 — 通俗详解</title>
+<style>
+  :root {
+    --bg: #0f172a; --card: #1e293b; --card2: #1a2332;
+    --border: #334155; --text: #e2e8f0; --text2: #94a3b8;
+    --accent: #a78bfa; --green: #4ade80; --red: #f87171;
+    --pink: #f472b6; --blue: #38bdf8; --yellow: #fbbf24;
+    --purple: #c084fc;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.85; padding-bottom: 4rem;
+  }
+  .container { max-width: 980px; margin: 0 auto; padding: 1.5rem; }
+  h1 {
+    text-align: center; font-size: 2rem; margin: 1.5rem 0 0.5rem;
+    background: linear-gradient(135deg, var(--purple), var(--pink), var(--yellow));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle { text-align: center; color: var(--text2); margin-bottom: 2rem; font-size: 1.05rem; }
+  h2 {
+    font-size: 1.45rem; margin: 2.2rem 0 1rem; padding-left: 0.75rem;
+    border-left: 4px solid var(--purple);
+  }
+  h3 { font-size: 1.1rem; margin: 1.3rem 0 0.6rem; color: var(--text); }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.5rem 1.8rem; margin: 1rem 0;
+  }
+  canvas { display: block; margin: 1rem auto; max-width: 100%; }
+  .fig-caption { text-align: center; color: var(--text2); font-size: 0.9rem; margin-top: 0.3rem; }
+  .highlight { background: rgba(168,139,250,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--purple); }
+  .highlight-red { background: rgba(248,113,113,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--red); }
+  .highlight-green { background: rgba(74,222,128,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--green); }
+  .highlight-yellow { background: rgba(251,191,36,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--yellow); }
+  .highlight-blue { background: rgba(56,189,248,0.2); padding: 0.12em 0.4em; border-radius: 5px; font-weight: 600; color: var(--blue); }
+  .callout {
+    border-radius: 10px; padding: 1rem 1.3rem; margin: 1rem 0; font-weight: 500;
+  }
+  .callout-info { background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); }
+  .callout-warn { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); }
+  .callout-danger { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); }
+  .callout-success { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); }
+  table { border-collapse: collapse; margin: 1rem 0; width: 100%; }
+  th { background: var(--border); padding: 0.6rem 1rem; text-align: center; }
+  td { padding: 0.5rem 1rem; text-align: center; border-bottom: 1px solid var(--border); }
+  .tag {
+    display: inline-block; padding: 0.2em 0.65em; border-radius: 20px;
+    font-size: 0.82rem; font-weight: 600;
+  }
+  .tag-red { background: rgba(248,113,113,0.2); color: var(--red); }
+  .tag-green { background: rgba(74,222,128,0.2); color: var(--green); }
+  .tag-purple { background: rgba(192,132,252,0.2); color: var(--purple); }
+  .tag-yellow { background: rgba(251,191,36,0.2); color: var(--yellow); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin: 0.3rem 0; }
+  .math {
+    font-family: "Times New Roman", "Courier New", serif;
+    font-style: italic; color: #e2e8f0;
+  }
+  .math.big { font-size: 1.15rem; }
+  .step-row { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; margin: 0.8rem 0; }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; min-width: 30px;
+    border-radius: 50%; background: var(--purple); color: #fff;
+    font-weight: 700; font-size: 0.95rem; margin-right: 0.5rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>📊 偏序关系 · 哈斯图 · 上下确界</h1>
+<p class="subtitle">离散数学期末高频题型 — 从关系矩阵到求上下界</p>
+
+<!-- 题目 -->
+<div class="card" style="text-align:center;">
+  <h3 style="margin-top:0;">📝 题目</h3>
+  <p style="font-size:1.05rem;">
+    A = {<b>a</b>, <b>b</b>, <b>c</b>, <b>d</b>, <b>e</b>}，R 是 A 上的偏序关系，子集 B = {<b>c</b>, <b>d</b>, <b>e</b>}
+  </p>
+  <p style="color:var(--text2);">(1) 列举 R &nbsp;→&nbsp; (2) 画哈斯图 &nbsp;→&nbsp; (3) 求 B 的上下界和确界</p>
+</div>
+
+<!-- ==================== 第一问 ==================== -->
+<h2>一、从关系矩阵 → R 的集合表达式</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">📖 关系矩阵长这样（5×5，行列对应 a,b,c,d,e）</h3>
+<canvas id="matrix" width="560" height="240"></canvas>
+<div class="fig-caption">矩阵中 1 表示有序对存在，0 表示不存在<br><span class="highlight-yellow">黄色高亮</span> = 对角线（自反性），说明 R 是偏序关系</div>
+</div>
+
+<div class="callout callout-info">
+  <strong>💡 读矩阵口诀：</strong>
+  行 → 第一个元素，列 → 第二个元素。<br>
+  比如第 2 行第 1 列 = 1 → &lt;b, a&gt; ∈ R（b 在 a 下面）
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">✍️ 逐个读出 12 个有序对</h3>
+<div style="display:flex; flex-wrap:wrap; gap:0.6rem; justify-content:center; font-size:1.1rem;">
+  <span class="tag tag-purple">&lt;a,a&gt;</span>
+  <span class="tag tag-purple">&lt;b,a&gt;</span>
+  <span class="tag tag-purple">&lt;b,b&gt;</span>
+  <span class="tag tag-purple">&lt;c,a&gt;</span>
+  <span class="tag tag-purple">&lt;c,c&gt;</span>
+  <span class="tag tag-purple">&lt;d,a&gt;</span>
+  <span class="tag tag-purple">&lt;d,b&gt;</span>
+  <span class="tag tag-purple">&lt;d,c&gt;</span>
+  <span class="tag tag-purple">&lt;d,d&gt;</span>
+  <span class="tag tag-purple">&lt;e,a&gt;</span>
+  <span class="tag tag-purple">&lt;e,c&gt;</span>
+  <span class="tag tag-purple">&lt;e,e&gt;</span>
+</div>
+</div>
+
+<!-- ==================== 第二问 ==================== -->
+<h2>二、从 R 画哈斯图（三步法）</h2>
+
+<div class="callout callout-success" style="text-align:center; font-size:1.05rem;">
+  <strong>哈斯图 = 去掉自环 + 去掉传递边 + 箭头朝上</strong>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;"><span class="step-num">1</span> 第一步：去掉所有自环</h3>
+<p>自环 = 对角线上的元素（自反性）：&lt;a,a&gt; &lt;b,b&gt; &lt;c,c&gt; &lt;d,d&gt; &lt;e,e&gt;，全部删掉。</p>
+<div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.5rem;">
+  <span>剩余：</span>
+  <span class="tag tag-yellow">&lt;b,a&gt;</span>
+  <span class="tag tag-yellow">&lt;c,a&gt;</span>
+  <span class="tag tag-yellow">&lt;d,a&gt;</span>
+  <span class="tag tag-yellow">&lt;d,b&gt;</span>
+  <span class="tag tag-yellow">&lt;d,c&gt;</span>
+  <span class="tag tag-yellow">&lt;e,a&gt;</span>
+  <span class="tag tag-yellow">&lt;e,c&gt;</span>
+</div>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;"><span class="step-num">2</span> 第二步：去掉传递边</h3>
+<p style="color:var(--text2);">如果 d→b 且 b→a，则 d→a 就是传递边，可以删掉。</p>
+
+<canvas id="transitive" width="560" height="200"></canvas>
+
+<table>
+  <tr><th>边</th><th>能删吗？</th><th>理由</th></tr>
+  <tr><td>&lt;d,a&gt;</td><td><span class="tag tag-red">✗ 删</span></td><td style="text-align:left">d→b→a 已经连通，d→a 是传递边</td></tr>
+  <tr><td>&lt;d,a&gt;</td><td><span class="tag tag-red">✗ 删</span></td><td style="text-align:left">也可走 d→c→a</td></tr>
+  <tr><td>&lt;e,a&gt;</td><td><span class="tag tag-red">✗ 删</span></td><td style="text-align:left">e→c→a 已经连通</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;"><span class="step-num">3</span> 第三步：只保留覆盖关系 → 哈斯图</h3>
+<div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.8rem;">
+  <span><strong>覆盖边：</strong></span>
+  <span class="tag tag-green">&lt;b,a&gt;</span>
+  <span class="tag tag-green">&lt;c,a&gt;</span>
+  <span class="tag tag-green">&lt;d,b&gt;</span>
+  <span class="tag tag-green">&lt;d,c&gt;</span>
+  <span class="tag tag-green">&lt;e,c&gt;</span>
+</div>
+
+<canvas id="hasse" width="560" height="380"></canvas>
+<div class="fig-caption">
+  <span class="highlight-green">绿色虚线框</span> = 子集 B = {c, d, e}
+</div>
+</div>
+
+<!-- ==================== 第三问 ==================== -->
+<h2>三、求 B = {c, d, e} 的上界·下界·确界</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">🧭 先看 B 中三个元素之间的关系</h3>
+<canvas id="Bonly" width="560" height="220"></canvas>
+<div class="fig-caption">
+  c 在 d 和 e 的上方 · d 和 e <span class="highlight-red">不可比</span>
+</div>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">⬆️ 求上界 & 上确界</h3>
+<p style="color:var(--text2);">上界 = 比 B 中<span class="highlight">所有元素都大</span>的元素</p>
+
+<canvas id="upper" width="560" height="380"></canvas>
+
+<table>
+  <tr><th>候选</th><th>≥ c ?</th><th>≥ d ?</th><th>≥ e ?</th><th>是上界?</th></tr>
+  <tr><td><b>a</b></td><td><span class="tag tag-green">✅</span></td><td><span class="tag tag-green">✅</span></td><td><span class="tag tag-green">✅</span></td><td><span class="tag tag-green">✅ 是</span></td></tr>
+  <tr><td>b</td><td>不可比</td><td><span class="tag tag-green">✅</span></td><td>不可比</td><td><span class="tag tag-red">✗</span></td></tr>
+  <tr><td><b>c</b></td><td><span class="tag tag-green">✅</span></td><td><span class="tag tag-green">✅</span><br><small>(d≤c)</small></td><td><span class="tag tag-green">✅</span><br><small>(e≤c)</small></td><td><span class="tag tag-green">✅ 是</span></td></tr>
+  <tr><td>d</td><td><span class="tag tag-red">✗</span></td><td><span class="tag tag-green">✅</span></td><td><span class="tag tag-red">✗</span></td><td><span class="tag tag-red">✗</span></td></tr>
+  <tr><td>e</td><td><span class="tag tag-red">✗</span></td><td><span class="tag tag-red">✗</span></td><td><span class="tag tag-green">✅</span></td><td><span class="tag tag-red">✗</span></td></tr>
+</table>
+
+<div class="callout callout-success">
+  <strong>📋 上界 = {a, c}</strong><br>
+  <strong>🎯 上确界 = c</strong>（上界中最小的：c ≤ a，c 更小）
+</div>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">⬇️ 求下界 & 下确界</h3>
+<p style="color:var(--text2);">下界 = 比 B 中<span class="highlight">所有元素都小</span>的元素</p>
+
+<canvas id="lower" width="560" height="380"></canvas>
+
+<p style="margin-top:1rem;">
+  需要同时 ≤ c、≤ d、≤ e：
+</p>
+<ul>
+  <li>≤ d 的元素：只有 <b>d 自己</b>（d 已在最底层）</li>
+  <li>≤ e 的元素：只有 <b>e 自己</b>（e 已在最底层）</li>
+  <li><span class="highlight-red">同时 ≤ d 且 ≤ e 的元素不存在！</span></li>
+</ul>
+
+<div class="callout callout-danger">
+  <strong>📋 下界 = ∅（无）</strong><br>
+  <strong>🎯 下确界 = 不存在</strong>
+</div>
+</div>
+
+<!-- ==================== 总结 ==================== -->
+<h2>四、答案总结 & 记忆口诀</h2>
+
+<div class="card">
+<table>
+  <tr><th>问题</th><th>答案</th></tr>
+  <tr><td>(1) R 的集合表达式</td><td style="text-align:left; font-size:0.92rem;">{&lt;a,a&gt;,&lt;b,a&gt;,&lt;b,b&gt;,&lt;c,a&gt;,&lt;c,c&gt;,&lt;d,a&gt;,&lt;d,b&gt;,&lt;d,c&gt;,&lt;d,d&gt;,&lt;e,a&gt;,&lt;e,c&gt;,&lt;e,e&gt;}</td></tr>
+  <tr><td>(2) 哈斯图</td><td>见上方图示（a在上，d最下）</td></tr>
+  <tr><td>(3) 上界</td><td><span class="tag tag-green">a, c</span></td></tr>
+  <tr><td>(3) 上确界</td><td><span class="tag tag-green">c</span></td></tr>
+  <tr><td>(3) 下界</td><td><span class="tag tag-red">无</span></td></tr>
+  <tr><td>(3) 下确界</td><td><span class="tag tag-red">无</span></td></tr>
+</table>
+</div>
+
+<div class="callout callout-info" style="font-size:1.05rem; text-align:center;">
+  <strong>🎯 考场速记：</strong><br>
+  哈斯图三去：去自环 → 去传递 → 箭头朝上<br>
+  上界：比所有都大 · 下界：比所有都小<br>
+  确界：界中取最值（上确界=最小上界，下确界=最大下界）
+</div>
+
+</div>
+
+<script>
+// ============ 工具函数 ============
+function circle(ctx, x, y, r, fill, stroke, label, labelColor, bgColor) {
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fillStyle = bgColor || '#1e293b';
+  ctx.fill();
+  ctx.strokeStyle = stroke || '#e2e8f0';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  if (label) {
+    ctx.fillStyle = labelColor || '#e2e8f0';
+    ctx.font = 'bold 16px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(label, x, y);
+  }
+}
+
+function line(ctx, x1, y1, x2, y2, color, width) {
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+  ctx.strokeStyle = color; ctx.lineWidth = width || 2; ctx.stroke();
+}
+
+// ============ 图1：关系矩阵 ============
+(function(){
+  var c = document.getElementById('matrix');
+  var ctx = c.getContext('2d');
+  var rows = 5, cols = 5, cellW = 48, cellH = 36;
+  var mx = 65, my = 50;
+  var labels = ['a','b','c','d','e'];
+  var M = [
+    [1,0,0,0,0],
+    [1,1,0,0,0],
+    [1,0,1,0,0],
+    [1,1,1,1,0],
+    [1,0,1,0,1]
+  ];
+  // 列标签
+  for (var j = 0; j < cols; j++) {
+    ctx.fillStyle = '#e2e8f0'; ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(labels[j], mx + j * cellW + cellW/2, my - 18);
+  }
+  // 行标签
+  for (var i = 0; i < rows; i++) {
+    ctx.fillText(labels[i], mx - 22, my + i * cellH + cellH/2);
+  }
+  for (var i = 0; i < rows; i++) {
+    for (var j = 0; j < cols; j++) {
+      var x = mx + j * cellW, y = my + i * cellH;
+      // 对角线高亮
+      if (i === j) {
+        ctx.fillStyle = 'rgba(251,191,36,0.25)';
+        ctx.fillRect(x, y, cellW, cellH);
+      }
+      ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5;
+      ctx.strokeRect(x, y, cellW, cellH);
+      ctx.fillStyle = M[i][j] ? '#4ade80' : '#64748b';
+      ctx.font = 'bold 18px "Courier New",monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('' + M[i][j], x + cellW/2, y + cellH/2 + 1);
+    }
+  }
+  // 标注
+  ctx.fillStyle = '#fbbf24'; ctx.font = '12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('↙ 对角线 = 自反性', mx, my + rows * cellH + 25);
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText('行 = 第一个元素（下方）, 列 = 第二个元素（上方）', mx + 200, my + rows * cellH + 25);
+  // 箭头标注
+  ctx.fillStyle = '#c084fc'; ctx.font = 'bold 12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('行↓', mx - 45, my + rows*cellH/2);
+  ctx.fillText('列→', mx + cols*cellW/2 - 15, my - 30);
+})();
+
+// ============ 图2：传递边解释 ============
+(function(){
+  var c = document.getElementById('transitive');
+  var ctx = c.getContext('2d');
+  // 画出 d→b→a 和 d→a 的关系
+  var da = [120, 140], db = [250, 140], ba = [380, 140];
+  circle(ctx, da[0], da[1], 24, '#1e293b', '#f87171', 'a');
+  circle(ctx, db[0], db[1], 24, '#1e293b', '#fbbf24', 'b');
+  circle(ctx, ba[0], ba[1], 24, '#1e293b', '#f872b6', 'd');
+
+  // d→b (实线)
+  line(ctx, ba[0] + 22, ba[1] - 8, db[0] - 22, db[1] - 8, '#4ade80', 3);
+  // b→a (实线)
+  line(ctx, db[0] + 22, db[1] - 8, da[0] - 22, da[1] - 8, '#4ade80', 3);
+  // d→a (虚线 - 传递边)
+  ctx.setLineDash([8,5]);
+  line(ctx, ba[0] + 22, ba[1] + 10, da[0] - 22, da[1] + 10, '#f87171', 3);
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = '#4ade80'; ctx.font = 'bold 12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('覆盖关系 ✓', 315, 115);
+  ctx.fillStyle = '#f87171';
+  ctx.fillText('传递边 ✗ 删掉 d→a', 250, 178);
+  ctx.fillText('d→b→a 已经连通，d→a 多余', 250, 196);
+})();
+
+// ============ 图3：哈斯图 ============
+(function(){
+  var c = document.getElementById('hasse');
+  var ctx = c.getContext('2d');
+  // 坐标：a最上，b和c在中间，d和e在下面
+  var a = [280, 55];
+  var b = [165, 175];
+  var c2 = [395, 175];
+  var d = [100, 310];
+  var e = [380, 310];
+
+  // 覆盖边
+  line(ctx, a[0], a[1]+22, b[0], b[1]-22, '#64748b', 3);
+  line(ctx, a[0], a[1]+22, c2[0], c2[1]-22, '#64748b', 3);
+  line(ctx, d[0]+22, d[1]-6, b[0]-22, b[1]+6, '#64748b', 3);
+  line(ctx, d[0]+16, d[1]-16, c2[0]-16, c2[1]+16, '#64748b', 3);
+  line(ctx, e[0]-16, e[1]-12, c2[0]+12, c2[1]+16, '#64748b', 3);
+
+  // B 的虚线框
+  ctx.setLineDash([4,4]);
+  ctx.strokeStyle = '#4ade80'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(c2[0]-35, c2[1]-30);
+  ctx.lineTo(c2[0]+35, c2[1]-30);
+  ctx.lineTo(c2[0]+40, c2[1]+60);
+  ctx.lineTo(e[0]+35, e[1]+30);
+  ctx.lineTo(e[0]+20, e[1]+50);
+  ctx.lineTo(d[0]-20, d[1]+50);
+  ctx.lineTo(d[0]-35, d[1]+30);
+  ctx.lineTo(c2[0]-40, c2[1]+60);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  circle(ctx, a[0], a[1], 24, '#1e293b', '#e2e8f0', 'a', '#e2e8f0');
+  circle(ctx, b[0], b[1], 24, '#1e293b', '#e2e8f0', 'b', '#e2e8f0');
+  circle(ctx, c2[0], c2[1], 24, '#0f172a', '#4ade80', 'c', '#4ade80');
+  circle(ctx, d[0], d[1], 24, '#0f172a', '#4ade80', 'd', '#4ade80');
+  circle(ctx, e[0], e[1], 24, '#0f172a', '#4ade80', 'e', '#4ade80');
+
+  // 标注
+  ctx.fillStyle = '#4ade80'; ctx.font = 'bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('B = {c, d, e}', 430, 330);
+})();
+
+// ============ 图4：B中关系 ============
+(function(){
+  var c = document.getElementById('Bonly');
+  var ctx = c.getContext('2d');
+  var ct = [280, 50], dt = [130, 160], et = [430, 160];
+  line(ctx, dt[0]+22, dt[1]-10, ct[0]-18, ct[1]+16, '#64748b', 3);
+  line(ctx, et[0]-22, et[1]-10, ct[0]+18, ct[1]+16, '#64748b', 3);
+  // d-e 之间的红叉
+  ctx.setLineDash([4,4]);
+  ctx.strokeStyle = '#f87171'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(dt[0]+30, dt[1]-10); ctx.lineTo(et[0]-30, et[1]-10); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#f87171'; ctx.font = 'bold 20px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('✗', 280, 148);
+  ctx.fillText('不可比', 280, 175);
+
+  circle(ctx, ct[0], ct[1], 24, '#0f172a', '#4ade80', 'c', '#4ade80');
+  circle(ctx, dt[0], dt[1], 24, '#0f172a', '#4ade80', 'd', '#4ade80');
+  circle(ctx, et[0], et[1], 24, '#0f172a', '#4ade80', 'e', '#4ade80');
+})();
+
+// ============ 图5：上界 ============
+(function(){
+  var c = document.getElementById('upper');
+  var ctx = c.getContext('2d');
+
+  var a = [280, 50], b2 = [145, 180], c2 = [415, 180],
+      d = [90, 310], e2 = [410, 310];
+
+  // 所有覆盖边
+  line(ctx, a[0], a[1]+22, b2[0], b2[1]-22, '#334155', 2);
+  line(ctx, a[0], a[1]+22, c2[0], c2[1]-22, '#334155', 2);
+  line(ctx, d[0]+20, d[1]-8, b2[0]-20, b2[1]+8, '#334155', 2);
+  line(ctx, d[0]+14, d[1]-14, c2[0]-18, c2[1]+18, '#334155', 2);
+  line(ctx, e2[0]-14, e2[1]-14, c2[0]+18, c2[1]+18, '#334155', 2);
+
+  // 上界 = a, c 高亮
+  circle(ctx, a[0], a[1], 24, '#1a2332', '#4ade80', 'a', '#4ade80', '#0a2a15');
+  circle(ctx, b2[0], b2[1], 24, '#1e293b', '#475569', 'b', '#475569');
+  circle(ctx, c2[0], c2[1], 24, '#1a2332', '#4ade80', 'c', '#4ade80', '#0a2a15');
+  circle(ctx, d[0], d[1], 24, '#1e293b', '#f87171', 'd', '#f87171');
+  circle(ctx, e2[0], e2[1], 24, '#1e293b', '#f87171', 'e', '#f87171');
+
+  // 标注
+  ctx.fillStyle = '#4ade80'; ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('↑ 上界', a[0], a[1]-38);
+  ctx.fillText('↑ 上界（也是上确界）', c2[0], c2[1]-38);
+  ctx.fillStyle = '#f87171';
+  ctx.fillText('b 不和 c、e 可比', b2[0]+60, b2[1]);
+  ctx.fillText('d 在 B 中但比 e 大？不', d[0]-50, d[1]-15);
+  ctx.textAlign = 'left';
+  ctx.fillText('e 在 B 中但比 d 大？不', e2[0]+32, e2[1]-15);
+
+  // 说明
+  ctx.fillStyle = '#94a3b8'; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('上界 = {a, c}     上确界 = c（最小上界）', 280, 362);
+})();
+
+// ============ 图6：下界 ============
+(function(){
+  var c = document.getElementById('lower');
+  var ctx = c.getContext('2d');
+
+  var a = [280, 50], b2 = [145, 180], c2 = [415, 180],
+      d = [90, 310], e2 = [410, 310];
+
+  // 所有覆盖边
+  line(ctx, a[0], a[1]+22, b2[0], b2[1]-22, '#334155', 2);
+  line(ctx, a[0], a[1]+22, c2[0], c2[1]-22, '#334155', 2);
+  line(ctx, d[0]+20, d[1]-8, b2[0]-20, b2[1]+8, '#334155', 2);
+  line(ctx, d[0]+14, d[1]-14, c2[0]-18, c2[1]+18, '#334155', 2);
+  line(ctx, e2[0]-14, e2[1]-14, c2[0]+18, c2[1]+18, '#334155', 2);
+
+  circle(ctx, a[0], a[1], 24, '#1e293b', '#475569', 'a', '#475569');
+  circle(ctx, b2[0], b2[1], 24, '#1e293b', '#475569', 'b', '#475569');
+  circle(ctx, c2[0], c2[1], 24, '#1e293b', '#475569', 'c', '#475569');
+  circle(ctx, d[0], d[1], 24, '#1e293b', '#f87171', 'd', '#f87171');
+  circle(ctx, e2[0], e2[1], 24, '#1e293b', '#f87171', 'e', '#f87171');
+
+  // 红叉
+  ctx.setLineDash([4,4]);
+  ctx.strokeStyle = '#f87171'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(d[0]+30, d[1]-15); ctx.lineTo(e2[0]-30, e2[1]-15); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#f87171'; ctx.font = 'bold 17px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('✗', 250, 292);
+
+  ctx.fillStyle = '#f87171'; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('d 只 ≤ 自己，e 也只 ≤ 自己', 250, 320);
+  ctx.fillText('没有元素同时 ≤ d 且 ≤ e', 250, 340);
+  ctx.fillText('→ 下界 = ∅，下确界不存在', 250, 360);
+})();
+</script>
+
+</body>
+</html>

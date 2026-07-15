@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>25-26 A卷 · 判断题全解析</title>
+<style>
+  :root {
+    --bg: #0b1120; --card: #111827; --card2: #1a2235;
+    --border: #1f2a3f; --text: #e5e7eb; --text2: #9ca3af;
+    --green: #34d399; --red: #f87171; --accent: #fbbf24;
+    --blue: #60a5fa; --purple: #c084fc; --pink: #f472b6;
+    --t: #34d399; --f: #f87171;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.9; padding-bottom: 5rem;
+    background-image: radial-gradient(ellipse at 20% 10%, rgba(52,211,153,0.04) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 90%, rgba(96,165,250,0.04) 0%, transparent 60%);
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+
+  /* ----- Hero ----- */
+  .hero {
+    text-align: center; padding: 2rem 1rem 1rem;
+  }
+  h1 {
+    font-size: 2.1rem; font-weight: 800; letter-spacing: 1px;
+    background: linear-gradient(135deg, var(--green) 25%, var(--blue) 55%, var(--purple) 80%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero .sub { color: var(--text2); margin-top: 0.5rem; font-size: 1rem; }
+
+  /* ----- 统计条 ----- */
+  .stats-bar {
+    display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;
+    margin: 1.8rem 0 2.5rem;
+  }
+  .stat {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 1rem 1.8rem; text-align: center; min-width: 100px;
+  }
+  .stat .num { font-size: 2rem; font-weight: 800; }
+  .stat .lbl { color: var(--text2); font-size: 0.85rem; margin-top: 0.2rem; }
+  .stat.t-stat .num { color: var(--t); }
+  .stat.f-stat .num { color: var(--f); }
+
+  /* ----- 章节标题 ----- */
+  h2 {
+    font-size: 1.35rem; margin: 2.5rem 0 1rem; padding-left: 0.75rem;
+    border-left: 4px solid var(--accent);
+  }
+
+  /* ----- 每道题的卡片 ----- */
+  .q-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 18px; margin: 1.3rem 0; overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .q-card:hover { box-shadow: 0 0 30px rgba(255,255,255,0.03); }
+
+  .q-top {
+    display: flex; align-items: center; gap: 1rem; padding: 1.2rem 1.5rem;
+  }
+  .q-num {
+    display: flex; align-items: center; justify-content: center;
+    width: 42px; height: 42px; min-width: 42px; border-radius: 50%;
+    font-weight: 800; font-size: 1.15rem;
+    background: var(--border); color: var(--text);
+  }
+  .q-num.is-t { background: rgba(52,211,153,0.18); color: var(--t); }
+  .q-num.is-f { background: rgba(248,113,113,0.18); color: var(--f); }
+
+  .q-sentence { flex:1; font-size: 1.05rem; font-weight: 600; line-height: 1.65; }
+  .q-verdict {
+    font-size: 1rem; font-weight: 700; padding: 0.35em 1em; border-radius: 30px;
+    white-space: nowrap;
+  }
+  .q-verdict.t { background: rgba(52,211,153,0.15); color: var(--t); }
+  .q-verdict.f { background: rgba(248,113,113,0.15); color: var(--f); }
+
+  /* 解析区 */
+  .q-body { padding: 0 1.5rem 1.4rem; }
+  .explain-block {
+    background: rgba(255,255,255,0.025); border-radius: 12px;
+    padding: 1.2rem 1.4rem; margin-top: 0.3rem;
+  }
+  .explain-block p { margin: 0.5rem 0; }
+  .explain-block .label {
+    display: inline-block; font-weight: 700; font-size: 0.85rem;
+    padding: 0.15em 0.6em; border-radius: 6px; margin-right: 0.5rem;
+  }
+  .label-reason { background: rgba(251,191,36,0.15); color: var(--accent); }
+  .label-example { background: rgba(96,165,250,0.15); color: var(--blue); }
+  .label-key { background: rgba(192,132,252,0.15); color: var(--purple); }
+  .label-warn { background: rgba(248,113,113,0.15); color: var(--red); }
+
+  /* 公式框 */
+  .fml {
+    display: inline-block; padding: 0.25rem 0.7rem; border-radius: 7px;
+    font-family: "Times New Roman","Courier New",serif; font-style: italic;
+    font-size: 1.05rem;
+    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    margin: 0.15rem 0;
+  }
+  .fml.hi { border-color: var(--accent); background: rgba(251,191,36,0.08); }
+  .fml.hi-t { border-color: var(--t); background: rgba(52,211,153,0.08); }
+  .fml.hi-f { border-color: var(--f); background: rgba(248,113,113,0.08); }
+
+  .inline-code {
+    font-family: "Courier New", monospace; font-size: 0.92rem;
+    background: rgba(255,255,255,0.08); padding: 0.1em 0.4em; border-radius: 4px;
+  }
+
+  /* 反例引用块 */
+  .counter {
+    border-left: 3px solid var(--f); padding-left: 1rem; margin: 0.8rem 0;
+    color: var(--text2);
+  }
+
+  /* 知识延伸 */
+  .extra {
+    background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.2);
+    border-radius: 10px; padding: 0.8rem 1.1rem; margin-top: 1rem;
+    font-size: 0.92rem;
+  }
+  .extra strong { color: var(--blue); }
+
+  /* 响应式 */
+  @media (max-width:600px) {
+    .q-top { flex-wrap: wrap; }
+    .q-verdict { margin-left: 0; }
+  }
+
+  /* 表格 */
+  table { border-collapse: collapse; margin: 0.5rem 0; width: 100%; }
+  th { background: var(--border); padding: 0.45rem 0.7rem; text-align: center; font-size:0.9rem; }
+  td { padding: 0.4rem 0.7rem; text-align: center; border-bottom: 1px solid var(--border); font-size:0.9rem; }
+  .td-l { text-align: left; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ====== Hero ====== -->
+<div class="hero">
+  <h1>✅❌ 判断题 全解析</h1>
+  <div class="sub">2025–2026 学年第一学期 · A 卷 · 每小题 1 分，共 10 分</div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat t-stat"><div class="num">5</div><div class="lbl">T（正确）</div></div>
+  <div class="stat f-stat"><div class="num">5</div><div class="lbl">F（错误）</div></div>
+</div>
+
+<!-- ==================== 第1题 ==================== -->
+<div class="q-card">
+  <div class="q-top">
+    <span class="q-num is-f">1</span>
+    <span class="q-sentence">{∧, ∨} 是联结词完备集。</span>
+    <span class="q-verdict f">F（假）</span>
+  </div>
+  <div class="q-body">
+    <div class="explain-block">
+      <p><span class="label label-reason">为什么错</span></p>
+      <p>只用 <span class="fml">∧</span> 和 <span class="fml">∨</span> <strong>无法表达否定 ¬</strong>。</p>
+      <p>任何仅含 ∧ 和 ∨ 的公式，当所有命题变元取值为 T 时，整个公式也取值为 T。<strong>永远得不到 F</strong>，所以不是完备集。</p>
+      <p><span class="label label-example">完整完备集</span> {¬, ∧, ∨}、{¬, ∧}、{¬, ∨}、{¬, →}、<strong>{↑}（与非）</strong>、<strong>{↓}（或非）</strong></p>
+      <p><span class="label label-key">记法</span> 最小完备集可以只有一个联结词！（{↑} 或 {↓}）</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 第2题 ==================== -->
+<div class="q-card">
+  <div class="q-top">
+    <span class="q-num is-t">2</span>
+    <span class="q-sentence">"闪光的未必是金子"符号化为 ¬∀x(F(x)→G(x))。</span>
+    <span class="q-verdict t">T（真）</span>
+  </div>
+  <div class="q-body">
+    <div class="explain-block">
+      <p><span class="label label-reason">逐词翻译</span></p>
+      <p>∀x(F(x)→G(x)) = "所有闪光的东西都是金子"（闪光→金子）</p>
+      <p>¬∀x(F(x)→G(x)) = "并非所有闪光的东西都是金子" = <strong>闪光的未必是金子</strong> ✅</p>
+      <div class="extra">
+        <strong>🔗 等价变体：</strong>¬∀x(F(x)→G(x)) ⇔ ∃x(F(x)∧¬G(x)) = "存在闪光但不是金子的东西"
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 第3题 ==================== -->
+<div class="q-card">
+  <div class="q-top">
+    <span class="q-num is-f">3</span>
+    <span class="q-sentence">集合 X 上的任意一个划分，确定了 X 上的一个偏序关系。</span>
+    <span class="q-verdict f">F（假）</span>
+  </div>
+  <div class="q-body">
+    <div class="explain-block">
+      <p><span class="label label-reason">为什么错</span></p>
+      <p>划分确定的是 <strong>等价关系</strong>，不是偏序关系！</p>
+      <table>
+        <tr><th></th><th>等价关系</th><th>偏序关系</th></tr>
+        <tr><td>对应概念</td><td><strong>划分</strong>（等价类）</td><td><strong>哈斯图</strong>（层级的）</td></tr>
+        <tr><td>对称性</td><td>✅ 对称</td><td>❌ <strong>反对称</strong></td></tr>
+      </table>
+      <p style="margin-top:0.5rem;">划分 → 每个等价类内的元素互为等价关系。两个不同类的元素之间没有关系。而偏序关系要求<strong>反对称性</strong>——划分的关系是对称的，和反对称正好相反！</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 第4题 ==================== -->
+<div class="q-card">
+  <div class="q-top">
+    <span class="q-num is-f">4</span>
+    <span class="q-sentence">设 A 和 B 是有限集合，f: A→B，则 f 是双射当且仅当 |A| = |B|。</span>
+    <span class="q-verdict f">F（假）</span>
+  </div>
+  <div class="q-body">
+    <div class="explain-block">
+      <p><span class="label label-reason">为什么错</span></p>
+      <p>|A| = |B| 是双射的 <strong>必要条件</strong>，不是充分条件！</p>
+      <div class="counter">
+        <strong>反例：</strong>A = {1, 2}，B = {a, b}，|A| = |B| = 2<br>
+        f(1)=a，f(2)=a → 不是单射（1≠2 但 f(1)=f(2)）→ <strong>不是双射</strong>
+      </div>
+      <p><span class="label label-key">正确说法</span> 有限集合间，f 是双射 ⇔ f 是单射且 |A| = |B|（或 f 是满射且 |A| = |B|）。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 第5题 ==================== -->
+<div class="q-card">
+  <div class="q-top">
+    <span class="q-num is-t">5</span>
+    <span class="q-sentence">非空集合 A 上的恒等关系 I<sub>A</sub> 既是 A 上的等价关系也是 A 上的偏序关系。</span>
+    <span class="q-verdict t">T（真）</span>
+  </div>
+  <div class="q-body">
+    <div class="explain-block">
+      <p><span class="label label-reason">逐一验证</span></p>
+      <p>I<sub>A</sub> = {⟨x, x⟩ | x ∈ A}，所有有序对都在对角线上。</p>
+      <table>
+        <tr><th>性质</th><th>等价关系要求</th><th>偏序关系要求</th><th>I<sub>A</sub> 满足吗？</th></tr>
+        <tr><td>自反性</td><td>✅</td><td>✅</td><td>✅ ∀x, ⟨x,x⟩∈I<sub>A</sub></td></tr>
+        <tr><td>对称性</td><td>✅</td><td>—</td><td>✅ ⟨x,y⟩∈I<sub>A</sub>⇒x=y⇒⟨y,x⟩∈I<sub>A</sub></td></tr>
+        <tr><td>传递性</td><td>✅</td><td>✅</td><td>✅ 显然</td></tr>
+        <tr><td>反对称性</td><td>—</td><td>✅</td><td>✅ ⟨x,y⟩∈I<sub>A</sub>且⟨y,x⟩∈I<sub>A</sub>⇒x=y</td></tr>
+      </table>
+      <p style="margin-top:0.5rem;">全部满足 → <strong>既是等价关系又是偏序关系</strong> ✅</p>
+      <div class="extra">
+        <strong>💡 恒等关系是"最小的"等价关系和"最小的"偏序关系。</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 第6题 ==================== -->
+<div class="q-card">
+  <div class="q-top">
+    <span class="q-num is-f">6</span>
+    <span class="q-sentence">二叉树的中序行遍法的访问顺序是：左子树，右子树，树根。</span>
+    <span class="q-verdict f">F（假）</span>
+  </div>
+  <div class="q-body">
+    <div class="explain-block">
+      <p><span class="label label-reason">题目描述的不是中序！</span></p>
+      <table>
+        <tr><th>遍历方式</th><th>顺序</th><th>口诀</th></tr>
+        <tr><td style="color:var(--red);">前序</td><td><span class="fml hi-f">根 → 左 → 右</span></td><td>根左右</td></tr>
+        <tr><td style="color:var(--green);"><strong>中序</strong></td><td><span class="fml hi-t"><strong>左 → 根 → 右</strong></span></td><td><strong>左根右</strong> ← 这才是中序！</td></tr>
+        <tr><td style="color:var(--blue);">后序</td><td><span class="fml" style="border-color:var(--blue);">左 → 右 → 根</span></td><td>左右根 ← 题目说的这个</td></tr>
+      </table>
+      <p style="margin-top:0.5rem;">题目写的"左子树，右子树，树根" = <strong>后序遍历</strong>，不是中序遍历。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 第7题 ==================== -->
+<div class="q-card">
+  <div class="q-top">
+    <span class="q-num is-f">7</span>
+    <span class="q-sentence">若 T 是一棵 n 阶无向树 (n≥2)，则 T 的边连通度是 n−1。</span>
+    <span class="q-verdict f">F（假）</span>
+  </div>
+  <div class="q-body">
+    <div class="explain-block">
+      <p><span class="label label-reason">概念混淆！</span></p>
+      <p><strong>边连通度 λ(T)</strong> = 使图不连通需要删去的<strong>最少边数</strong>。</p>
+      <p>树中<strong>任意一条边都是桥</strong>，删去 1 条边就使图不连通。</p>
+      <p>∴ <span class="fml hi-t">λ(T) = 1</span>（不是 n−1！）</p>
+      <div class="extra">
+        <strong>🔗 正确的事实：</strong>n 阶树有 <strong>n−1 条边</strong>，但边连通度是 <strong>1</strong>。<br>
+        题目把"边数"和"边连通度"搞混了。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 第8题 ==================== -->
+<div class="q-card">
+  <div class="q-top">
+    <span class="q-num is-f">8</span>
+    <span class="q-sentence">平面图 G 有 K₃ 和 K₄ 两个连通分支，则 G 的对偶图 G* 不是哈密顿图。</span>
+    <span class="q-verdict f">F（假）</span>
+  </div>
+  <div class="q-body">
+    <div class="explain-block">
+      <p><span class="label label-reason">G* 实际上是哈密顿图</span></p>
+      <p>G = K₃ ∪ K₄（两个分离的平面子图），它们的对偶通过"外部面"顶点连接成一个连通图。</p>
+      <p>K₃ 的对偶：2 个顶点（内面 + 外面），3 条平行边 → <strong>有哈密顿回路</strong></p>
+      <p>K₄ 的对偶即 K₄ 自身 → <strong>有哈密顿回路</strong></p>
+      <p>合并后 G*：外部面顶点把两部分的回路"串"起来 → <strong>存在哈密顿回路</strong> → 题目说"不是哈密顿图"是错的</p>
+      <div class="extra">
+        <strong>💡 一般结论：</strong>不连通平面图的对偶图总是<strong>连通的</strong>（因为所有分支共享外部面）。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 第9题 ==================== -->
+<div class="q-card">
+  <div class="q-top">
+    <span class="q-num is-t">9</span>
+    <span class="q-sentence">无向连通图 G 中所有顶点的度数都是偶数，则 G 是欧拉图。</span>
+    <span class="q-verdict t">T（真）</span>
+  </div>
+  <div class="q-body">
+    <div class="explain-block">
+      <p><span class="label label-reason">欧拉图的充要条件</span></p>
+      <p>无向图是欧拉图 ⇔ <strong>所有顶点度数为偶数 + 连通</strong></p>
+      <p>题目已经给了"连通"和"所有顶点度数为偶数" → 恰好是充要条件！</p>
+      <div class="extra">
+        <strong>⚠️ 对比 24-25 A卷判断题第9题：</strong>"无向图G中所有顶点的度数都是偶数，则G是欧拉图" → <strong>F</strong>（缺少"连通"条件！）<br>
+        本题多加了一个"连通"，答案就变成 <strong>T</strong> 了。一词之差，迥然不同。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 第10题 ==================== -->
+<div class="q-card">
+  <div class="q-top">
+    <span class="q-num is-t">10</span>
+    <span class="q-sentence">n 阶循环群的子群的阶都是 n 的正因子。</span>
+    <span class="q-verdict t">T（真）</span>
+  </div>
+  <div class="q-body">
+    <div class="explain-block">
+      <p><span class="label label-reason">拉格朗日定理 + 循环群的特殊性</span></p>
+      <p><strong>拉格朗日定理：</strong>任何群，子群的阶一定整除群的阶。</p>
+      <p><strong>循环群的加强版：</strong>n 阶循环群，对 n 的<strong>每个</strong>正因子 d，<strong>恰好存在一个</strong> d 阶子群。</p>
+      <p>例如：6 阶循环群 ⟨a⟩：</p>
+      <table>
+        <tr><th>n 的正因子 d</th><td>1</td><td>2</td><td>3</td><td>6</td></tr>
+        <tr><th>对应子群</th><td>{e}</td><td>⟨a³⟩</td><td>⟨a²⟩</td><td>⟨a⟩</td></tr>
+      </table>
+      <p>所以子群的阶不仅是 n 的正因子，而且<strong>每个正因子都有子群</strong>。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 总结 ==================== -->
+<h2>📊 知识点分布 & 易错盘点</h2>
+
+<div class="q-card" style="padding:1.5rem;">
+  <table>
+    <tr><th>题号</th><th>答案</th><th>知识点</th><th>一句话纠错</th></tr>
+    <tr><td>1</td><td><span class="q-verdict f" style="font-size:0.78rem;">F</span></td><td class="td-l">联结词完备集</td><td class="td-l">{∧,∨} 缺 ¬，不是完备集</td></tr>
+    <tr><td>2</td><td><span class="q-verdict t" style="font-size:0.78rem;">T</span></td><td class="td-l">谓词逻辑符号化</td><td class="td-l">"未必是" = ¬∀，符号化正确</td></tr>
+    <tr><td>3</td><td><span class="q-verdict f" style="font-size:0.78rem;">F</span></td><td class="td-l">划分 ↔ 关系</td><td class="td-l">划分→等价关系，不是偏序关系</td></tr>
+    <tr><td>4</td><td><span class="q-verdict f" style="font-size:0.78rem;">F</span></td><td class="td-l">双射的充要条件</td><td class="td-l">|A|=|B| 必要但不充分</td></tr>
+    <tr><td>5</td><td><span class="q-verdict t" style="font-size:0.78rem;">T</span></td><td class="td-l">恒等关系的双重身份</td><td class="td-l">I<sub>A</sub> 同时满足等价+偏序</td></tr>
+    <tr><td>6</td><td><span class="q-verdict f" style="font-size:0.78rem;">F</span></td><td class="td-l">二叉树三种遍历</td><td class="td-l">中序=左根右，题目说的是后序</td></tr>
+    <tr><td>7</td><td><span class="q-verdict f" style="font-size:0.78rem;">F</span></td><td class="td-l">树的边连通度</td><td class="td-l">λ(树)=1，n−1 是边数不是连通度</td></tr>
+    <tr><td>8</td><td><span class="q-verdict f" style="font-size:0.78rem;">F</span></td><td class="td-l">对偶图 & 哈密顿</td><td class="td-l">G* 实际上是哈密顿图</td></tr>
+    <tr><td>9</td><td><span class="q-verdict t" style="font-size:0.78rem;">T</span></td><td class="td-l">欧拉图的充要条件</td><td class="td-l">度数全偶+连通→欧拉图</td></tr>
+    <tr><td>10</td><td><span class="q-verdict t" style="font-size:0.78rem;">T</span></td><td class="td-l">循环群子群</td><td class="td-l">拉格朗日定理：子群阶整除群阶</td></tr>
+  </table>
+</div>
+
+<div class="extra" style="text-align:center; font-size:1rem; margin-top:1.5rem;">
+  <strong>🎯 分值分布：</strong>
+  命题逻辑 1分 | 谓词逻辑 1分 | 集合·关系·函数 3分 | 图论 4分 | 代数系统 1分<br>
+  <strong>图论占 4/10 分，是判断题的重头戏！</strong>
+</div>
+
+</div>
+</body>
+</html>

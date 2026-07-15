@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>对偶图详解 · 平面图的对偶 — 通俗图解</title>
+<style>
+  :root {
+    --bg: #0b1120; --card: #111827; --border: #1f2a3f;
+    --text: #e5e7eb; --text2: #9ca3af;
+    --green: #34d399; --red: #f87171; --accent: #fbbf24;
+    --blue: #60a5fa; --purple: #c084fc; --pink: #f472b6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.9; padding-bottom: 5rem;
+  }
+  .container { max-width: 980px; margin: 0 auto; padding: 1.5rem; }
+
+  h1 {
+    text-align: center; font-size: 2rem; margin: 1.5rem 0 0.3rem;
+    background: linear-gradient(135deg, var(--blue), var(--purple), var(--pink));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle { text-align: center; color: var(--text2); margin-bottom: 2rem; font-size: 1rem; }
+  h2 {
+    font-size: 1.4rem; margin: 2.2rem 0 0.8rem; padding-left: 0.75rem;
+    border-left: 4px solid var(--accent);
+  }
+  h3 { font-size: 1.1rem; margin: 1.2rem 0 0.5rem; color: var(--text); }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.5rem 1.8rem; margin: 1.2rem 0;
+  }
+  canvas { display: block; margin: 1.2rem auto; max-width: 100%; }
+  .fig-caption { text-align: center; color: var(--text2); font-size: 0.9rem; margin-top: 0.3rem; }
+
+  .highlight { background: rgba(251,191,36,0.2); padding:0.1em 0.4em; border-radius:4px; color:var(--accent); font-weight:600; }
+  .hi-g { background: rgba(52,211,153,0.2); padding:0.1em 0.4em; border-radius:4px; color:var(--green); font-weight:600; }
+  .hi-r { background: rgba(248,113,113,0.2); padding:0.1em 0.4em; border-radius:4px; color:var(--red); font-weight:600; }
+  .hi-b { background: rgba(96,165,250,0.2); padding:0.1em 0.4em; border-radius:4px; color:var(--blue); font-weight:600; }
+  .hi-p { background: rgba(192,132,252,0.2); padding:0.1em 0.4em; border-radius:4px; color:var(--purple); font-weight:600; }
+
+  .callout {
+    border-radius: 12px; padding: 1rem 1.3rem; margin: 1rem 0;
+  }
+  .callout-info { background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.25); }
+  .callout-warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.25); }
+  .callout-success { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.25); }
+
+  table { border-collapse: collapse; margin: 0.8rem 0; width: 100%; }
+  th { background: var(--border); padding: 0.5rem 0.7rem; text-align: center; font-size:0.9rem; }
+  td { padding: 0.45rem 0.7rem; text-align: center; border-bottom: 1px solid var(--border); font-size:0.9rem; }
+
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; min-width: 30px;
+    border-radius: 50%; background: var(--accent); color: #000;
+    font-weight: 700; font-size: 0.95rem; margin-right: 0.4rem;
+  }
+  .step-row { display: flex; gap: 0.6rem; align-items: flex-start; margin: 0.7rem 0; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>🪞 对偶图（Dual Graph）</h1>
+<p class="subtitle">什么是"面↔顶点"互换  ·  判断题第8题详解</p>
+
+<!-- ==================== 核心概念 ==================== -->
+<h2>一、什么是对偶图 — "面变顶点，边连面"</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">📖 定义（一句话）</h3>
+<p style="font-size:1.1rem;">
+  平面图 G 的<strong>对偶图 G*</strong>：把 G 的<span class="hi-b">每个面</span>变成 G* 的<span class="hi-b">一个顶点</span>，
+  G 的<span class="highlight">每条边</span>变成 G* 中连接<span class="highlight">该边两侧面对应顶点的边</span>。
+</p>
+</div>
+
+<!-- ==================== 例子1：三角形 ==================== -->
+<h2>二、最简例子 — 三角形 K₃ 的对偶</h2>
+
+<div class="card">
+<div style="display:flex; gap:2rem; flex-wrap:wrap; align-items:center; justify-content:center;">
+  <div style="text-align:center;">
+    <canvas id="k3orig" width="280" height="280"></canvas>
+    <div class="fig-caption">原始图 K₃<br>2个面：内部面 F₁ + 外部面 F₂</div>
+  </div>
+  <div style="font-size:2rem; color:var(--accent);">→</div>
+  <div style="text-align:center;">
+    <canvas id="k3dual" width="280" height="280"></canvas>
+    <div class="fig-caption">对偶图 G*<br>2个顶点对应2个面<br>3条边（原3条边每边两侧都是F₁和F₂）</div>
+  </div>
+</div>
+<div class="callout callout-info">
+  <strong>🔍 观察：</strong>G 有 <strong>2 个面</strong> → G* 有 <strong>2 个顶点</strong>。G 的 3 条边每条都分隔 F₁ 和 F₂ → G* 有 <strong>3 条边</strong>连接这两个顶点。<br>
+  结果：<strong>2 个顶点 + 3 条平行边</strong>，这是一个多重图。
+</div>
+</div>
+
+<!-- ==================== 例子2：四边形 ==================== -->
+<h2>三、四边形 + 一条对角线 — 体会"面对应顶点"</h2>
+
+<div class="card">
+<canvas id="quad" width="560" height="340"></canvas>
+<div class="fig-caption">
+  面 → 顶点：F₁(内部三角①)、F₂(内部三角②)、F₃(外面) — 3个面 → 3个顶点<br>
+  边 → 边：每条原边连接它两侧面对应的顶点
+</div>
+</div>
+
+<!-- ==================== 构造三步法 ==================== -->
+<h2>四、构造对偶图三步法</h2>
+
+<div class="card">
+<div class="step-row">
+  <span class="step-num">1</span>
+  <div><strong>标面：</strong>给 G 的每个面一个名字（含外部面）。</div>
+</div>
+<div class="step-row">
+  <span class="step-num">2</span>
+  <div><strong>画顶点：</strong>在 G* 中为每个面画一个顶点（通常放在面内部 / 外部面附近）。</div>
+</div>
+<div class="step-row">
+  <span class="step-num">3</span>
+  <div><strong>连边：</strong>G 的每条边 e 分隔两个面 Fᵢ 和 Fⱼ → 在 G* 中连接对应顶点画一条边。<br>
+  <span style="color:var(--text2);">若 e 两侧是同一个面（如桥），则 G* 中为自环。</span></div>
+</div>
+</div>
+
+<!-- ==================== K₄ 自对偶 ==================== -->
+<h2>五、K₄ 是"自对偶图"</h2>
+
+<div class="card">
+<canvas id="k4dual" width="560" height="340"></canvas>
+<div class="fig-caption">
+  K₄ 有 4 个面（3个内部三角 + 1个外部三角）→ G* 有 4 个顶点<br>
+  K₄ 有 6 条边 → G* 有 6 条边<br>
+  结果：<strong>G* ≅ K₄</strong>——对偶图就是它自己！
+</div>
+</div>
+
+<!-- ==================== 判断题第8题 ==================== -->
+<h2>六、回到第8题 — G = K₃ ∪ K₄</h2>
+
+<div class="card">
+<h3 style="margin-top:0;">📝 原题回顾</h3>
+<p>平面图 G 有两个连通分支 K₃ 和 K₄，则 G 的对偶图 G* <span class="hi-r">不是</span>哈密顿图。<br>→ <strong>答案：F（命题为假，即 G* 是哈密顿图）</strong></p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">🔑 关键：两个分支共享同一个外部面</h3>
+<canvas id="k3k4" width="560" height="310"></canvas>
+<div class="fig-caption">
+  G 共有 5 个面：K₃ 的 1 个内面 + K₄ 的 3 个内面 + <span class="highlight">1 个共享外部面</span><br>
+  → G* 有 <strong>5 个顶点</strong>
+</div>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;">🌳 G* 的结构</h3>
+<canvas id="dualK3K4" width="560" height="340"></canvas>
+<div class="fig-caption">
+  外部面顶点（绿色）连接了 K₃ 和 K₄ 两部分<br>
+  可以找到一条哈密顿回路经过所有 5 个顶点 → <strong>G* 是哈密顿图</strong>
+</div>
+</div>
+
+<div class="callout callout-warn" style="font-size:1rem;">
+  <strong>🔑 核心结论：</strong><br>
+  即使 G 不连通，G* 也<span class="hi-g"><strong>一定连通</strong></span>（各分支通过共享外部面连在一起）<br>
+  本题 G* 其实就是"外部面顶点"把 K₃ 的对偶和 K₄ 串起来 → 存在哈密顿回路
+</div>
+
+<!-- ==================== 性质表 ==================== -->
+<h2>七、对偶图的重要性质</h2>
+
+<div class="card">
+<table>
+  <tr><th>#</th><th style="text-align:left;">性质</th><th>说明</th></tr>
+  <tr><td>①</td><td style="text-align:left;">G* 总是连通图</td><td>即使 G 不连通！</td></tr>
+  <tr><td>②</td><td style="text-align:left;">(G*)* = G</td><td>对偶的对偶 = 自己</td></tr>
+  <tr><td>③</td><td style="text-align:left;">G 是平面图 ⇔ G* 是平面图</td><td>保持平面性</td></tr>
+  <tr><td>④</td><td style="text-align:left;">G 的环 → G* 的桥</td><td>自环变割边</td></tr>
+  <tr><td>⑤</td><td style="text-align:left;">G 中长度 k 的面 → G* 中度数 k 的顶点</td><td>面边长 = 对偶顶点度数</td></tr>
+  <tr><td>⑥</td><td style="text-align:left;">∀ 平面图 G，n* = r，m* = m，r* = n</td><td>n=顶点数, m=边数, r=面数</td></tr>
+</table>
+</div>
+
+<!-- ==================== 判断题图解 ==================== -->
+<h2>八、判断题逻辑链（一图看懂）</h2>
+
+<div class="card" style="text-align:center;">
+<canvas id="finalVerdict" width="560" height="480"></canvas>
+</div>
+
+<div class="callout callout-success" style="text-align:center; font-size:1.05rem;">
+  <strong>🎯 结论：题目说"G* 不是哈密顿图" → 错误（F）<br>
+  实际上 G* 是哈密顿图。</strong>
+</div>
+
+</div>
+
+<script>
+// 工具
+function circle(ctx, x, y, r, fill, stroke, label, lc, bg) {
+  ctx.beginPath(); ctx.arc(x, y, r, 0, 2*Math.PI);
+  ctx.fillStyle = bg || '#111827'; ctx.fill();
+  ctx.strokeStyle = stroke || '#e2e8f0'; ctx.lineWidth = 2.2; ctx.stroke();
+  if (label) {
+    ctx.fillStyle = lc || '#e2e8f0';
+    ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(label, x, y);
+  }
+}
+function line(ctx, x1, y1, x2, y2, c, w, dash) {
+  ctx.beginPath(); ctx.setLineDash(dash || []);
+  ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+  ctx.strokeStyle = c || '#64748b'; ctx.lineWidth = w || 2; ctx.stroke();
+  ctx.setLineDash([]);
+}
+function faceLabel(ctx, x, y, text, color) {
+  ctx.fillStyle = color || '#94a3b8';
+  ctx.font = 'italic bold 14px "Times New Roman","PingFang SC",sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, x, y);
+}
+
+// ============ K3 原始 ============
+(function(){
+  var c=document.getElementById('k3orig');
+  var ctx=c.getContext('2d');
+  var t=[[140,60],[220,180],[60,180]];
+  line(ctx,t[0][0],t[0][1],t[1][0],t[1][1],'#64748b',2.5);
+  line(ctx,t[1][0],t[1][1],t[2][0],t[2][1],'#64748b',2.5);
+  line(ctx,t[2][0],t[2][1],t[0][0],t[0][1],'#64748b',2.5);
+  // 面
+  faceLabel(ctx,140,145,'F₁','#60a5fa');
+  // 外部面标注
+  ctx.fillStyle='#60a5fa';ctx.font='italic bold 13px "Times New Roman","PingFang SC",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('F₂ (外面)',140,30);
+  ctx.setLineDash([3,4]);ctx.strokeStyle='#60a5fa';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(140,45);ctx.lineTo(140,80);ctx.stroke();
+  ctx.setLineDash([]);
+
+  for(var i=0;i<3;i++) circle(ctx,t[i][0],t[i][1],14,'#111827','#e2e8f0','','#e2e8f0');
+  // 边的标签
+  ctx.fillStyle='#fbbf24';ctx.font='11px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('e₁',180,115);ctx.fillText('e₂',100,200);ctx.fillText('e₃',100,115);
+})();
+
+// ============ K3 对偶 ============
+(function(){
+  var c=document.getElementById('k3dual');
+  var ctx=c.getContext('2d');
+  var v1=[140,100], v2=[140,200];
+  // 3条平行边
+  line(ctx,v1[0]-18,v1[1]+8,v2[0]-18,v2[1]-8,'#4ade80',2.5);
+  line(ctx,v1[0],v1[1]+10,v2[0],v2[1]-10,'#4ade80',2.5);
+  line(ctx,v1[0]+18,v1[1]+8,v2[0]+18,v2[1]-8,'#4ade80',2.5);
+  circle(ctx,v1[0],v1[1],18,'#111827','#60a5fa','F₁','#60a5fa');
+  circle(ctx,v2[0],v2[1],18,'#111827','#60a5fa','F₂','#60a5fa');
+  ctx.fillStyle='#fbbf24';ctx.font='11px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText("e₁'",90,140);ctx.fillText("e₂'",140,140);ctx.fillText("e₃'",190,140);
+})();
+
+// ============ 四边形+对角线 ============
+(function(){
+  var c=document.getElementById('quad');
+  var ctx=c.getContext('2d');
+  var w=560;
+  // 左：原始图
+  ctx.fillStyle='#e2e8f0';ctx.font='bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('原始图 G',145,22);
+  ctx.fillText('对偶图 G*',425,22);
+
+  // 四边形顶点
+  var q=[[60,210],[230,60],[230,210],[60,60]];
+  line(ctx,q[0][0],q[0][1],q[1][0],q[1][1],'#64748b',2.2);
+  line(ctx,q[1][0],q[1][1],q[2][0],q[2][1],'#64748b',2.2);
+  line(ctx,q[2][0],q[2][1],q[3][0],q[3][1],'#64748b',2.2);
+  line(ctx,q[3][0],q[3][1],q[0][0],q[0][1],'#64748b',2.2);
+  line(ctx,q[0][0],q[0][1],q[2][0],q[2][1],'#64748b',2.2);
+
+  for(var i=0;i<4;i++) circle(ctx,q[i][0],q[i][1],12,'#111827','#e2e8f0','','#e2e8f0');
+  faceLabel(ctx,145,100,'F₁','#60a5fa');
+  faceLabel(ctx,145,180,'F₂','#c084fc');
+  faceLabel(ctx,30,60,'F₃','#fbbf24');
+  ctx.setLineDash([3,4]);ctx.strokeStyle='#fbbf24';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(25,52);ctx.lineTo(60,35);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 分隔线
+  ctx.setLineDash([4,8]);
+  line(ctx,280,30,280,250,'#334155',1.5);
+  ctx.setLineDash([]);
+
+  // 右：对偶图
+  var dp=[[430,80],[430,170],[340,160]];
+  line(ctx,dp[0][0],dp[0][1],dp[1][0],dp[1][1],'#4ade80',2.2);
+  line(ctx,dp[0][0],dp[0][1],dp[2][0],dp[2][1],'#4ade80',2.2);
+  line(ctx,dp[1][0],dp[1][1],dp[2][0],dp[2][1],'#4ade80',2.2);
+  line(ctx,dp[0][0],dp[0][1],dp[1][0],dp[1][1],'#4ade80',2.2);
+  circle(ctx,dp[0][0],dp[0][1],18,'#111827','#60a5fa','F₁','#60a5fa');
+  circle(ctx,dp[1][0],dp[1][1],18,'#111827','#c084fc','F₂','#c084fc');
+  circle(ctx,dp[2][0],dp[2][1],18,'#111827','#fbbf24','F₃','#fbbf24');
+  ctx.fillStyle='#94a3b8';ctx.font='11px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('G* 中4条边对应',430,225);
+  ctx.fillText('G中分隔F₁F₂的4条边',430,245);
+})();
+
+// ============ K4自对偶 ============
+(function(){
+  var c=document.getElementById('k4dual');
+  var ctx=c.getContext('2d');
+
+  ctx.fillStyle='#e2e8f0';ctx.font='bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('K₄ 画在平面上',145,18);
+  ctx.fillText('对偶图 = K₄ 自身！',410,18);
+
+  // 左 K4
+  var k=[[145,55],[230,140],[145,220],[60,140]];
+  for(var i=0;i<4;i++) for(var j=i+1;j<4;j++) line(ctx,k[i][0],k[i][1],k[j][0],k[j][1],'#64748b',1.8);
+  // 面
+  faceLabel(ctx,145,105,'F₁','#60a5fa');
+  faceLabel(ctx,105,170,'F₂','#c084fc');
+  faceLabel(ctx,185,170,'F₃','#f472b6');
+  ctx.setLineDash([3,4]);ctx.strokeStyle='#fbbf24';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(30,115);ctx.lineTo(55,120);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#fbbf24';ctx.font='italic bold 12px "Times New Roman","PingFang SC",sans-serif';
+  ctx.fillText('F₄',33,108);
+
+  for(var i=0;i<4;i++) circle(ctx,k[i][0],k[i][1],13,'#111827','#e2e8f0','','#e2e8f0');
+
+  // 分隔
+  ctx.setLineDash([4,8]);line(ctx,290,30,290,250,'#334155',1.5);ctx.setLineDash([]);
+
+  // 右 K4对偶
+  var kd=[[430,55],[510,140],[430,220],[350,140]];
+  for(var i=0;i<4;i++) for(var j=i+1;j<4;j++) line(ctx,kd[i][0],kd[i][1],kd[j][0],kd[j][1],'#4ade80',1.8);
+  circle(ctx,kd[0][0],kd[0][1],18,'#111827','#60a5fa','F₁','#60a5fa');
+  circle(ctx,kd[1][0],kd[1][1],18,'#111827','#c084fc','F₂','#c084fc');
+  circle(ctx,kd[2][0],kd[2][1],18,'#111827','#f472b6','F₃','#f472b6');
+  circle(ctx,kd[3][0],kd[3][1],18,'#111827','#fbbf24','F₄','#fbbf24');
+
+  ctx.fillStyle='#94a3b8';ctx.font='11px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('K₄ 是自对偶图 (self-dual)',280,262);
+})();
+
+// ============ K3 ∪ K4 面 ============
+(function(){
+  var c=document.getElementById('k3k4');
+  var ctx=c.getContext('2d');
+
+  // 左侧K3
+  var k3=[[90,180],[170,220],[50,250]];
+  line(ctx,k3[0][0],k3[0][1],k3[1][0],k3[1][1],'#64748b',2.2);
+  line(ctx,k3[1][0],k3[1][1],k3[2][0],k3[2][1],'#64748b',2.2);
+  line(ctx,k3[2][0],k3[2][1],k3[0][0],k3[0][1],'#64748b',2.2);
+  for(var i=0;i<3;i++) circle(ctx,k3[i][0],k3[i][1],12,'#111827','#e2e8f0','','#e2e8f0');
+  faceLabel(ctx,100,215,'F₁','#60a5fa');
+
+  // 右侧K4
+  var k4=[[340,80],[460,130],[430,260],[330,200]];
+  for(var i=0;i<4;i++) for(var j=i+1;j<4;j++) line(ctx,k4[i][0],k4[i][1],k4[j][0],k4[j][1],'#64748b',1.8);
+  for(var i=0;i<4;i++) circle(ctx,k4[i][0],k4[i][1],11,'#111827','#e2e8f0','','#e2e8f0');
+  faceLabel(ctx,370,130,'F₂','#c084fc');
+  faceLabel(ctx,440,170,'F₃','#f472b6');
+  faceLabel(ctx,380,220,'F₄','#fbbf24');
+
+  // 外部面（大虚线框）
+  ctx.setLineDash([6,5]);
+  ctx.strokeStyle='#60a5fa';ctx.lineWidth=2;
+  ctx.beginPath();ctx.roundRect(30,35,490,250,20);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#60a5fa';ctx.font='italic bold 14px "Times New Roman","PingFang SC",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('F₅ (共享外部面)',280,55);
+
+  // 总数
+  ctx.fillStyle='#e2e8f0';ctx.font='bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('G 共有 5 个面 → G* 有 5 个顶点',280,300);
+})();
+
+// ============ G* 结构 ============
+(function(){
+  var c=document.getElementById('dualK3K4');
+  var ctx=c.getContext('2d');
+
+  // G*: 外部面顶点在中间
+  var out=[280,40]; // F5
+  var k3v=[145,200]; // F1
+  var k4v1=[360,140],k4v2=[440,220],k4v3=[340,260];
+
+  // K3 部分：外部到F1——3条平行边
+  curve(ctx,out[0]-15,out[1]+12,k3v[0]-15,k3v[1]-12,'#60a5fa',2.2,-20);
+  line(ctx,out[0],out[1]+14,k3v[0],k3v[1]-14,'#60a5fa',2.2);
+  curve(ctx,out[0]+15,out[1]+12,k3v[0]+15,k3v[1]-12,'#60a5fa',2.2,20);
+
+  // K4 部分：K4的对偶即K4本身
+  line(ctx,k4v1[0],k4v1[1],k4v2[0],k4v2[1],'#c084fc',1.8);
+  line(ctx,k4v2[0],k4v2[1],k4v3[0],k4v3[1],'#c084fc',1.8);
+  line(ctx,k4v3[0],k4v3[1],k4v1[0],k4v1[1],'#c084fc',1.8);
+
+  // 外部连接到K4三个内面
+  line(ctx,out[0]+10,out[1]+14,k4v1[0]-10,k4v1[1]-14,'#fbbf24',2);
+  line(ctx,out[0]+15,out[1]+12,k4v2[0]-4,k4v2[1]-14,'#fbbf24',2);
+  line(ctx,out[0]-10,out[1]+14,k4v3[0]+10,k4v3[1]-14,'#fbbf24',2);
+
+  // 哈密顿回路虚线
+  ctx.setLineDash([7,5]);
+  ctx.strokeStyle='#4ade80';ctx.lineWidth=2.5;
+  ctx.beginPath();
+  ctx.moveTo(out[0],out[1]);
+  ctx.lineTo(k3v[0],k3v[1]);
+  ctx.lineTo(out[0]+20,out[1]+20);
+  ctx.lineTo(k4v1[0],k4v1[1]);
+  ctx.lineTo(k4v2[0],k4v2[1]);
+  ctx.lineTo(k4v3[0],k4v3[1]);
+  ctx.lineTo(out[0]-20,out[1]+20);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  circle(ctx,out[0],out[1],22,'#111827','#4ade80','F₅','#4ade80');
+  circle(ctx,k3v[0],k3v[1],20,'#111827','#60a5fa','F₁','#60a5fa');
+  circle(ctx,k4v1[0],k4v1[1],20,'#111827','#c084fc','F₂','#c084fc');
+  circle(ctx,k4v2[0],k4v2[1],20,'#111827','#f472b6','F₃','#f472b6');
+  circle(ctx,k4v3[0],k4v3[1],20,'#111827','#fbbf24','F₄','#fbbf24');
+
+  ctx.fillStyle='#4ade80';ctx.font='bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('绿色虚线 = 哈密顿回路（经过所有5个顶点恰好一次）',280,310);
+  ctx.fillText('→ G* 是哈密顿图！',280,330);
+})();
+
+function curve(ctx, x1, y1, x2, y2, color, width, cpOffset) {
+  var mx=(x1+x2)/2, my=(y1+y2)/2;
+  var dx=x2-x1, dy=y2-y1;
+  var len=Math.sqrt(dx*dx+dy*dy);
+  if(len===0)return;
+  var ox=-dy/len*(cpOffset||20), oy=dx/len*(cpOffset||20);
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);
+  ctx.quadraticCurveTo(mx+ox,my+oy,x2,y2);
+  ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke();
+}
+
+// ============ 判断题逻辑链 ============
+(function(){
+  var c=document.getElementById('finalVerdict');
+  var ctx=c.getContext('2d');
+  function box(x,y,w,h,txt,bg,stroke){
+    ctx.fillStyle=bg||'#111827';ctx.strokeStyle=stroke||'#475569';ctx.lineWidth=2;
+    ctx.beginPath();ctx.roundRect(x,y,w,h,10);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#e2e8f0';ctx.font='13px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    var ls=txt.split('\n');
+    ls.forEach(function(l,i){ctx.fillText(l,x+w/2,y+h/2+(i-(ls.length-1)/2)*22);});
+  }
+  function arr(x1,y1,x2,y2,cl){
+    cl=cl||'#fbbf24';
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
+    ctx.strokeStyle=cl;ctx.lineWidth=2.2;ctx.stroke();
+    var a=Math.atan2(y2-y1,x2-x1);
+    ctx.fillStyle=cl;
+    ctx.beginPath();
+    ctx.moveTo(x2,y2);
+    ctx.lineTo(x2-9*Math.cos(a-0.5),y2-9*Math.sin(a-0.5));
+    ctx.lineTo(x2-9*Math.cos(a+0.5),y2-9*Math.sin(a+0.5));
+    ctx.closePath();ctx.fill();
+  }
+
+  var cx=280;
+  box(cx-150,10,300,40,'题目：G = K₃ ∪ K₄，G* 不是哈密顿图？','#1a1a2e','#64748b');
+  arr(cx,50,cx,75,'#fbbf24');
+
+  box(cx-210,75,420,48,'G 有 5 个面：K₃ 内面 + K₄ 三个内面 + 共享外部面','#111827','#60a5fa');
+  arr(cx,123,cx,148);
+
+  box(cx-190,148,380,48,'G* 有 5 个顶点 = 每个面一个顶点\nG* 连通（外部面顶点串起两部分）','#111827','#4ade80');
+  arr(cx,196,cx,221);
+
+  box(cx-200,221,400,55,'K₃ 的对偶 = 2 顶点 + 3 边（有哈密顿回路）\nK₄ 的对偶 = K₄（有哈密顿回路）\n外部面顶点 = 把两条回路串成一条','#111827','#c084fc');
+  arr(cx,276,cx,301);
+
+  box(cx-160,301,320,45,'G* 存在哈密顿回路 → G* 是哈密顿图','#1a2a1a','#4ade80');
+  arr(cx,346,cx,371,'#f87171');
+
+  box(cx-200,371,400,50,'所以原命题"G* 不是哈密顿图"是 ❌ 错的\n→ 答案：F（假）','#2a1a1a','#f87171');
+})();
+</script>
+
+</body>
+</html>
