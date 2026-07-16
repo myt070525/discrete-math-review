@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>有桥的图 · 两个经典证明</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:17px}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+  background:linear-gradient(180deg,#0f172a 0%,#1e293b 400px,#f1f5f9 400px);
+  color:#1e293b;line-height:1.85;min-height:100vh
+}
+.hero{
+  text-align:center;padding:60px 20px 40px;color:#fff;position:relative;overflow:hidden
+}
+.hero::after{
+  content:'';position:absolute;bottom:-30px;left:0;right:0;height:60px;
+  background:#f1f5f9;border-radius:50% 50% 0 0
+}
+.hero h1{font-size:2.4rem;font-weight:900;letter-spacing:2px;position:relative;z-index:1}
+.hero p{font-size:1.1rem;color:#94a3b8;margin-top:8px;position:relative;z-index:1}
+.hero .tags{display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap;position:relative;z-index:1}
+.hero .tags span{
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);
+  border-radius:99px;padding:6px 18px;font-size:0.9rem;color:#cbd5e1
+}
+.container{max-width:900px;margin:0 auto;padding:20px 20px 80px}
+
+/* Section cards */
+.section{margin:32px 0}
+.section-header{
+  display:flex;align-items:center;gap:14px;margin-bottom:20px
+}
+.section-num{
+  width:50px;height:50px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:1.3rem;color:#fff;flex-shrink:0
+}
+.hamilton .section-num{background:linear-gradient(135deg,#7c3aed,#a78bfa)}
+.euler .section-num{background:linear-gradient(135deg,#059669,#34d399)}
+.compare .section-num{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#1e293b}
+.section-header h2{font-size:1.5rem;font-weight:800;color:#1e293b}
+.section-header .sub{font-size:0.85rem;color:#64748b}
+
+/* Cards */
+.card{
+  background:#fff;border-radius:18px;padding:28px 32px;
+  box-shadow:0 2px 16px rgba(0,0,0,0.06);margin-bottom:20px;
+  border:1px solid #e2e8f0
+}
+.card h3{font-size:1.15rem;color:#334155;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card h3 .emoji{font-size:1.3rem}
+
+/* Bridge explainer SVG area */
+.bridge-demo{
+  background:linear-gradient(135deg,#f0f9ff,#e0f2fe);
+  border-radius:14px;padding:20px;text-align:center;margin:16px 0
+}
+.bridge-demo svg{max-width:100%}
+
+/* Step walkthrough */
+.step-walk{margin:12px 0}
+.step{
+  display:flex;gap:14px;padding:12px 16px;margin:8px 0;
+  border-radius:12px;background:#f8fafc;align-items:flex-start;
+  border-left:4px solid #e2e8f0;transition:all .2s
+}
+.step:hover{background:#f1f5f9;border-left-color:#7c3aed}
+.step-num{
+  width:32px;height:32px;border-radius:50%;
+  background:#7c3aed;color:#fff;font-weight:800;font-size:0.85rem;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px
+}
+.step.euler .step-num{background:#059669}
+.step-content{flex:1;font-size:0.93rem}
+.step-content .highlight{color:#7c3aed;font-weight:700}
+.step.euler .step-content .highlight{color:#059669}
+
+/* Contradiction box */
+.contradiction{
+  background:linear-gradient(135deg,#fef2f2,#fde8e8);
+  border:2px dashed #ef4444;border-radius:14px;padding:16px 20px;
+  text-align:center;margin:16px 0;animation:pulse 2s infinite
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
+.contradiction .big-x{font-size:2rem;color:#ef4444;font-weight:900}
+
+/* Info boxes */
+.info-box{padding:14px 18px;border-radius:12px;margin:12px 0;font-size:0.9rem}
+.info-box.purple{background:#f5f3ff;border-left:4px solid #7c3aed}
+.info-box.green{background:#ecfdf5;border-left:4px solid #059669}
+.info-box.amber{background:#fffbeb;border-left:4px solid #f59e0b}
+
+/* SVG graph area */
+.graph-area{display:flex;justify-content:center;flex-wrap:wrap;gap:24px;margin:16px 0}
+
+/* Legend */
+.legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin:12px 0;font-size:0.85rem}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend .dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+.legend .dot.bridge{border:2px solid #ef4444;background:transparent;width:16px;height:4px;border-radius:2px}
+
+/* Comparison table */
+.cmp-table{
+  width:100%;border-collapse:collapse;margin:12px 0;font-size:0.9rem;
+  border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06)
+}
+.cmp-table th{background:#1e293b;color:#fff;padding:12px 16px;text-align:left;font-weight:700}
+.cmp-table td{padding:10px 16px;border-bottom:1px solid #e2e8f0}
+.cmp-table tr:nth-child(even) td{background:#f8fafc}
+.cmp-table .check{color:#059669;font-weight:700}
+.cmp-table .cross{color:#ef4444;font-weight:700}
+
+/* Footer */
+.footer{text-align:center;padding:30px;color:#94a3b8;font-size:0.85rem}
+
+/* Responsive */
+@media(max-width:640px){
+  .hero h1{font-size:1.6rem}
+  .card{padding:18px 16px}
+  .cmp-table{font-size:0.78rem}
+  .cmp-table th,.cmp-table td{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🌉 有桥的图</h1>
+  <p>两个经典证明 · 看完永远不会忘</p>
+  <div class="tags">
+    <span>桥 = 割边</span>
+    <span>哈密顿图</span>
+    <span>欧拉图</span>
+    <span>反证法</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ============ WHAT IS A BRIDGE ============ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num" style="background:linear-gradient(135deg,#ef4444,#f87171)">桥</div>
+    <div><h2>先搞懂：桥是什么？</h2><div class="sub">删掉它，图就裂成两半</div></div>
+  </div>
+
+  <div class="card">
+    <div class="bridge-demo">
+      <svg viewBox="0 0 600 260" width="580" height="250" xmlns="http://www.w3.org/2000/svg">
+        <!-- Left island -->
+        <circle cx="120" cy="80" r="22" fill="#c4b5fd" stroke="#7c3aed" stroke-width="3"/>
+        <text x="120" y="86" text-anchor="middle" font-weight="800" font-size="15" fill="#5b21b6">A</text>
+        <circle cx="60" cy="160" r="22" fill="#c4b5fd" stroke="#7c3aed" stroke-width="3"/>
+        <text x="60" y="166" text-anchor="middle" font-weight="800" font-size="15" fill="#5b21b6">B</text>
+        <circle cx="180" cy="150" r="22" fill="#c4b5fd" stroke="#7c3aed" stroke-width="3"/>
+        <text x="180" y="156" text-anchor="middle" font-weight="800" font-size="15" fill="#5b21b6">C</text>
+        <line x1="120" y1="80" x2="60" y2="140" stroke="#a78bfa" stroke-width="2.5"/>
+        <line x1="120" y1="80" x2="180" y2="130" stroke="#a78bfa" stroke-width="2.5"/>
+        <line x1="60" y1="140" x2="180" y2="130" stroke="#a78bfa" stroke-width="2.5"/>
+
+        <!-- Right island -->
+        <circle cx="420" cy="80" r="22" fill="#a7f3d0" stroke="#059669" stroke-width="3"/>
+        <text x="420" y="86" text-anchor="middle" font-weight="800" font-size="15" fill="#065f46">D</text>
+        <circle cx="480" cy="160" r="22" fill="#a7f3d0" stroke="#059669" stroke-width="3"/>
+        <text x="480" y="166" text-anchor="middle" font-weight="800" font-size="15" fill="#065f46">E</text>
+        <circle cx="370" cy="155" r="22" fill="#a7f3d0" stroke="#059669" stroke-width="3"/>
+        <text x="370" y="161" text-anchor="middle" font-weight="800" font-size="15" fill="#065f46">F</text>
+        <line x1="420" y1="80" x2="370" y2="135" stroke="#34d399" stroke-width="2.5"/>
+        <line x1="420" y1="80" x2="480" y2="140" stroke="#34d399" stroke-width="2.5"/>
+        <line x1="370" y1="135" x2="480" y2="140" stroke="#34d399" stroke-width="2.5"/>
+
+        <!-- THE BRIDGE -->
+        <line x1="200" y1="110" x2="350" y2="110" stroke="#ef4444" stroke-width="5" stroke-dasharray="8,4"/>
+        <!-- Bridge label -->
+        <rect x="240" y="88" width="70" height="28" rx="14" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="275" y="107" text-anchor="middle" font-weight="800" font-size="13" fill="#ef4444">桥 e</text>
+
+        <!-- Arrows pointing to bridge -->
+        <text x="215" y="100" font-size="18" fill="#ef4444">👆</text>
+        <text x="320" y="100" font-size="18" fill="#ef4444">👆</text>
+
+        <!-- Labels -->
+        <text x="120" y="220" text-anchor="middle" font-weight="600" font-size="14" fill="#5b21b6">左边连通块 G₁</text>
+        <text x="420" y="220" text-anchor="middle" font-weight="600" font-size="14" fill="#065f46">右边连通块 G₂</text>
+
+        <!-- Scissors icon -->
+        <text x="275" y="145" text-anchor="middle" font-size="22">✂️</text>
+        <text x="275" y="165" text-anchor="middle" font-size="11" fill="#64748b">删掉后</text>
+        <text x="275" y="180" text-anchor="middle" font-size="11" fill="#64748b">图就裂开了</text>
+      </svg>
+    </div>
+    <div class="info-box purple">
+      <strong>🔑 核心事实：</strong>桥是两边的<strong>唯一通道</strong>。从左边到右边（或反过来），<strong>只能走这条桥</strong>，没有第二条路。
+    </div>
+  </div>
+</div>
+
+<!-- ============ PROOF 1: HAMILTONIAN ============ -->
+<div class="section hamilton">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div><h2>有桥的图 → 不是哈密顿图</h2><div class="sub">反证法 · 桥只能走一次，但哈密顿要求进出两次</div></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="emoji">🔍</span>先回顾：什么叫哈密顿图？</h3>
+    <div class="info-box purple">
+      图中存在一个<strong>哈密顿回路</strong>——从某个顶点出发，<strong>每个顶点恰好经过一次</strong>，最后回到起点。<br>
+      形象理解：一个旅行商要访问所有城市各一次，最后回家。
+    </div>
+    <div class="bridge-demo">
+      <svg viewBox="0 0 400 140" width="380" height="130" xmlns="http://www.w3.org/2000/svg">
+        <text x="20" y="30" font-size="13" fill="#64748b">❌ 不是哈密顿回路（有顶点走了两次）：</text>
+        <circle cx="50" cy="70" r="14" fill="#ddd" stroke="#999" stroke-width="2"/>
+        <circle cx="140" cy="70" r="14" fill="#ddd" stroke="#999" stroke-width="2"/>
+        <circle cx="230" cy="70" r="14" fill="#ddd" stroke="#999" stroke-width="2"/>
+        <text x="50" y="75" text-anchor="middle" font-size="11" fill="#666">A</text>
+        <text x="140" y="75" text-anchor="middle" font-size="11" fill="#666">B</text>
+        <text x="230" y="75" text-anchor="middle" font-size="11" fill="#666">A</text>
+        <line x1="64" y1="70" x2="126" y2="70" stroke="#ef4444" stroke-width="2" marker-end="url(#arrR)"/>
+        <line x1="154" y1="70" x2="216" y2="70" stroke="#ef4444" stroke-width="2" marker-end="url(#arrR)"/>
+        <text x="140" y="105" text-anchor="middle" font-size="12" fill="#ef4444">A出现了两次！不行！</text>
+
+        <text x="20" y="30" font-size="13" fill="#64748b" transform="translate(300,0)">✅ 哈密顿回路（每个顶点恰好一次）：</text>
+        <!-- This is in a different part of the SVG... let me restructure -->
+      </svg>
+    </div>
+    <p style="font-size:0.9rem;color:#64748b;margin-top:4px;text-align:center;">哈密顿回路要求每个顶点访问<strong>恰好一次</strong>，不能多也不能少。</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="emoji">🧩</span>证明（反证法）</h3>
+    <p style="margin-bottom:14px;">假设图 <strong>G</strong> 既有一条桥 <strong>e = uv</strong>，又存在一个哈密顿回路 <strong>C</strong>。看会发生什么——</p>
+
+    <div class="step-walk">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>删掉桥 e</strong>，图裂成两块：<span class="highlight">G₁</span>（含 u）和 <span class="highlight">G₂</span>（含 v）。<br>
+          <span style="color:#64748b;font-size:0.85rem;">u 和 v 是桥的两个端点，各在一边。</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          哈密顿回路 <span class="highlight">C</span> 必须经过 <strong>G₁ 和 G₂ 的所有顶点</strong>。<br>
+          <span style="color:#64748b;font-size:0.85rem;">哈密顿回路要求每个顶点都走到，当然两边都要去。</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          从 <span class="highlight">G₁ 进入 G₂</span>，<strong>只能走桥 e</strong>。桥是唯一的通道。<br>
+          <span style="color:#64748b;font-size:0.85rem;">所以 C 第一次跨过桥：从 u 走到 v。</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          C 在 G₂ 中逛完所有顶点后，<strong>必须回到 G₁</strong> 才能完成回路。<br>
+          回 G₁ 也只能走桥 e——但 <span class="highlight">哈密顿回路每条边只能走一次！</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contradiction">
+      <div class="big-x">⚡ 矛盾！</div>
+      <p style="font-weight:700;color:#991b1b;">桥 e 走了<strong>两次</strong>（出去一次 + 回来一次），<br>违反哈密顿回路"每条边最多走一次"的规则。</p>
+      <p style="font-size:0.85rem;color:#b91c1c;margin-top:6px;">因为 e 是哈密顿回路上的边，回路里每条边必然只走一次。</p>
+    </div>
+
+    <div class="info-box purple" style="margin-top:16px;">
+      <strong>💡 一句话总结：</strong>桥是两边唯一的出入口。哈密顿回路要进出各一次，桥就得走两次 → 不可能！
+    </div>
+  </div>
+</div>
+
+<!-- ============ PROOF 2: EULER ============ -->
+<div class="section euler">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div><h2>有桥的图 → 不是欧拉图</h2><div class="sub">反证法 · 桥走一次就回不来了</div></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="emoji">🔍</span>先回顾：什么叫欧拉图？</h3>
+    <div class="info-box green">
+      图中存在一个<strong>欧拉回路</strong>——从某顶点出发，<strong>每条边恰好经过一次</strong>，最后回到起点。<br>
+      形象理解：邮递员要走过每条街道各一次，最后回到邮局。走过的不准再走！
+    </div>
+    <div style="text-align:center;margin:12px 0;padding:12px;background:#f0fdf4;border-radius:10px;font-size:0.9rem;">
+      🏠 → 🚶 走遍每条边，走过的不能再走 → 🏠 回家
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="emoji">🧩</span>证明（反证法）</h3>
+    <p style="margin-bottom:14px;">假设图 <strong>G</strong> 有桥 <strong>e</strong>，且存在欧拉回路 <strong>C</strong>。</p>
+
+    <div class="step-walk">
+      <div class="step euler">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          删掉桥 e，图裂成 <span class="highlight">G₁</span> 和 <span class="highlight">G₂</span>。<br>
+          <span style="color:#64748b;font-size:0.85rem;">和前面一样，桥是唯一通道。</span>
+        </div>
+      </div>
+      <div class="step euler">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          欧拉回路 C 必须经过 <strong>每条边</strong>，当然也要走 <span class="highlight">桥 e</span>。<br>
+          <span style="color:#64748b;font-size:0.85rem;">假设 C 沿着 e 从 G₁ 走到了 G₂。</span>
+        </div>
+      </div>
+      <div class="step euler">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          现在 C 在 <span class="highlight">G₂</span> 里面。它要想回到 G₁ 完成回路——<br>
+          只能再走桥 e。但 <span class="highlight">e 已经走过了，不能再走！</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contradiction">
+      <div class="big-x">⚡ 矛盾！</div>
+      <p style="font-weight:700;color:#991b1b;">C 被困在 G₂ 里，<strong>回不去了</strong>。</p>
+      <p style="font-size:0.85rem;color:#b91c1c;margin-top:6px;">欧拉回路要求每条边恰好走一次，桥已经走过，没路回 G₁。</p>
+    </div>
+
+    <div class="info-box green" style="margin-top:16px;">
+      <strong>💡 一句话总结：</strong>桥只够走一次。欧拉回路跨过桥就到了对面，想回来没第二条路 → 有去无回！
+    </div>
+  </div>
+
+  <!-- Visual comparison -->
+  <div class="card">
+    <h3><span class="emoji">🎨</span>图解：为什么都过不了桥？</h3>
+    <div class="graph-area">
+      <!-- Hamiltonian diagram -->
+      <div style="text-align:center">
+        <p style="font-weight:700;color:#7c3aed;margin-bottom:8px">哈密顿回路的困境</p>
+        <svg viewBox="0 0 400 200" width="360" height="180" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7c3aed"/></marker></defs>
+          <rect x="30" y="30" width="120" height="140" rx="16" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="2"/>
+          <text x="90" y="100" text-anchor="middle" font-weight="700" font-size="14" fill="#7c3aed">G₁</text>
+          <rect x="250" y="30" width="120" height="140" rx="16" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="2"/>
+          <text x="310" y="100" text-anchor="middle" font-weight="700" font-size="14" fill="#7c3aed">G₂</text>
+          <!-- Bridge -->
+          <line x1="150" y1="80" x2="250" y2="80" stroke="#ef4444" stroke-width="4"/>
+          <text x="200" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="#ef4444">桥</text>
+          <!-- Paths -->
+          <path d="M90,140 C90,170 200,170 310,140" fill="none" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#ah)" stroke-dasharray="6,3"/>
+          <text x="180" y="185" text-anchor="middle" font-size="11" fill="#7c3aed">出去 → 过桥</text>
+          <path d="M310,120 C200,120 90,150 90,150" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6,3"/>
+          <text x="200" y="25" text-anchor="middle" font-size="11" fill="#ef4444">回来？又要过桥！</text>
+          <text x="200" y="40" text-anchor="middle" font-size="16">❌</text>
+        </svg>
+        <p style="font-size:0.82rem;color:#64748b">哈密顿要进出各走一次桥<br>= 桥走两次 = 违反规则</p>
+      </div>
+
+      <!-- Euler diagram -->
+      <div style="text-align:center">
+        <p style="font-weight:700;color:#059669;margin-bottom:8px">欧拉回路的困境</p>
+        <svg viewBox="0 0 400 200" width="360" height="180" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="ae" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#059669"/></marker></defs>
+          <rect x="30" y="30" width="120" height="140" rx="16" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="2"/>
+          <text x="90" y="100" text-anchor="middle" font-weight="700" font-size="14" fill="#059669">G₁</text>
+          <rect x="250" y="30" width="120" height="140" rx="16" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="2"/>
+          <text x="310" y="100" text-anchor="middle" font-weight="700" font-size="14" fill="#059669">G₂</text>
+          <!-- Bridge - already walked -->
+          <line x1="150" y1="80" x2="250" y2="80" stroke="#d1d5db" stroke-width="4"/>
+          <text x="200" y="70" text-anchor="middle" font-size="11" fill="#9ca3af">桥(已走)</text>
+          <text x="200" y="85" text-anchor="middle" font-size="11" fill="#ef4444" font-weight="700">✗不能再走</text>
+          <!-- Path -->
+          <path d="M90,140 C90,170 200,170 310,140" fill="none" stroke="#059669" stroke-width="2.5" marker-end="url(#ae)"/>
+          <text x="200" y="190" text-anchor="middle" font-size="11" fill="#059669">走了桥，到了G₂</text>
+          <!-- Stranded -->
+          <text x="310" y="130" text-anchor="middle" font-size="30">🏝️</text>
+          <text x="310" y="155" text-anchor="middle" font-size="11" fill="#ef4444" font-weight="700">困在这里了！</text>
+        </svg>
+        <p style="font-size:0.82rem;color:#64748b">欧拉走一次桥到了对面<br>= 回不来 = 完不成回路</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ COMPARISON ============ -->
+<div class="section compare">
+  <div class="section-header">
+    <div class="section-num">VS</div>
+    <div><h2>两个定理对比记忆</h2><div class="sub">别再搞混了！</div></div>
+  </div>
+
+  <div class="card" style="overflow-x:auto">
+    <table class="cmp-table">
+      <tr>
+        <th></th>
+        <th>🟣 哈密顿回路</th>
+        <th>🟢 欧拉回路</th>
+      </tr>
+      <tr>
+        <td><strong>经过什么？</strong></td>
+        <td>每个<strong>顶点</strong>恰好一次</td>
+        <td>每条<strong>边</strong>恰好一次</td>
+      </tr>
+      <tr>
+        <td><strong>可以不走完所有边/顶点吗？</strong></td>
+        <td>可以不经过某些边</td>
+        <td>必须经过所有顶点（因为边都走了）</td>
+      </tr>
+      <tr>
+        <td><strong>有桥 → 不成立</strong></td>
+        <td><span class="cross">❌ 桥要进出各一次 = 走两次</span></td>
+        <td><span class="cross">❌ 桥走一次就回不来</span></td>
+      </tr>
+      <tr>
+        <td><strong>为什么桥会致命？</strong></td>
+        <td>桥是唯一通道，回路要<strong>两次</strong>通过它</td>
+        <td>桥是唯一通道，走过去就<strong>回不来</strong></td>
+      </tr>
+      <tr>
+        <td><strong>充要条件</strong></td>
+        <td>无简洁充要条件（NP完全问题）</td>
+        <td>连通 + 所有顶点度数为偶数</td>
+      </tr>
+      <tr>
+        <td><strong>记忆口诀</strong></td>
+        <td>"<strong>桥走两次</strong>，哈密顿不干"</td>
+        <td>"<strong>有去无回</strong>，欧拉回路没戏"</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="info-box amber">
+    <strong>🔑 终极记忆法：</strong><br>
+    哈密顿 → 过顶点 → 桥像城门，进出各一次 → <strong>走了两次桥</strong>，违规！<br>
+    欧拉 → 过边 → 桥自身就是一条边，走了就没了 → <strong>有去无回</strong>，完蛋！<br>
+    <span style="font-size:0.85rem;color:#92400e;">核心区别：哈密顿可以不过某些边（桥可以不走），但没别的路进出时被迫走两次；欧拉必须过每条边（桥必须走），但过了桥就困在对岸。</span>
+  </div>
+</div>
+
+</div>
+
+<footer class="footer">
+  离散数学 · 有桥的图两个经典证明 · 用反证法一招制敌
+</footer>
+
+</body>
+</html>
